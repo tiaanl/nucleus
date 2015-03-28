@@ -17,7 +17,11 @@
 
 #include <sstream>
 
+#include "base/config.h"
+
 namespace base {
+
+namespace detail {
 
 class LogEntry {
 public:
@@ -29,7 +33,11 @@ public:
     LogLevel_COUNT,
   };
 
+  // Construct the log entry with a log level, file name and line number for
+  // where the log entry was created.
   LogEntry(LogLevel logLevel, const char* file, int line);
+
+  // This does the output part of the logging.
   ~LogEntry();
 
   std::ostream& getStream() { return m_stream; }
@@ -42,9 +50,32 @@ private:
   std::stringstream m_stream;
 };
 
+class LogEntryVoidify {
+public:
+  // This has to to an operator with a precedence lower than << but higher than
+  // ?.
+  void operator&(std::ostream&) {}
+};
+
+}  // namespace detail
+
 }  // namespace base
 
-#define LOG(LogLevel) \
-  ::base::LogEntry(::base::LogEntry::LogLevel, __FILE__, __LINE__).getStream()
+#define LAZY_STREAM(Stream, Condition)                                         \
+  !(Condition) ? static_cast<void>(0)                                          \
+               : ::base::detail::LogEntryVoidify() & (Stream)
+
+#define LOG_STREAM(LogLevel)                                                   \
+  ::base::detail::LogEntry(::base::detail::LogEntry::LogLevel, __FILE__,       \
+                           __LINE__).getStream()
+
+//#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), LOG_IS_ON(LogLevel))
+#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 1)
+
+#if BUILD(DEBUG)
+#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 1)
+#else
+#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 0)
+#endif
 
 #endif  // BASE_LOGGING_H_

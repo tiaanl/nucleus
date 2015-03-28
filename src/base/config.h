@@ -12,10 +12,17 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#include "base/logging.h"
-#include "gtest/gtest.h"
+#ifndef BASE_CONFIG_H_
+#define BASE_CONFIG_H_
 
-TEST(LoggingTest, Basic) {
-  LOG(Info) << "Testing";
-  DLOG(Warning) << "This only logs in debug mode.";
-}
+// BUILD()
+
+#define BUILD(Feature) (defined BUILD_##Feature && BUILD_##Feature)
+
+#if defined(NDEBUG)
+#define BUILD_RELEASE 1
+#else
+#define BUILD_DEBUG 1
+#endif
+
+#endif  // BASE_CONFIG_H_

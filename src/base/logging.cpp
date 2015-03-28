@@ -19,6 +19,8 @@
 
 namespace base {
 
+namespace detail {
+
 namespace {
 
 const char* kLogEntryNames[] = {
@@ -42,5 +44,7 @@ LogEntry::~LogEntry() {
   std::cout << '[' << m_file << ':' << m_line << "] ";
   std::cout << m_stream.str() << std::endl;
 }
+
+}  // namespace detail
 
 }  // namespace base
