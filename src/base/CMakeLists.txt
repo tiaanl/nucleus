@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.0)
+project("base")
+
+set("base_SOURCE_FILES"
+  "logging.cpp"
+  "logging.h"
+)
+
+set("base_TEST_FILES"
+  "logging_test.cpp"
+)
+
+add_library("base" ${base_SOURCE_FILES})
+
+add_executable("base_tests" ${base_TEST_FILES})
+target_link_libraries("base_tests" "gtest" "gtest_main" "base")
