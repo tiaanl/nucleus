@@ -16,6 +16,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <mutex>
+#include <thread>
 
 namespace base {
 
@@ -32,6 +34,8 @@ const char* logLevelToString(LogEntry::LogLevel logLevel) {
   return kLogEntryNames[static_cast<int>(logLevel)];
 }
 
+std::mutex g_loggingMutex;
+
 }  // namespace
 
 LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
@@ -39,9 +43,19 @@ LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
 }
 
 LogEntry::~LogEntry() {
+  std::lock_guard<std::mutex> locker(g_loggingMutex);
+
   const char* logLevelName = logLevelToString(m_logLevel);
+
+  // Output the thread id.
+  std::cout << '[' << std::this_thread::get_id() << "] ";
+
+  // Output the log level.
   std::cout << '[' << logLevelName << "] ";
-  std::cout << '[' << m_file << ':' << m_line << "] ";
+
+  // Output the file name and line number.
+  // std::cout << '[' << m_file << ':' << m_line << "] ";
+
   std::cout << m_stream.str() << std::endl;
 }
 

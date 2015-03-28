@@ -5,10 +5,14 @@ set("base_SOURCE_FILES"
   "config.h"
   "logging.cpp"
   "logging.h"
+  "macros.h"
+  "message_loop/message_loop.cpp"
+  "message_loop/message_loop.h"
 )
 
 set("base_TEST_FILES"
   "logging_test.cpp"
+  "message_loop/message_loop_tests.cpp"
 )
 
 add_library("base" ${base_SOURCE_FILES})
