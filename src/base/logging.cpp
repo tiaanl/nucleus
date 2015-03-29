@@ -48,7 +48,11 @@ LogEntry::~LogEntry() {
   const char* logLevelName = logLevelToString(m_logLevel);
 
   // Output the thread id.
-  std::cout << '[' << std::this_thread::get_id() << "] ";
+  std::cout << '[';
+  std::cout.fill('0');
+  std::cout.width(4);
+  std::cout << std::hex << std::this_thread::get_id();
+  std::cout << "] ";
 
   // Output the log level.
   std::cout << '[' << logLevelName << "] ";

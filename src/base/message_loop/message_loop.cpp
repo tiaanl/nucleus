@@ -26,30 +26,41 @@ MessageLoop::MessageLoop() {
 MessageLoop::~MessageLoop() {
 }
 
-void MessageLoop::addTask(const std::function<void()>& callback) {
+void MessageLoop::postTask(const Task& callback) {
   m_incomingQueue.push(callback);
 }
 
 void MessageLoop::run() {
-  assert(!m_isRunning);
+  assert(!m_shouldQuit);
 
-  m_isRunning = true;
+  m_shouldQuit = false;
   for (;;) {
     LOG(Info) << "Trying to do work.";
 
     bool didWork = doWork();
-    if (!m_isRunning)
+
+    if (m_shouldQuit)
       break;
 
     if (didWork)
       continue;
+
+    didWork |= doIdleWork();
+
+    if (m_shouldQuit)
+      break;
   }
 
-  assert(!m_isRunning);
+  assert(m_shouldQuit);
+}
+
+void MessageLoop::runUntilIdle() {
+  m_quitWhenIdle = true;
+  run();
 }
 
 void MessageLoop::requestQuit() {
-  addTask(std::bind(&MessageLoop::quitInternal, this));
+  postTask(std::bind(&MessageLoop::quitInternal, this));
 }
 
 bool MessageLoop::doWork() {
@@ -61,7 +72,7 @@ bool MessageLoop::doWork() {
 
     // Start executing tasks.
     do {
-      CallbackType callback = m_workQueue.front();
+      Task callback = m_workQueue.front();
       m_workQueue.pop();
 
       callback();
@@ -71,6 +82,16 @@ bool MessageLoop::doWork() {
   }
 
   // Nothing happened.
+  return false;
+}
+
+bool MessageLoop::doIdleWork() {
+  if (m_quitWhenIdle) {
+    m_quitWhenIdle = false;
+    m_shouldQuit = true;
+    return true;
+  }
+
   return false;
 }
 
@@ -87,7 +108,7 @@ void MessageLoop::reloadWorkQueue() {
 }
 
 void MessageLoop::quitInternal() {
-  m_isRunning = false;
+  m_shouldQuit = true;
 }
 
 }  // namespace base

@@ -26,16 +26,19 @@ namespace base {
 
 class MessageLoop {
 public:
-  using CallbackType = std::function<void()>;
+  using Task = std::function<void()>;
 
   MessageLoop();
   ~MessageLoop();
 
   // Add a task to the queue to be performed.
-  void addTask(const std::function<void()>& callback);
+  void postTask(const Task& callback);
 
   // Run the message loop.
   void run();
+
+  // Run the message loop until we go idle.
+  void runUntilIdle();
 
   // Request that the message loop quit as soon as possible.
   void requestQuit();
@@ -47,18 +50,26 @@ private:
   // Perform any immediate tasks in the work queue.
   bool doWork();
 
+  // Perform any tasks when this message loop goes idle.
+  bool doIdleWork();
+
   // Post a task to the queue that will set the loop to exit as soon as
   // possible.
   void quitInternal();
 
-  // Track whether the message loop is running or now.
-  bool m_isRunning{false};
+  // This will be set to true if the message loop should quit as soon as
+  // possible.
+  bool m_shouldQuit{false};
+
+  // This is set by runUntilIdle so that we set m_isRunning to false as soon as
+  // we hit the first idle.
+  bool m_quitWhenIdle{false};
 
   // The queue where incoming tasks will be added.
-  std::queue<CallbackType> m_incomingQueue;
+  std::queue<Task> m_incomingQueue;
 
   // The queue of tasks that we need to perform.
-  std::queue<CallbackType> m_workQueue;
+  std::queue<Task> m_workQueue;
 
   // The condition that is notified when we have work to do.
   std::condition_variable m_workIsAvailable;

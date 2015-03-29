@@ -12,6 +12,7 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
+#include <atomic>
 #include <chrono>
 #include <functional>
 #include <thread>
@@ -21,6 +22,8 @@
 #include "gtest/gtest.h"
 
 namespace base {
+
+namespace {
 
 struct RunCounter {
   int32_t runCount;
@@ -38,38 +41,61 @@ struct RunCounter {
                              const std::chrono::milliseconds& duration) {
     for (auto i = 0; i < count; ++i) {
       LOG(Info) << "Adding task to message loop.";
-      messageLoop->addTask(std::bind(&RunCounter::runOnce, this, duration));
+      messageLoop->postTask(std::bind(&RunCounter::runOnce, this, duration));
     }
   }
 };
+
+void longRunningTask(const std::chrono::milliseconds& taskTime) {
+  LOG(Info) << "Starting long running task: " << taskTime.count();
+  std::this_thread::sleep_for(taskTime);
+}
+
+}  // namespace
 
 TEST(MessageLoopTest, Basic) {
   MessageLoop loop;
   RunCounter runCounter;
 
   // Add some tasks that need to be run.
-  loop.addTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
-                         std::chrono::seconds(1)));
-  loop.addTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
-                         std::chrono::seconds(1)));
-  loop.requestQuit();
-
-  loop.run();
+  loop.postTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
+                          std::chrono::seconds(1)));
+  loop.postTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
+                          std::chrono::seconds(1)));
+  loop.runUntilIdle();
 
   EXPECT_EQ(2, runCounter.runCount);
 }
 
 TEST(MessageLoopTest, AddTaskFromDifferentThread) {
+  // We should be able to add tasks to the message loop while there is a very
+  // long task currently running.
+
   MessageLoop loop;
   RunCounter runCounter;
 
-  std::thread t(std::bind(&RunCounter::addTasksToMessageLoop,
-                          std::ref(runCounter), &loop, 5,
-                          std::chrono::seconds(5)));
+  std::atomic<size_t> counter{0};
 
-  loop.run();
+  std::thread t2([&]() {
+    // Post a long running task.
+    loop.postTask(std::bind(&longRunningTask, std::chrono::seconds(10)));
+    ++counter;
 
-  t.join();
+    // Sleep for a little bit and then post 2 more tasks.
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+
+    loop.postTask(std::bind(&longRunningTask, std::chrono::milliseconds(100)));
+    ++counter;
+    loop.postTask(std::bind(&longRunningTask, std::chrono::milliseconds(100)));
+    ++counter;
+
+    // When this task is run, we should have posted all the previous tasks.
+    loop.postTask(std::bind([&]() { EXPECT_EQ(3, counter); }));
+  });
+
+  loop.runUntilIdle();
+
+  t2.join();
 }
 
 }  // namespace base
