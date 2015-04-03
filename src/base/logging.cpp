@@ -19,6 +19,12 @@
 #include <mutex>
 #include <thread>
 
+#include "base/config.h"
+
+#if OS(WIN)
+#include "base/win/windows_mxin.h"
+#endif
+
 namespace base {
 
 namespace detail {
@@ -47,20 +53,30 @@ LogEntry::~LogEntry() {
 
   const char* logLevelName = logLevelToString(m_logLevel);
 
+  std::stringstream outStr;
+
   // Output the thread id.
-  std::cout << '[';
-  std::cout.fill('0');
-  std::cout.width(4);
-  std::cout << std::hex << std::this_thread::get_id();
-  std::cout << "] ";
+  outStr << '[';
+  outStr.fill('0');
+  outStr.width(4);
+  outStr << std::hex << std::this_thread::get_id();
+  outStr << "] ";
 
   // Output the log level.
-  std::cout << '[' << logLevelName << "] ";
+  outStr << '[' << logLevelName << "] ";
 
   // Output the file name and line number.
-  // std::cout << '[' << m_file << ':' << m_line << "] ";
+  // outStr << '[' << m_file << ':' << m_line << "] ";
 
-  std::cout << m_stream.str() << std::endl;
+  outStr << m_stream.str();
+
+  std::string s{outStr.str()};
+
+  std::cout << s << std::endl;
+
+#if OS(WIN)
+  ::OutputDebugString(s.c_str());
+#endif
 }
 
 }  // namespace detail

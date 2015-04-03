@@ -15,7 +15,7 @@ set("base_TEST_FILES"
   "message_loop/message_loop_tests.cpp"
 )
 
-add_library("base" ${base_SOURCE_FILES})
+add_library("base" STATIC ${base_SOURCE_FILES})
 
 add_executable("base_tests" ${base_TEST_FILES})
 target_link_libraries("base_tests" "gtest" "gtest_main" "base")
