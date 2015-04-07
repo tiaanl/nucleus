@@ -53,7 +53,7 @@ void longRunningTask(const std::chrono::milliseconds& taskTime) {
 
 }  // namespace
 
-TEST(MessageLoopTest, Basic) {
+TEST(MessageLoopTest, DISABLED_Basic) {
   MessageLoop loop;
   RunCounter runCounter;
 
@@ -67,7 +67,7 @@ TEST(MessageLoopTest, Basic) {
   EXPECT_EQ(2, runCounter.runCount);
 }
 
-TEST(MessageLoopTest, AddTaskFromDifferentThread) {
+TEST(MessageLoopTest, DISABLED_AddTaskFromDifferentThread) {
   // We should be able to add tasks to the message loop while there is a very
   // long task currently running.
 
