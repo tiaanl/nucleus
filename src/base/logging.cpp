@@ -74,6 +74,8 @@ LogEntry::~LogEntry() {
 
   std::cout << s << std::endl;
 
+  s.push_back('\n');
+
 #if OS(WIN)
   ::OutputDebugString(s.c_str());
 #endif

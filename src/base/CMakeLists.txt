@@ -3,12 +3,19 @@ project("base")
 
 set("base_SOURCE_FILES"
   "config.h"
+  "files/file_utils.h"
   "logging.cpp"
   "logging.h"
   "macros.h"
   "message_loop/message_loop.cpp"
   "message_loop/message_loop.h"
 )
+
+if(WIN32)
+  list(APPEND "base_SOURCE_FILES"
+    "files/file_utils_win.cpp"
+  )
+endif()
 
 set("base_TEST_FILES"
   "logging_test.cpp"
