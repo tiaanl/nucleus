@@ -25,11 +25,11 @@ namespace base {
 template <typename Traits>
 class CharPtrBase {
 public:
-  using CharType = Traits::CharType;
+  using CharType = typename Traits::CharType;
 
-  CharPtr() {}
+  CharPtrBase() {}
 
-  CharPtr(const CharType* ptr) : m_ptr(ptr) {}
+  CharPtrBase(const CharType* ptr) : m_ptr(const_cast<CharType*>(ptr)) {}
 
   // Return the unicode character that we are currently pointing to.
   char32_t getUnicodeChar() const { return Traits::getUnicodeChar(m_ptr); }

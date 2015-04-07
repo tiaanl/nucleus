@@ -40,6 +40,7 @@ bool StartsWithASCII(const std::string& str, const std::string& search,
     return _strnicmp(str.c_str(), search.c_str(), search.length()) == 0;
 #endif
   }
+  return false;
 }
 
 template <typename StrType>

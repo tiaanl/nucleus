@@ -17,7 +17,7 @@
 
 #define DISALLOW_COPY_AND_ASSIGN(ClassName) \
   ClassName(const ClassName&) = delete; \
-  ClassName& ClassName::operator=(const ClassName&) = delete
+  ClassName& operator=(const ClassName&) = delete
 
 #define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName) \
   DISALLOW_COPY_AND_ASSIGN(ClassName); \
