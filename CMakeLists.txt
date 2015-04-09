@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 project("nucleus")
 
+# Options
+
+# Turn this on to generate projects for unit testing.
+option(NUCLEUS_BUILD_UNITTESTS "Build unittests with library?")
+
 # Compiler options
 
 if(NOT WIN32)
@@ -9,8 +14,10 @@ endif()
 
 # Third party libraries.
 
-add_subdirectory("third_party/gtest-1.7.0" "gtest")
-include_directories("${gtest_SOURCE_DIR}/include")
+if(NUCLEUS_BUILD_UNITTESTS)
+  add_subdirectory("third_party/gtest-1.7.0" "gtest")
+  include_directories("${gtest_SOURCE_DIR}/include")
+endif()
 
 # nucleus
 
@@ -48,6 +55,7 @@ if(WIN32)
   )
 endif()
 
+if(NUCLEUS_BUILD_UNITTESTS)
 set("nucleus_TEST_FILES"
   "tests/logging_test.cpp"
   "tests/message_loop/message_loop_tests.cpp"
@@ -55,8 +63,11 @@ set("nucleus_TEST_FILES"
   "tests/strings/string_utf_conversion_tests.cpp"
   "tests/strings/string_utils_tests.cpp"
 )
+endif()
 
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 
+if(NUCLEUS_BUILD_UNITTESTS)
 add_executable("nucleus_tests" ${nucleus_TEST_FILES})
 target_link_libraries("nucleus_tests" "gtest" "gtest_main" "nucleus")
+endif()
