@@ -12,15 +12,15 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BASE_MACROS_H_
-#define BASE_MACROS_H_
+#include <gtest/gtest.h>
 
-#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
-  ClassName(const ClassName&) = delete; \
-  ClassName& operator=(const ClassName&) = delete
+#include "base/strings/char_ptr.h"
 
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName) \
-  DISALLOW_COPY_AND_ASSIGN(ClassName); \
-  ClassName() = delete
+namespace base {
 
-#endif  // BASE_MACROS_H_
+TEST(CharPtrTest, Basic) {
+  const char kTestString[] = "testing";
+  CharPtrA a((kTestString));
+}
+
+}  // namespace base

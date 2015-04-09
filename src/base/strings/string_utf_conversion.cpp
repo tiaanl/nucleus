@@ -12,15 +12,18 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BASE_MACROS_H_
-#define BASE_MACROS_H_
+#include "base/strings/string_utf_conversion.h"
 
-#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
-  ClassName(const ClassName&) = delete; \
-  ClassName& operator=(const ClassName&) = delete
+namespace base {
 
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName) \
-  DISALLOW_COPY_AND_ASSIGN(ClassName); \
-  ClassName() = delete
+std::u16string ASCIIToUTF16(const std::string& ascii) {
+  // DCHECK(isStringASCII(ascii)) << ascii;
+  return std::u16string(ascii.begin(), ascii.end());
+}
 
-#endif  // BASE_MACROS_H_
+std::string UTF16ToASCII(const std::u16string& utf16) {
+  // DCHECK(isStringASCII(utf16)) << UTF16ToUTF8(utf16);
+  return std::string(utf16.begin(), utf16.end());
+}
+
+}  // namespace base

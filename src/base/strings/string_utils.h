@@ -12,15 +12,19 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef BASE_MACROS_H_
-#define BASE_MACROS_H_
+#ifndef BASE_STRINGS_STRING_UTILS_H_
+#define BASE_STRINGS_STRING_UTILS_H_
 
-#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
-  ClassName(const ClassName&) = delete; \
-  ClassName& operator=(const ClassName&) = delete
+#include <string>
 
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName) \
-  DISALLOW_COPY_AND_ASSIGN(ClassName); \
-  ClassName() = delete
+namespace base {
 
-#endif  // BASE_MACROS_H_
+bool StartsWithASCII(const std::string& str, const std::string& search,
+                     bool caseSensitive);
+
+bool StartsWith(const std::u16string& str, const std::u16string& search,
+                bool caseSensitive);
+
+}  // namespace base
+
+#endif  // BASE_STRINGS_STRING_UTILS_H_
