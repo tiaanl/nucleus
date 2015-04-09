@@ -35,7 +35,7 @@ struct CharPtrTraits32 {
   }
 
   // Given a pointer to an array of characters, advance the pointer to the
-  // beginnin of the next character.
+  // beginning of the next character.
   static CharType* nextCharacter(CharType* ptr) {
     ++ptr;
     return ptr;
