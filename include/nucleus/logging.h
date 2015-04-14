@@ -43,9 +43,13 @@ public:
   std::ostream& getStream() { return m_stream; }
 
 private:
-  LogLevel m_logLevel;
+  // Fields that control how the log messages are printed.
+  static bool s_showThreadIdInLog;
+  static bool s_showFileNameInLog;
+
+  const LogLevel m_logLevel;
   const char* m_file;
-  int m_line;
+  const int m_line;
 
   std::stringstream m_stream;
 };

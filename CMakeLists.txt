@@ -68,6 +68,6 @@ endif()
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 
 if(NUCLEUS_BUILD_UNITTESTS)
-add_executable("nucleus_tests" ${nucleus_TEST_FILES})
-target_link_libraries("nucleus_tests" "gtest" "gtest_main" "nucleus")
+  add_executable("nucleus_tests" ${nucleus_TEST_FILES})
+  target_link_libraries("nucleus_tests" "gtest" "gtest_main" "nucleus")
 endif()

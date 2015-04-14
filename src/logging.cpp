@@ -44,6 +44,10 @@ std::mutex g_loggingMutex;
 
 }  // namespace
 
+// static
+bool LogEntry::s_showThreadIdInLog{true};
+bool LogEntry::s_showFileNameInLog{false};
+
 LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
   : m_logLevel(logLevel), m_file(file), m_line(line) {
 }
@@ -56,17 +60,20 @@ LogEntry::~LogEntry() {
   std::stringstream outStr;
 
   // Output the thread id.
-  outStr << '[';
-  outStr.fill('0');
-  outStr.width(4);
-  outStr << std::hex << std::this_thread::get_id();
-  outStr << "] ";
+  if (s_showThreadIdInLog) {
+    outStr << '[';
+    outStr.fill('0');
+    outStr.width(4);
+    outStr << std::hex << std::this_thread::get_id();
+    outStr << "] ";
+  }
 
   // Output the log level.
   outStr << '[' << logLevelName << "] ";
 
   // Output the file name and line number.
-  // outStr << '[' << m_file << ':' << m_line << "] ";
+  if (s_showFileNameInLog)
+    outStr << '[' << m_file << ':' << m_line << "] ";
 
   outStr << m_stream.str();
 
