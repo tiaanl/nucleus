@@ -56,13 +56,13 @@ if(WIN32)
 endif()
 
 if(NUCLEUS_BUILD_UNITTESTS)
-set("nucleus_TEST_FILES"
-  "tests/logging_test.cpp"
-  "tests/message_loop/message_loop_tests.cpp"
-  "tests/strings/char_ptr_tests.cpp"
-  "tests/strings/string_utf_conversion_tests.cpp"
-  "tests/strings/string_utils_tests.cpp"
-)
+  set("nucleus_TEST_FILES"
+    "tests/logging_test.cpp"
+    "tests/message_loop/message_loop_tests.cpp"
+    "tests/strings/char_ptr_tests.cpp"
+    "tests/strings/string_utf_conversion_tests.cpp"
+    "tests/strings/string_utils_tests.cpp"
+  )
 endif()
 
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
