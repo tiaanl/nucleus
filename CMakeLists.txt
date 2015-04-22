@@ -1,22 +1,29 @@
 cmake_minimum_required(VERSION 2.8.7)
 project("nucleus")
 
+# General options
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# Compiler options
+
+include("cmake/gcc.cmake")
+include("cmake/msvc.cmake")
+
+# Platform options
+
+include("cmake/win32.cmake")
+
 # Options
 
 # Turn this on to generate projects for unit testing.
 option(NUCLEUS_BUILD_UNITTESTS "Build unittests with library?")
 
-# Compiler options
-
-if(NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
-endif()
-
 # Third party libraries.
 
 if(NUCLEUS_BUILD_UNITTESTS)
-  add_subdirectory("third_party/gtest-1.7.0" "gtest")
-  include_directories("${gtest_SOURCE_DIR}/include")
+  include("cmake/gtest.cmake")
 endif()
 
 # nucleus
@@ -66,8 +73,11 @@ if(NUCLEUS_BUILD_UNITTESTS)
 endif()
 
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
+target_include_directories("nucleus" PUBLIC "${nucleus_SOURCE_DIR}/include")
+set_property(TARGET "nucleus" PROPERTY FOLDER "nucleus")
 
 if(NUCLEUS_BUILD_UNITTESTS)
   add_executable("nucleus_tests" ${nucleus_TEST_FILES})
   target_link_libraries("nucleus_tests" "gtest" "gtest_main" "nucleus")
+  set_property(TARGET "nucleus_tests" PROPERTY FOLDER "nucleus")
 endif()
