@@ -20,9 +20,12 @@
 #include <gtest/gtest.h>
 
 #include "nucleus/message_loop/message_loop.h"
+#include "nucleus/message_loop/message_pump_default.h"
 #include "nucleus/logging.h"
 
 namespace nu {
+
+#if 0
 
 namespace {
 
@@ -97,6 +100,20 @@ TEST(MessageLoopTest, DISABLED_AddTaskFromDifferentThread) {
   loop.runUntilIdle();
 
   t2.join();
+}
+
+#endif  // 0
+
+void doSomething() {
+  LOG(Info) << "Doing something.";
+}
+
+TEST(MessageLoopTest, Basic) {
+  auto pump = std::make_unique<MessagePumpDefault>();
+  MessageLoop loop(std::move(pump));
+  loop.postTask(std::bind(&doSomething));
+  loop.postDelayedTask(std::bind(&doSomething), std::chrono::milliseconds(5000));
+  loop.runUntilIdle();
 }
 
 }  // namespace nu
