@@ -104,7 +104,25 @@ void MessageLoop::addToDelayedWorkQueue(const PendingTask& pendingTask) {
 }
 
 bool MessageLoop::deletePendingTasks() {
-  return false;
+  bool didWork = !m_workQueue.empty();
+  while (!m_workQueue.empty()) {
+    PendingTask pendingTask{m_workQueue.front()};
+    m_workQueue.pop();
+
+    if (pendingTask.delayedRunTime !=
+        std::chrono::time_point<std::chrono::high_resolution_clock>()) {
+      // We want to delete delayed tasks in the same order in which they would
+      // normalle be deleted in case of any funny dependencies between delayed
+      // tasks.
+      addToDelayedWorkQueue(pendingTask);
+    }
+  }
+
+  while (!m_delayedWorkQueue.empty()) {
+    m_delayedWorkQueue.pop();
+  }
+
+  return didWork;
 }
 
 void MessageLoop::reloadWorkQueue() {
@@ -122,14 +140,23 @@ void MessageLoop::scheduleWork() {
 
 bool MessageLoop::doWork() {
   for (;;) {
+    // Move all tasks from the incoming queue to the m_workQueue. (only if the
+    // work queue is empty).
     reloadWorkQueue();
-    if (m_workQueue.empty())
-      break;
 
-    // Execute oldest task.
+    // If there is nothing to do, then we break out of the loop.
+    if (m_workQueue.empty()) {
+      break;
+    }
+
+    // Start processing all the tasks in the m_workQueue.
     do {
+      // Get the top most task.
       PendingTask pendingTask = m_workQueue.front();
       m_workQueue.pop();
+
+      // If the pending task has a valid delayed run time, then we add it to
+      // m_delayedWorkQueue.
       if (pendingTask.delayedRunTime !=
           std::chrono::time_point<std::chrono::high_resolution_clock>()) {
         addToDelayedWorkQueue(pendingTask);
@@ -138,8 +165,12 @@ bool MessageLoop::doWork() {
           m_pump->scheduleDelayedWork(pendingTask.delayedRunTime);
         // }
       } else {
-        // Run the task.
+        // The task did not have a delayed run time, so we just run it right
+        // now.
         pendingTask.task();
+
+        // We break out here, because we did some work.
+        return true;
       }
     } while (!m_workQueue.empty());
   }

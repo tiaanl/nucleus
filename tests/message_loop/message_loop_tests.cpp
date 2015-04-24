@@ -12,108 +12,109 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#include <atomic>
-#include <chrono>
-#include <functional>
-#include <thread>
+#include <memory>
 
 #include <gtest/gtest.h>
 
 #include "nucleus/message_loop/message_loop.h"
 #include "nucleus/message_loop/message_pump_default.h"
-#include "nucleus/logging.h"
 
 namespace nu {
 
-#if 0
+class Foo {
+public:
+  Foo() {}
+  ~Foo() {}
 
-namespace {
-
-struct RunCounter {
-  int32_t runCount;
-
-  RunCounter() : runCount(0) {}
-
-  void runOnce(const std::chrono::milliseconds& delay) {
-    ++runCount;
-    LOG(Info) << "Running once - begin";
-    std::this_thread::sleep_for(delay);
-    LOG(Info) << "Running once - end";
+  void test0() {
+    ++m_testCount;
   }
 
-  void addTasksToMessageLoop(MessageLoop* messageLoop, size_t count,
-                             const std::chrono::milliseconds& duration) {
-    for (auto i = 0; i < count; ++i) {
-      LOG(Info) << "Adding task to message loop.";
-      messageLoop->postTask(std::bind(&RunCounter::runOnce, this, duration));
-    }
+  void test1ConstRef(const std::string& a) {
+    ++m_testCount;
+    m_result.append(a);
   }
+
+  void test1Ptr(std::string* a) {
+    ++m_testCount;
+    m_result.append(*a);
+  }
+
+  void test1Int(int a) {
+    m_testCount += a;
+  }
+
+  void test2Ptr(std::string* a, std::string* b) {
+    ++m_testCount;
+    m_result.append(*a);
+    m_result.append(*b);
+  }
+
+  void test2Mixed(const std::string& a, std::string* b) {
+    ++m_testCount;
+    m_result.append(a);
+    m_result.append(*b);
+  }
+
+  int getTestCount() const { return m_testCount; }
+
+  const std::string& getResult() const { return m_result; }
+
+private:
+  int m_testCount = 0;
+  std::string m_result;
+
+  DISALLOW_COPY_AND_ASSIGN(Foo);
 };
 
-void longRunningTask(const std::chrono::milliseconds& taskTime) {
-  LOG(Info) << "Starting long running task: " << taskTime.count();
-  std::this_thread::sleep_for(taskTime);
+TEST(MessageLoopTest, PostTask) {
+   MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+   // Add tests to message loop.
+   auto foo = std::make_shared<Foo>();
+   std::string a("a"), b("b"), c("c"), d("d");
+
+   loop.postTask(std::bind(&Foo::test0, foo));
+   loop.postTask(std::bind(&Foo::test1ConstRef, foo, a));
+   loop.postTask(std::bind(&Foo::test1Ptr, foo, &b));
+   loop.postTask(std::bind(&Foo::test1Int, foo, 100));
+   loop.postTask(std::bind(&Foo::test2Ptr, foo, &a, &c));
+   loop.postTask(std::bind(&Foo::test2Mixed, foo, a, &d));
+
+   // After all tests, post a message that will shut down the message loop.
+   loop.postTask(std::bind(&MessageLoop::quitWhenIdle, &loop));
+
+   // Now run the loop.
+   loop.run();
+
+   EXPECT_EQ(foo->getTestCount(), 105);
+   EXPECT_EQ(foo->getResult(), "abacad");
 }
 
-}  // namespace
 
-TEST(MessageLoopTest, DISABLED_Basic) {
-  MessageLoop loop;
-  RunCounter runCounter;
+#if 0
+void RunTest_PostDelayedTask_Basic(MessagePumpFactory factory) {
+  scoped_ptr<MessagePump> pump(factory());
+  MessageLoop loop(pump.Pass());
 
-  // Add some tasks that need to be run.
-  loop.postTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
-                          std::chrono::seconds(1)));
-  loop.postTask(std::bind(&RunCounter::runOnce, std::ref(runCounter),
-                          std::chrono::seconds(1)));
-  loop.runUntilIdle();
+  // Test that PostDelayedTask results in a delayed task.
 
-  EXPECT_EQ(2, runCounter.runCount);
+  const TimeDelta kDelay = TimeDelta::FromMilliseconds(100);
+
+  int num_tasks = 1;
+  Time run_time;
+
+  loop.PostDelayedTask(
+      FROM_HERE, Bind(&RecordRunTimeFunc, &run_time, &num_tasks),
+      kDelay);
+
+  Time time_before_run = Time::Now();
+  loop.Run();
+  Time time_after_run = Time::Now();
+
+  EXPECT_EQ(0, num_tasks);
+  EXPECT_LT(kDelay, time_after_run - time_before_run);
 }
-
-TEST(MessageLoopTest, DISABLED_AddTaskFromDifferentThread) {
-  // We should be able to add tasks to the message loop while there is a very
-  // long task currently running.
-
-  MessageLoop loop;
-  RunCounter runCounter;
-
-  std::atomic<size_t> counter{0};
-
-  std::thread t2([&]() {
-    // Post a long running task.
-    loop.postTask(std::bind(&longRunningTask, std::chrono::seconds(10)));
-    ++counter;
-
-    // Sleep for a little bit and then post 2 more tasks.
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-
-    loop.postTask(std::bind(&longRunningTask, std::chrono::milliseconds(100)));
-    ++counter;
-    loop.postTask(std::bind(&longRunningTask, std::chrono::milliseconds(100)));
-    ++counter;
-
-    // When this task is run, we should have posted all the previous tasks.
-    loop.postTask(std::bind([&]() { EXPECT_EQ(3, counter); }));
-  });
-
-  loop.runUntilIdle();
-
-  t2.join();
-}
-
 #endif  // 0
-
-void doSomething() {
-  LOG(Info) << "Doing something.";
-}
-
-TEST(MessageLoopTest, Basic) {
-  auto pump = std::make_unique<MessagePumpDefault>();
-  MessageLoop loop(std::move(pump));
-  loop.postTask(std::bind(&doSomething));
-  loop.postDelayedTask(std::bind(&doSomething), std::chrono::milliseconds(5000));
-  loop.runUntilIdle();
-}
 
 }  // namespace nu
