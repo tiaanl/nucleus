@@ -13,6 +13,7 @@
 // PERFORMANCE OF THIS SOFTWARE.
 
 #include <memory>
+#include <thread>
 
 #include <gtest/gtest.h>
 
@@ -21,14 +22,14 @@
 
 namespace nu {
 
+namespace {
+
 class Foo {
 public:
   Foo() {}
   ~Foo() {}
 
-  void test0() {
-    ++m_testCount;
-  }
+  void test0() { ++m_testCount; }
 
   void test1ConstRef(const std::string& a) {
     ++m_testCount;
@@ -40,9 +41,7 @@ public:
     m_result.append(*a);
   }
 
-  void test1Int(int a) {
-    m_testCount += a;
-  }
+  void test1Int(int a) { m_testCount += a; }
 
   void test2Ptr(std::string* a, std::string* b) {
     ++m_testCount;
@@ -67,54 +66,74 @@ private:
   DISALLOW_COPY_AND_ASSIGN(Foo);
 };
 
+// This function runs slowly to simulate a large amount of work being done.
+void slowFunc(MessageLoop* messageLoop, const std::chrono::milliseconds& delay,
+              int* quitCounter) {
+  std::this_thread::sleep_for(delay);
+  if (--(*quitCounter) == 0) {
+    messageLoop->quitWhenIdle();
+  }
+}
+
+// This function records the time when run was called, which is useful for
+// building a variety of MessageLoop tests.
+void recordRunTimeFunc(
+    MessageLoop* messageLoop,
+    std::chrono::time_point<std::chrono::high_resolution_clock>* runTime,
+    int* quitCounter) {
+  *runTime = std::chrono::high_resolution_clock::now();
+
+  // Cause our run function to take some time to execute.  As a result we can
+  // count on subsequent recordRunTimeFunc() running at a future time wihout
+  // worry about the resolution of our system clock being an issue.
+  slowFunc(messageLoop, std::chrono::milliseconds(100), quitCounter);
+}
+
+}  // namespace
+
 TEST(MessageLoopTest, PostTask) {
-   MessageLoop loop(std::make_unique<MessagePumpDefault>());
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
 
-   // Add tests to message loop.
-   auto foo = std::make_shared<Foo>();
-   std::string a("a"), b("b"), c("c"), d("d");
+  // Add tests to message loop.
+  auto foo = std::make_shared<Foo>();
+  std::string a("a"), b("b"), c("c"), d("d");
 
-   loop.postTask(std::bind(&Foo::test0, foo));
-   loop.postTask(std::bind(&Foo::test1ConstRef, foo, a));
-   loop.postTask(std::bind(&Foo::test1Ptr, foo, &b));
-   loop.postTask(std::bind(&Foo::test1Int, foo, 100));
-   loop.postTask(std::bind(&Foo::test2Ptr, foo, &a, &c));
-   loop.postTask(std::bind(&Foo::test2Mixed, foo, a, &d));
+  loop.postTask(std::bind(&Foo::test0, foo));
+  loop.postTask(std::bind(&Foo::test1ConstRef, foo, a));
+  loop.postTask(std::bind(&Foo::test1Ptr, foo, &b));
+  loop.postTask(std::bind(&Foo::test1Int, foo, 100));
+  loop.postTask(std::bind(&Foo::test2Ptr, foo, &a, &c));
+  loop.postTask(std::bind(&Foo::test2Mixed, foo, a, &d));
 
-   // After all tests, post a message that will shut down the message loop.
-   loop.postTask(std::bind(&MessageLoop::quitWhenIdle, &loop));
+  // After all tests, post a message that will shut down the message loop.
+  loop.postTask(std::bind(&MessageLoop::quitWhenIdle, &loop));
 
-   // Now run the loop.
-   loop.run();
+  // Now run the loop.
+  loop.run();
 
-   EXPECT_EQ(foo->getTestCount(), 105);
-   EXPECT_EQ(foo->getResult(), "abacad");
+  EXPECT_EQ(foo->getTestCount(), 105);
+  EXPECT_EQ(foo->getResult(), "abacad");
 }
 
+TEST(MessageLoopTest, PostDelayedTask_Basic) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
 
-#if 0
-void RunTest_PostDelayedTask_Basic(MessagePumpFactory factory) {
-  scoped_ptr<MessagePump> pump(factory());
-  MessageLoop loop(pump.Pass());
+  // Test that postDelayedTask results in a delayed task.
+  const std::chrono::milliseconds kDelay{100};
 
-  // Test that PostDelayedTask results in a delayed task.
+  int numTasks = 1;
+  Time runTime;
 
-  const TimeDelta kDelay = TimeDelta::FromMilliseconds(100);
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime, &numTasks), kDelay);
 
-  int num_tasks = 1;
-  Time run_time;
+  Time timeBeforeRun = std::chrono::high_resolution_clock::now();
+  loop.run();
+  Time timeAfterRun = std::chrono::high_resolution_clock::now();
 
-  loop.PostDelayedTask(
-      FROM_HERE, Bind(&RecordRunTimeFunc, &run_time, &num_tasks),
-      kDelay);
-
-  Time time_before_run = Time::Now();
-  loop.Run();
-  Time time_after_run = Time::Now();
-
-  EXPECT_EQ(0, num_tasks);
-  EXPECT_LT(kDelay, time_after_run - time_before_run);
+  EXPECT_EQ(0, numTasks);
+  EXPECT_LT(kDelay, timeAfterRun - timeBeforeRun);
 }
-#endif  // 0
 
 }  // namespace nu
