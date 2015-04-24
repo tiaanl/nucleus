@@ -136,4 +136,145 @@ TEST(MessageLoopTest, PostDelayedTask_Basic) {
   EXPECT_LT(kDelay, timeAfterRun - timeBeforeRun);
 }
 
+TEST(MessageLoopTest, PostDelayedTask_InDelayOrder) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+  // Test that two tasks with different delays run in the right order.
+  int numTasks = 2;
+  Time runTime1, runTime2;
+
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime1, &numTasks),
+      std::chrono::milliseconds{200});
+
+  // If we get a large pause in execution (due to a context switch) here, this
+  // test could fail.
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime2, &numTasks),
+      std::chrono::milliseconds{10});
+
+  loop.run();
+
+  EXPECT_EQ(0, numTasks);
+  EXPECT_TRUE(runTime2 < runTime1);
+}
+
+TEST(MessageLoopTest, PostDelayedTask_InPostOrder) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+  // Test that two tasks with the same delay run in the order in which they were
+  // posted.
+  const std::chrono::milliseconds kDelay{100};
+
+  int numTasks = 2;
+  Time runTime1, runTime2;
+
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime1, &numTasks), kDelay);
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime2, &numTasks), kDelay);
+
+  loop.run();
+
+  EXPECT_EQ(0, numTasks);
+  EXPECT_TRUE(runTime1 < runTime2);
+}
+
+TEST(MessageLoopTest, PostDelayedTask_InPostOrder_2) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+  // Test that a delayed task still runs after normal tasks even if the normal
+  // tasks take a long time to run.
+
+  const std::chrono::milliseconds kPause{50};
+
+  int numTasks = 2;
+  Time runTime;
+
+  loop.postTask(std::bind(&slowFunc, &loop, kPause, &numTasks));
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime, &numTasks),
+      std::chrono::milliseconds{10});
+
+  Time timeBeforeRun = std::chrono::high_resolution_clock::now();
+  loop.run();
+  Time timeAfterRun = std::chrono::high_resolution_clock::now();
+
+  EXPECT_EQ(0, numTasks);
+  EXPECT_LT(kPause, timeAfterRun - timeBeforeRun);
+}
+
+TEST(MessageLoopTest, PostDelayedTask_InPostOrder_3) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+  // Test that a delayed task still runs after a pile of normal tasks.  The key
+  // difference between this test and the previous one is that here we return
+  // the MessageLoop a lot so we give the MessageLoop plenty of opportunities to
+  // maybe run the delayed task.  It should know not to do so until the delayed
+  // task's delay has passed.
+
+  int numTasks = 11;
+  Time runTime1, runTime2;
+
+  // Clutter the MessageLoop with tasks.
+  for (int i = 1; i < numTasks; ++i) {
+    loop.postTask(std::bind(&recordRunTimeFunc, &loop, &runTime1, &numTasks));
+  }
+
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime2, &numTasks),
+      std::chrono::milliseconds{1});
+
+  loop.run();
+
+  EXPECT_EQ(0, numTasks);
+  EXPECT_TRUE(runTime2 > runTime1);
+}
+
+TEST(MessageLoopTest, PostDelayedTask_SharedTimer) {
+  using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+  MessageLoop loop(std::make_unique<MessagePumpDefault>());
+
+  // Test that the interval of the timer, used to run the next delayed task, is
+  // set to a value corresponding to when the next delayed task should run.
+
+  // By setting numTasks to 1, we ensure that the first task to run causes the
+  // run loop to exit.
+
+  int numTasks = 1;
+  Time runTime1, runTime2;
+
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime1, &numTasks),
+      std::chrono::milliseconds{1000});
+  loop.postDelayedTask(
+      std::bind(&recordRunTimeFunc, &loop, &runTime2, &numTasks),
+      std::chrono::milliseconds{10});
+
+  Time startTime = std::chrono::high_resolution_clock::now();
+
+  loop.run();
+
+  EXPECT_EQ(0, numTasks);
+
+  // Ensure that we ran in far less time than the slower timer.
+  std::chrono::milliseconds totalTime =
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+          std::chrono::high_resolution_clock::now() - startTime);
+  EXPECT_GT(5000, totalTime.count());
+
+  // In case both timers somehow run at nearly the same time, sleep a little and
+  // then run all pending to force them both to have run.
+  std::this_thread::sleep_for(std::chrono::milliseconds{100});
+
+  loop.runUntilIdle();
+
+  EXPECT_TRUE(runTime1 == Time());
+  EXPECT_FALSE(runTime2 == Time());
+}
+
 }  // namespace nu
