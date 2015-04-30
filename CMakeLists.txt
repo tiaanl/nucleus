@@ -49,6 +49,8 @@ set("nucleus_INCLUDE_FILES"
   "include/nucleus/strings/char_ptr_traits_w.h"
   "include/nucleus/strings/string_utf_conversion.h"
   "include/nucleus/strings/string_utils.h"
+  "include/nucleus/utils/detail/observer_list_base.h"
+  "include/nucleus/utils/observer_list.h"
   "include/nucleus/win/windows_mixin.h"
 )
 
@@ -76,6 +78,7 @@ if(NUCLEUS_BUILD_UNITTESTS)
     "tests/strings/char_ptr_tests.cpp"
     "tests/strings/string_utf_conversion_tests.cpp"
     "tests/strings/string_utils_tests.cpp"
+    "tests/utils/observer_list_tests.cpp"
   )
 endif()
 
