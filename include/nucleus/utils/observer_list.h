@@ -41,7 +41,7 @@ public:
   do {                                                                         \
     if (!(ObserverList).isEmpty()) {                                           \
       ::nu::detail::ObserverListBase<ObserverType>::Iterator                   \
-          itInsideObserverMacro(&observerList);                                \
+          itInsideObserverMacro(&ObserverList);                                \
       ObserverType* oobbss;                                                    \
       while ((oobbss = itInsideObserverMacro.getNext()) != nullptr) {          \
         oobbss->Func;                                                          \
