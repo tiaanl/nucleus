@@ -73,6 +73,7 @@ endif()
 
 if(NUCLEUS_BUILD_UNITTESTS)
   set("nucleus_TEST_FILES"
+    "tests/files/file_path_tests.cpp"
     "tests/logging_test.cpp"
     "tests/message_loop/message_loop_tests.cpp"
     "tests/strings/char_ptr_tests.cpp"
