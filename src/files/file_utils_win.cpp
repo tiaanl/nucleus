@@ -14,12 +14,13 @@
 
 #include "nucleus/files/file_utils.h"
 
+#include "nucleus/logging.h"
 #include "nucleus/win/windows_mixin.h"
 
 namespace nu {
 
 bool readFileToVector(const std::string& path, std::vector<char>* bufferOut) {
-  // DCHECK(buffer);
+  DCHECK(bufferOut);
 
   HANDLE fileHandle = ::CreateFileA(
       path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
@@ -47,9 +48,9 @@ bool readFileToVector(const std::string& path, std::vector<char>* bufferOut) {
 }
 
 bool writeVectorToFile(const std::string& path, const std::vector<char>& data) {
-  HANDLE fileHandle = ::CreateFileA(
-      path.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
-      CREATE_NEW, 0, nullptr);
+  HANDLE fileHandle = ::CreateFileA(path.c_str(), GENERIC_WRITE,
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                                    CREATE_NEW, 0, nullptr);
   if (fileHandle == INVALID_HANDLE_VALUE)
     return false;
 

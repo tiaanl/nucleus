@@ -27,7 +27,7 @@ MessageLoop::MessageLoop(std::unique_ptr<MessagePump> pump) {
 }
 
 MessageLoop::~MessageLoop() {
-  // DCHECK_EQ(this, getCurrent());
+  DCHECK(this == getCurrent());
 
   // Clean up any unprocessed tasks, but take care: deleting a task could result
   // in the addition of more tasks.  We set a limit on the number of times we
@@ -44,7 +44,7 @@ MessageLoop::~MessageLoop() {
     if (!didWork)
       break;
   }
-  // DCHECK(!didWork);
+  DCHECK(!didWork);
 
   m_incomingTaskQueue->willDestroyCurrentMessageLoop();
   m_incomingTaskQueue = nullptr;
@@ -86,7 +86,7 @@ bool MessageLoop::isRunning() const {
 }
 
 void MessageLoop::initialize() {
-  // DCHECK(!getCurrent()) << "Should only have one message loop per thread.";
+  DCHECK(!getCurrent()) << "Should only have one message loop per thread.";
 
   // TODO: Set the local thread message loop.
 
@@ -94,7 +94,7 @@ void MessageLoop::initialize() {
 }
 
 void MessageLoop::runHandler() {
-  // DCHECK_EQ(this, getCurrent());
+  DCHECK(this == getCurrent());
   m_pump->run(this);
 }
 

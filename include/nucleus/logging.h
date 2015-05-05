@@ -30,6 +30,7 @@ public:
     Warning,
     Error,
     Fatal,
+    DCheck,
     LogLevel_COUNT,
   };
 
@@ -45,6 +46,7 @@ public:
 private:
   // Fields that control how the log messages are printed.
   static bool s_showThreadIdInLog;
+  static bool s_showLogLevelName;
   static bool s_showFileNameInLog;
 
   const LogLevel m_logLevel;
@@ -73,6 +75,8 @@ public:
   ::nu::detail::LogEntry(::nu::detail::LogEntry::LogLevel, __FILE__, __LINE__) \
       .getStream()
 
+// LOG/DLOG
+
 //#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), LOG_IS_ON(LogLevel))
 #define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 1)
 
@@ -81,5 +85,21 @@ public:
 #else
 #define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 0)
 #endif
+
+// DCHECK
+
+#if BUILD(DEBUG)
+#define DCHECK_IS_ON() 1
+#else
+#define DCHECK_IS_ON() 0
+#endif
+
+#define DCHECK(condition)                                                      \
+  LAZY_STREAM(LOG_STREAM(DCheck), DCHECK_IS_ON() ? !(condition) : false)       \
+      << "Check failed: " #condition ". "
+
+// NOTREACHED
+
+#define NOTREACHED() DCHECK(false)
 
 #endif  // NUCLEUS_LOGGING_H_

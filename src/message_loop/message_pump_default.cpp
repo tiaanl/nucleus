@@ -14,6 +14,8 @@
 
 #include "nucleus/message_loop/message_pump_default.h"
 
+#include "nucleus/logging.h"
+
 namespace nu {
 
 MessagePumpDefault::MessagePumpDefault() {
@@ -23,7 +25,7 @@ MessagePumpDefault::~MessagePumpDefault() {
 }
 
 void MessagePumpDefault::run(Delegate* delegate) {
-  // DCHECK(m_keepRunning) << "Quit must have been called outside of run!";
+  DCHECK(m_keepRunning) << "Quit must have been called outside of run!";
 
   for (;;) {
     bool didWork = delegate->doWork();

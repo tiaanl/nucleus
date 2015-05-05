@@ -70,11 +70,11 @@ public:
   // Add an observer to the list.  An observer should not be added to the same
   // list more than once.
   void addObserver(ObserverType* observer) {
-    // DCHECK(observer);
+    DCHECK(observer);
 
     if (std::find(std::begin(m_observers), std::end(m_observers), observer) !=
         std::end(m_observers)) {
-      // NOTREACHED() << "Observers can only be added once!";
+      NOTREACHED() << "Observers can only be added once!";
       return;
     }
 
@@ -83,7 +83,7 @@ public:
 
   // Remove an observer from the list if it is in the list.
   void removeObserver(ObserverType* observer) {
-    // DCHECK(observer);
+    DCHECK(observer);
 
     auto it =
         std::find(std::begin(m_observers), std::end(m_observers), observer);

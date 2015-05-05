@@ -32,7 +32,7 @@ namespace detail {
 namespace {
 
 const char* kLogEntryNames[] = {
-    "Info", "Warning", "Error", "Fatal",
+    "Info", "Warning", "Error", "Fatal", "Check",
 };
 
 const char* logLevelToString(LogEntry::LogLevel logLevel) {
@@ -46,6 +46,7 @@ std::mutex g_loggingMutex;
 
 // static
 bool LogEntry::s_showThreadIdInLog{true};
+bool LogEntry::s_showLogLevelName{true};
 bool LogEntry::s_showFileNameInLog{false};
 
 LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
@@ -54,8 +55,6 @@ LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
 
 LogEntry::~LogEntry() {
   std::lock_guard<std::mutex> locker(g_loggingMutex);
-
-  const char* logLevelName = logLevelToString(m_logLevel);
 
   std::stringstream outStr;
 
@@ -69,7 +68,10 @@ LogEntry::~LogEntry() {
   }
 
   // Output the log level.
-  outStr << '[' << logLevelName << "] ";
+  if (s_showLogLevelName) {
+    const char* logLevelName = logLevelToString(m_logLevel);
+    outStr << '[' << logLevelName << "] ";
+  }
 
   // Output the file name and line number.
   if (s_showFileNameInLog)

@@ -14,6 +14,7 @@
 
 #include "nucleus/message_loop/incoming_task_queue.h"
 
+#include "nucleus/logging.h"
 #include "nucleus/message_loop/message_loop.h"
 
 namespace nu {
@@ -34,7 +35,7 @@ bool IncomingTaskQueue::addToIncomingQueue(
 
 void IncomingTaskQueue::reloadWorkQueue(std::queue<PendingTask>* workQueue) {
   // Make sure no tasks are lost.
-  // DCHECK(workQueue->empty());
+  DCHECK(workQueue->empty());
 
   // Acquire all we can from the inter-thread queue with one lock acquisition.
   std::lock_guard<std::mutex> locker(m_incomingQueueLock);
@@ -60,7 +61,8 @@ IncomingTaskQueue::calculateDelayedRunTime(
   if (delay > std::chrono::milliseconds(0)) {
     delayedRunTime = std::chrono::high_resolution_clock::now() + delay;
   } else {
-    // DCHECK_EQ(dealy, 0) << "Delay should not be negative.";
+    DCHECK(delay == std::chrono::milliseconds(0))
+        << "Delay should not be negative.";
   }
   return delayedRunTime;
 }

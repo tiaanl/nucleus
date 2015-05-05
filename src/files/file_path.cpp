@@ -14,6 +14,7 @@
 
 #include "nucleus/files/file_path.h"
 
+#include "nucleus/logging.h"
 #include "nucleus/macros.h"
 #include "nucleus/strings/string_utils.h"
 
@@ -182,7 +183,9 @@ FilePath FilePath::append(const StringType& component) const {
     appended = &withoutNuls;
   }
 
-  // DCHECK(!isPathAbsolute(*appended));
+#if 0
+  DCHECK(!isPathAbsolute(*appended));
+#endif  // 0
 
   if (m_path.compare(kCurrentDirectory) == 0) {
     // Append normally doesn't do any normalization, but as a special case, when

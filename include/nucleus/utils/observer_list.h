@@ -15,6 +15,7 @@
 #ifndef NUCLEUS_OBSERVER_LIST_H_
 #define NUCLEUS_OBSERVER_LIST_H_
 
+#include "nucleus/logging.h"
 #include "nucleus/utils/detail/observer_list_base.h"
 
 namespace nu {
@@ -28,7 +29,7 @@ public:
     // When CheckEmpty is true, assert that the list is empty on destruction.
     if (CheckEmpty) {
       ObserverListBase<ObserverType>::compact();
-      // DCHECK_TRUE(ObserverListBase<ObserverType>::isEmpty());
+      DCHECK(ObserverListBase<ObserverType>::isEmpty());
     }
   }
 
