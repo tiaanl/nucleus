@@ -51,6 +51,7 @@ set("nucleus_INCLUDE_FILES"
   "include/nucleus/strings/string_utils.h"
   "include/nucleus/utils/detail/observer_list_base.h"
   "include/nucleus/utils/observer_list.h"
+  "include/nucleus/utils/signals.h"
   "include/nucleus/win/windows_mixin.h"
 )
 
@@ -73,6 +74,7 @@ endif()
 
 if(NUCLEUS_BUILD_UNITTESTS)
   set("nucleus_TEST_FILES"
+	"tests/utils/signals_tests.cpp"
     "tests/files/file_path_tests.cpp"
     "tests/logging_test.cpp"
     "tests/message_loop/message_loop_tests.cpp"
