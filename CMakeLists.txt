@@ -3,7 +3,6 @@ project("nucleus")
 
 # General options
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Compiler options
@@ -74,7 +73,6 @@ endif()
 
 if(NUCLEUS_BUILD_UNITTESTS)
   set("nucleus_TEST_FILES"
-	"tests/utils/signals_tests.cpp"
     "tests/files/file_path_tests.cpp"
     "tests/logging_test.cpp"
     "tests/message_loop/message_loop_tests.cpp"
@@ -82,6 +80,7 @@ if(NUCLEUS_BUILD_UNITTESTS)
     "tests/strings/string_utf_conversion_tests.cpp"
     "tests/strings/string_utils_tests.cpp"
     "tests/utils/observer_list_tests.cpp"
+    "tests/utils/signals_tests.cpp"
   )
 endif()
 
