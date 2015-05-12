@@ -15,14 +15,16 @@
 #ifndef NUCLEUS_MACROS_H_
 #define NUCLEUS_MACROS_H_
 
+#include <cstddef>
+
 #include "nucleus/config.h"
 
-#define DISALLOW_COPY_AND_ASSIGN(ClassName) \
-  ClassName(const ClassName&) = delete; \
+#define DISALLOW_COPY_AND_ASSIGN(ClassName)                                    \
+  ClassName(const ClassName&) = delete;                                        \
   ClassName& operator=(const ClassName&) = delete
 
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName) \
-  DISALLOW_COPY_AND_ASSIGN(ClassName); \
+#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName)                              \
+  DISALLOW_COPY_AND_ASSIGN(ClassName);                                         \
   ClassName() = delete
 
 // ARRAY_SIZE
