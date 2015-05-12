@@ -15,11 +15,12 @@
 #ifndef NUCLEUS_MESSAGE_LOOP_MESSAGE_LOOP_H_
 #define NUCLEUS_MESSAGE_LOOP_MESSAGE_LOOP_H_
 
+#include <condition_variable>
 #include <functional>
 #include <queue>
 #include <memory>
 #include <mutex>
-#include <condition_variable>
+#include <string>
 
 #include "nucleus/macros.h"
 #include "nucleus/message_loop/incoming_task_queue.h"
@@ -81,7 +82,7 @@ private:
   // Run all tasks that haven't been run yet and then clear our the queue.
   // Returns true if any work was performed.
   bool deletePendingTasks();
-  
+
   // Load tasks from the incoming queue to m_workQueue if the latter is empty.
   void reloadWorkQueue();
 

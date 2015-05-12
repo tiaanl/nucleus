@@ -28,8 +28,8 @@ public:
   ~ObserverList() {
     // When CheckEmpty is true, assert that the list is empty on destruction.
     if (CheckEmpty) {
-      ObserverListBase<ObserverType>::compact();
-      DCHECK(ObserverListBase<ObserverType>::isEmpty());
+      detail::ObserverListBase<ObserverType>::compact();
+      DCHECK(detail::ObserverListBase<ObserverType>::isEmpty());
     }
   }
 

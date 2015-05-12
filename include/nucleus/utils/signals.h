@@ -141,7 +141,7 @@ public:
     link->incRef();
     do {
       if (link->function) {
-        if (!invoke(collector, link->function, args...)) {
+        if (!this->invoke(collector, link->function, args...)) {
           break;
         }
       }
