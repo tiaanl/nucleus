@@ -54,7 +54,7 @@ public:
   static bool isSeparator(CharType ch);
 
   FilePath();
-  explicit FilePath(const StringType& path);
+  FilePath(const StringType& path);
   FilePath(const FilePath& other);
   ~FilePath();
 
