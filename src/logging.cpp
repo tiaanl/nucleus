@@ -87,6 +87,11 @@ LogEntry::~LogEntry() {
 
 #if OS(WIN)
   ::OutputDebugString(s.c_str());
+
+  // If this is a DCheck message, then we break into the debugger.
+  if (m_logLevel == DCheck) {
+    __debugbreak();
+  }
 #endif
 }
 
