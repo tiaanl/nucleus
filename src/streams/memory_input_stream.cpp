@@ -44,7 +44,7 @@ MemoryInputStream::SizeType MemoryInputStream::read(void* buffer,
                                                     SizeType bytesToRead) {
   DCHECK(bytesToRead >= 0);
 
-  i32 num = std::min(bytesToRead, m_buffer.size() - m_currentPosition);
+  SizeType num = std::min(bytesToRead, m_buffer.size() - m_currentPosition);
   if (num <= 0)
     return 0;
 
