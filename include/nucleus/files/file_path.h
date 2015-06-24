@@ -15,6 +15,7 @@
 #ifndef NUCLEUS_FILES_FILE_PATH_H_
 #define NUCLEUS_FILES_FILE_PATH_H_
 
+#include <functional>
 #include <string>
 
 #include "nucleus/config.h"
@@ -105,5 +106,20 @@ private:
 #endif
 
 }  // namespace nu
+
+// Provide a std::hash for a FilePath.
+namespace std {
+
+template <>
+struct hash<nu::FilePath> {
+  std::size_t operator()(const nu::FilePath& path) const {
+    using std::hash;
+
+    hash<nu::FilePath::StringType> hashFunc;
+    return hashFunc(path.getPath());
+  }
+};
+
+}  // namespace std
 
 #endif  // NUCLEUS_FILES_FILE_PATH_H_
