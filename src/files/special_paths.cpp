@@ -12,18 +12,36 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NUCLEUS_WIN_WINDOWS_MIXIN_H_
-#define NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#include "nucleus/files/special_paths.h"
+#include "nucleus/logging.h"
+#include "nucleus/win/windows_mixin.h"
 
-#include "nucleus/config.h"
+namespace nu {
 
-#if OS(WIN)
+// static
+bool SpecialPath::get(Path path, FilePath* pathOut) {
+  DCHECK(static_cast<int>(path) >= 0 && static_cast<int>(path) < PATH_COUNT)
+      << "Invalid path specified.";
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <Shlobj.h>
+  switch (path) {
+    case EXE_PATH:
+      return getExePath(pathOut);
 
-#endif  // OS(WIN)
+    case TEMP_DIRECTORY:
+      return getTempDirectory(pathOut);
 
-#endif  // NUCLEUS_WIN_WINDOWS_MIXIN_H_
+    case SOURCE_ROOT:
+      return getSourceRoot(pathOut);
+
+    case CONFIG_DIRECTORY:
+      return getConfigRootDir(pathOut);
+
+    default:
+      NOTREACHED() << "Invalid special path key.";
+      break;
+  }
+
+  return false;
+}
+
+}  // namespace nu

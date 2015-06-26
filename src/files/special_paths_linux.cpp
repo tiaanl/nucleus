@@ -12,18 +12,29 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NUCLEUS_WIN_WINDOWS_MIXIN_H_
-#define NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#include "nucleus/files/special_paths.h"
 
-#include "nucleus/config.h"
+namespace nu {
 
-#if OS(WIN)
+// static
+bool SpecialPath::getExePath(FilePath* pathOut) {
+  NOTREACHED();
+  *pathOut = FilePath();
+  return false;
+}
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <Shlobj.h>
+// static
+bool SpecialPath::getTempDirectory(FilePath* pathOut) {
+  NOTREACHED();
+  *pathOut = FilePath();
+  return false;
+}
 
-#endif  // OS(WIN)
+// static
+bool SpecialPath::getConfigRootDir(FilePath* pathOut) {
+  NOTREACHED();
+  *pathOut = FilePath();
+  return false;
+}
 
-#endif  // NUCLEUS_WIN_WINDOWS_MIXIN_H_
+}  // namespace nu
