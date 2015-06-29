@@ -15,7 +15,6 @@
 #ifndef NUCLEUS_FILES_SPECIAL_PATH_H_
 #define NUCLEUS_FILES_SPECIAL_PATH_H_
 
-
 #include "nucleus/files/file_path.h"
 #include "nucleus/macros.h"
 
@@ -23,27 +22,6 @@ namespace nu {
 
 class SpecialPath {
 public:
-  enum Path {
-    // Executable location.
-    EXE_PATH,
-
-    // The source tree root directory.
-    SOURCE_ROOT,
-
-    // For Android - the cache directory
-    CACHE_DIRECTORY,
-
-    // The config file directory
-    CONFIG_DIRECTORY,
-
-    // The platform's temporary directory.
-    TEMP_DIRECTORY,
-    PATH_COUNT  // Sentinel
-  };
-
-  static bool get(Path path, FilePath* pathOut);
-
-private:
 #if OS(ANDROID)
   static bool getCachePath(FilePath* pathOut);
 #endif

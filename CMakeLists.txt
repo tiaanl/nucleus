@@ -64,7 +64,6 @@ set("nucleus_INCLUDE_FILES"
 
 set("nucleus_SOURCE_FILES"
   "src/files/file_path.cpp"
-  "src/files/special_paths.cpp"
   "src/logging.cpp"
   "src/message_loop/incoming_task_queue.cpp"
   "src/message_loop/message_loop.cpp"
