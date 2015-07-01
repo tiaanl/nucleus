@@ -17,31 +17,31 @@
 #include <algorithm>
 
 #include "nucleus/logging.h"
+#include "nucleus/types.h"
 
 namespace nu {
 
 namespace detail {
 
-int64_t setFileInputStreamPosition(FileInputStream::HandleType handle,
-                                   int64_t pos);
+i64 setFileInputStreamPosition(FileInputStream::HandleType handle, i64 pos);
 
 }  // namespace detail
 
 FileInputStream::FileInputStream(const FilePath& path) : m_path(path) {
-  OpenHandle();
+  openHandle();
 }
 
 FileInputStream::~FileInputStream() {
-  CloseHandle();
+  closeHandle();
 }
 
-bool FileInputStream::OpenedOk() const {
+bool FileInputStream::openedOk() const {
   return m_status;
 }
 
 FileInputStream::SizeType FileInputStream::read(void* destBuffer,
                                                 SizeType maxBytesToRead) {
-  if (!OpenedOk()) {
+  if (!openedOk()) {
     LOG(Warning) << "Trying to read from an invalid stream.";
     NOTREACHED() << "Do not read from an invalid stream.";
     return 0;
@@ -55,7 +55,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer,
     m_needToSeek = false;
   }
 
-  size_t num = ReadInternal(destBuffer, static_cast<size_t>(maxBytesToRead));
+  size_t num = readInternal(destBuffer, static_cast<size_t>(maxBytesToRead));
   m_currentPosition += num;
 
   return static_cast<SizeType>(num);
@@ -70,7 +70,7 @@ FileInputStream::SizeType FileInputStream::getPosition() {
 }
 
 bool FileInputStream::setPosition(SizeType newPosition) {
-  DCHECK(OpenedOk());
+  DCHECK(openedOk());
 
   if (newPosition != m_currentPosition) {
     newPosition = std::max(newPosition, static_cast<SizeType>(0));

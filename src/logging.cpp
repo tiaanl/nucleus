@@ -87,12 +87,16 @@ LogEntry::~LogEntry() {
 
 #if OS(WIN)
   ::OutputDebugString(s.c_str());
+#endif
 
   // If this is a DCheck message, then we break into the debugger.
   if (m_logLevel == DCheck) {
+#if OS(WIN)
     __debugbreak();
-  }
+#elif OS(MACOSX)
+  asm("int3");
 #endif
+  }
 }
 
 }  // namespace detail

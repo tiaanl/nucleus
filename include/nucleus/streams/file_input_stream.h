@@ -37,18 +37,18 @@ public:
   ~FileInputStream() override;
 
   // Returns the file path that this stream is pointing to.
-  const FilePath& GetFile() const { return m_path; }
+  const FilePath& getFile() const { return m_path; }
 
   // Returns the status of the file stream.  The result will be ok if the file
   // opened successfully.  If an error occurred while opening or reading from
   // the file, this will return false.
-  bool GetStatus() const;
+  bool getStatus() const;
 
   // Returns true if the stream couldn't be opened for some reason.
-  bool FailedToOpen() const;
+  bool failedToOpen() const;
 
   // Returns true if the stream opened without problems.
-  bool OpenedOk() const;
+  bool openedOk() const;
 
   // Override: InputStream
   SizeType getLength() override;
@@ -59,13 +59,13 @@ public:
 
 private:
   // Open the handle to the file.
-  void OpenHandle();
+  void openHandle();
 
   // Close the handle to the file.
-  void CloseHandle();
+  void closeHandle();
 
   // Read data from the file handle.
-  SizeType ReadInternal(void* buffer, SizeType numBytes);
+  SizeType readInternal(void* buffer, SizeType numBytes);
 
   FilePath m_path;
   HandleType m_handle{0};

@@ -83,6 +83,12 @@ if(WIN32)
   )
 endif()
 
+if(APPLE)
+  list(APPEND "nucleus_SOURCE_FILES"
+    "src/streams/file_input_stream_posix.cpp"
+  )
+endif()
+
 if(NUCLEUS_BUILD_UNITTESTS)
   set("nucleus_TEST_FILES"
     "tests/files/file_path_tests.cpp"
