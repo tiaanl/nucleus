@@ -39,7 +39,7 @@ FileInputStream::SizeType FileInputStream::getLength() {
   return fileSize;
 }
 
-void FileInputStream::OpenHandle() {
+void FileInputStream::openHandle() {
   HANDLE h =
       ::CreateFileW((LPCWSTR)m_path.getPath().c_str(), GENERIC_READ,
                     FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING,
@@ -51,11 +51,11 @@ void FileInputStream::OpenHandle() {
   }
 }
 
-void FileInputStream::CloseHandle() {
+void FileInputStream::closeHandle() {
   ::CloseHandle(static_cast<HANDLE>(m_handle));
 }
 
-FileInputStream::SizeType FileInputStream::ReadInternal(void* buffer,
+FileInputStream::SizeType FileInputStream::readInternal(void* buffer,
                                                         SizeType numBytes) {
   if (m_handle != NULL) {
     DWORD actualNum = 0;
