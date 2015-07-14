@@ -25,7 +25,7 @@ namespace nu {
 class WrappedMemoryInputStream : public InputStream {
 public:
   // Construct the stream with the specified data and size.
-  WrappedMemoryInputStream(const void* data, size_t size);
+  WrappedMemoryInputStream(const void* data, usize size);
 
   // Construct the stream with the specified vector data.
   explicit WrappedMemoryInputStream(const std::vector<char>& data);
@@ -37,7 +37,7 @@ public:
   const void* getData() const { return m_data; }
 
   // Return the size of the source data (in bytes).
-  size_t getSize() const { return m_size; }
+  usize getSize() const { return m_size; }
 
   // Override: InputStream
   SizeType getPosition() override;
@@ -51,10 +51,10 @@ private:
   const void* m_data;
 
   // The size of the data we are streaming.
-  size_t m_size;
+  usize m_size;
 
   // The current position of the stream in the source data.
-  size_t m_currentPosition{0};
+  usize m_currentPosition{0};
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(WrappedMemoryInputStream);
 };

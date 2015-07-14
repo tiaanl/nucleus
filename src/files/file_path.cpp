@@ -78,7 +78,7 @@ const FilePath::CharType FilePath::kExtensionSeparator = FILE_PATH_LITERAL('.');
 
 // static
 bool FilePath::isSeparator(CharType ch) {
-  for (size_t i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
+  for (usize i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
     if (ch == kSeparators[i]) {
       return true;
     }

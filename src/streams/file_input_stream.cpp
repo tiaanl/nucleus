@@ -55,7 +55,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer,
     m_needToSeek = false;
   }
 
-  size_t num = readInternal(destBuffer, static_cast<size_t>(maxBytesToRead));
+  usize num = readInternal(destBuffer, static_cast<usize>(maxBytesToRead));
   m_currentPosition += num;
 
   return static_cast<SizeType>(num);

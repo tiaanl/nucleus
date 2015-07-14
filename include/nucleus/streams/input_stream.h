@@ -15,17 +15,17 @@
 #ifndef NUCLEUS_STREAMS_INPUT_STREAM_H_
 #define NUCLEUS_STREAMS_INPUT_STREAM_H_
 
-#include <cstdint>
 #include <string>
 
 #include "nucleus/macros.h"
+#include "nucleus/types.h"
 
 namespace nu {
 
 // This is the abstract base class for all types of input streams.
 class InputStream {
 public:
-  using SizeType = size_t;
+  using SizeType = usize;
 
   virtual ~InputStream() {}
 
@@ -64,20 +64,20 @@ public:
   // next two bytes are byte1 and byte2, this returns:
   // (byte1 | (byte2 << 8))
   // If the stream is exhausted while reading the bytes, this will return zero.
-  int16_t readInt16();
+  i16 readInt16();
 
   // Read four bytes from the stream as a little-endian 32-bit value.  If the
   // next four bytes are byte1 to byte4, this returns:
   // (byte1 | (byte2 << 8) | (byte3 << 16) | (byte4 << 24))
   // If the stream is exhausted while reading the bytes, this will return zero.
-  int32_t readInt32();
+  i32 readInt32();
 
   // Read eight bytes from the stream as a little-endian 64-bit value.  If the
   // next eight bytes are byte1 to byte8, this returns:
   // (byte1 | (byte2 << 8) | (byte3 << 16) | (byte4 << 24) | (byte5 << 32)
   //   | (byte6 << 40) | (byte7 << 48) | (byte8 << 56))
   // If the stream is exhausted while reading the bytes, this will return zero.
-  int64_t readInt64();
+  i64 readInt64();
 
   // Read four bytes as a 32-bit floating point value.  The raw 32-bit
   // encoding of the float is read from the stream as a little-endian int32.

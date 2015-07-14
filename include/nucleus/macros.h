@@ -15,9 +15,8 @@
 #ifndef NUCLEUS_MACROS_H_
 #define NUCLEUS_MACROS_H_
 
-#include <cstddef>
-
 #include "nucleus/config.h"
+#include "nucleus/types.h"
 
 #define DISALLOW_COPY_AND_ASSIGN(ClassName)                                    \
   ClassName(const ClassName&) = delete;                                        \
@@ -30,10 +29,10 @@
 // ARRAY_SIZE
 
 // Helper to figure out the item count of a static array of elements, c++ style!
-template <typename T, size_t N>
+template <typename T, usize N>
 char(&ArraySizeHelper(T(&array)[N]))[N];
 #if COMPILER(MSVC)
-template <typename T, size_t N>
+template <typename T, usize N>
 char(&ArraySizeHelper(const T(&array)[N]))[N];
 #endif  // COMPILER(MSVC)
 

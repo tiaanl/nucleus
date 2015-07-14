@@ -48,7 +48,7 @@ public:
       ListType& observers = m_list->m_observers;
 
       // Advance if the current element is null.
-      size_t maxIndex = observers.size();
+      usize maxIndex = observers.size();
       while (m_index < maxIndex && !observers[m_index]) {
         ++m_index;
       }
@@ -62,7 +62,7 @@ public:
     ObserverListBase<ObserverType>* m_list;
 
     // The current index we are on.
-    size_t m_index{0};
+    usize m_index{0};
   };
 
   ObserverListBase() : m_notifyDepth(0) {}
@@ -129,7 +129,7 @@ private:
   ListType m_observers;
 
   // The notify depth.
-  int32_t m_notifyDepth{0};
+  i32 m_notifyDepth{0};
 
   DISALLOW_COPY_AND_ASSIGN(ObserverListBase);
 };

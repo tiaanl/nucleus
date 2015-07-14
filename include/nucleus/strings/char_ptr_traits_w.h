@@ -21,7 +21,7 @@ namespace nu {
 
 struct CharPtrTraitsW {
   using CharType = wchar_t;
-  using SizeType = size_t;
+  using SizeType = usize;
 
   // Return the unicode character that the pointer is pointing to.
   static char32_t getUnicodeChar(CharType* ptr) {

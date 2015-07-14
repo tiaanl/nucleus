@@ -23,7 +23,7 @@ namespace nu {
 
 class MemoryInputStream : public InputStream {
 public:
-  MemoryInputStream(const void* src, size_t srcDataSize);
+  MemoryInputStream(const void* src, usize srcDataSize);
   explicit MemoryInputStream(const std::vector<char>& data);
 
   virtual ~MemoryInputStream();
@@ -34,7 +34,7 @@ public:
 
   // Returns the number of bytes of source data in the block from which this
   // stream is reading.
-  size_t GetDataSize() const { return m_buffer.size(); }
+  usize GetDataSize() const { return m_buffer.size(); }
 
   // Override: InputStream
   SizeType getPosition() override;
@@ -44,10 +44,10 @@ public:
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
 private:
-  void createInternalCopy(const char* data, size_t dataSize);
+  void createInternalCopy(const char* data, usize dataSize);
 
   std::vector<char> m_buffer;
-  size_t m_currentPosition;
+  usize m_currentPosition;
 
   DISALLOW_COPY_AND_ASSIGN(MemoryInputStream);
 };

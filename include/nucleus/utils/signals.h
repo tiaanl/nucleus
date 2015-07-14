@@ -15,11 +15,11 @@
 #ifndef NUCLEUS_UTILS_SIGNALS_H_
 #define NUCLEUS_UTILS_SIGNALS_H_
 
-#include <cstdint>
 #include <functional>
 
 #include "nucleus/logging.h"
 #include "nucleus/macros.h"
+#include "nucleus/types.h"
 
 namespace nu {
 
@@ -117,14 +117,14 @@ public:
 
   // Add a new function or lambda as signal handler, returns a handler
   // connection ID.
-  size_t connect(const CallbackFunction& function) {
+  usize connect(const CallbackFunction& function) {
     ensureRing();
     return m_callbackRing->addBefore(function);
   }
 
   // Operator to remove a signal handler through it's connection ID, returns if
   // a handler was removed.
-  bool disconnect(size_t connection) {
+  bool disconnect(usize connection) {
     return m_callbackRing ? m_callbackRing->removeSiblings(connection) : false;
   }
 
@@ -155,8 +155,8 @@ public:
   }
 
   // Return the number of connected slots.
-  size_t getSize() {
-    size_t size = 0;
+  usize getSize() {
+    usize size = 0;
     SignalLink* link = m_callbackRing;
     link->incRef();
     do {
@@ -179,7 +179,7 @@ private:
     SignalLink* next{nullptr};
     SignalLink* prev{nullptr};
     CallbackFunction function;
-    int32_t refCount{1};
+    i32 refCount{1};
 
     explicit SignalLink(const CallbackFunction& function)
       : function(function) {}
@@ -211,16 +211,16 @@ private:
       decRef();
     }
 
-    size_t addBefore(const CallbackFunction& callbackFunction) {
+    usize addBefore(const CallbackFunction& callbackFunction) {
       SignalLink* link = new SignalLink(callbackFunction);
       link->prev = prev;
       link->next = this;
       prev->next = link;
       prev = link;
 
-      static_assert(sizeof(link) == sizeof(size_t), "sizeof(size_t)");
+      static_assert(sizeof(link) == sizeof(usize), "sizeof(usize)");
 
-      return reinterpret_cast<size_t>(link);
+      return reinterpret_cast<usize>(link);
     }
 
     bool deactivate(const CallbackFunction& callbackFunction) {
@@ -240,10 +240,10 @@ private:
       return false;
     }
 
-    bool removeSiblings(size_t id) {
+    bool removeSiblings(usize id) {
       for (SignalLink* link = next ? next : this; link != this;
            link = link->next) {
-        if (id == reinterpret_cast<size_t>(link)) {
+        if (id == reinterpret_cast<usize>(link)) {
           link->unlink();
           return true;
         }

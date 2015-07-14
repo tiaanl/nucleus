@@ -21,8 +21,7 @@
 
 namespace nu {
 
-WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data,
-                                                   size_t size)
+WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, usize size)
   : m_data(data), m_size(size) {
 }
 
@@ -42,7 +41,7 @@ WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(
   SizeType num = std::min(bytesToRead, getBytesRemaining());
 
   std::memcpy(buffer, static_cast<const u8*>(m_data) + m_currentPosition,
-              static_cast<size_t>(num));
+              static_cast<usize>(num));
   m_currentPosition += num;
 
   return num;
