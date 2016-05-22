@@ -33,6 +33,7 @@ set("nucleus_INCLUDE_FILES"
   "include/nucleus/config.h"
   "include/nucleus/files/file_path.h"
   "include/nucleus/files/file_utils.h"
+  "include/nucleus/files/special_paths.h"
   "include/nucleus/logging.h"
   "include/nucleus/macros.h"
   "include/nucleus/streams/file_input_stream.h"
@@ -70,6 +71,7 @@ set("nucleus_SOURCE_FILES"
 if(WIN32)
   list(APPEND "nucleus_SOURCE_FILES"
     "src/files/file_utils_win.cpp"
+    "src/files/special_paths_win.cpp"
     "src/streams/file_input_stream_win.cpp"
   )
 endif()
@@ -83,6 +85,7 @@ endif()
 if(NUCLEUS_BUILD_UNITTESTS)
   set("nucleus_TEST_FILES"
     "tests/files/file_path_tests.cpp"
+    "tests/files/special_paths_tests.cpp"
     "tests/logging_test.cpp"
     "tests/strings/char_ptr_tests.cpp"
     "tests/strings/string_utf_conversion_tests.cpp"

@@ -12,18 +12,37 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NUCLEUS_WIN_WINDOWS_MIXIN_H_
-#define NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#include "nucleus/files/special_paths.h"
 
-#include "nucleus/config.h"
+#include <mach-o/dyld.h>
 
-#if OS(WIN)
+#include <vector>
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <Shlobj.h>
+#include "nucleus/mac/foundation_utils_mac.h"
+#include "nucleus/utils/stl.h"
 
-#endif  // OS(WIN)
+namespace nu {
 
-#endif  // NUCLEUS_WIN_WINDOWS_MIXIN_H_
+bool SpecialPath::getExePath(FilePath* pathOut) {
+  uint32_t size = 0;
+  _NSGetExecutablePath((char*)0, &size);
+  DCHECK(size > 1);
+
+  std::vector<char> buffer;
+  _NSGetExecutablePath(VectorAsArray(&buffer, size), &size);
+
+  *pathOut = FilePath::StringType(buffer.data());
+
+  return true;
+}
+
+bool SpecialPath::getConfigRootDir(FilePath* pathOut) {
+  FilePath path =
+      mac::getUserLibraryPath().Append(STRING_LITERAL("Preferences"));
+
+  *pathOut = path;
+
+  return true;
+}
+
+}  // namespace nu

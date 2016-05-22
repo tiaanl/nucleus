@@ -12,18 +12,17 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NUCLEUS_WIN_WINDOWS_MIXIN_H_
-#define NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#ifndef NUCLEUS_MAC_FOUNDATION_UTILS_MAC_H_
+#define MUCLEUS_MAC_FOUNDATION_UTILS_MAC_H_
 
-#include "nucleus/config.h"
+#include "nucleus/files/file_path.h"
 
-#if OS(WIN)
+namespace nu {
+namespace mac {
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <Shlobj.h>
+FilePath getUserLibraryPath();
 
-#endif  // OS(WIN)
+}  // namespace mac
+}  // namespace nu
 
-#endif  // NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#endif  // NUCLEUS_MAC_FOUNDATION_UTILS_MAC_H_

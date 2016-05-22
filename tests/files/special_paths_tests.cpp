@@ -12,18 +12,16 @@
 // OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 // PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NUCLEUS_WIN_WINDOWS_MIXIN_H_
-#define NUCLEUS_WIN_WINDOWS_MIXIN_H_
+#include <gtest/gtest.h>
 
-#include "nucleus/config.h"
+#include "nucleus/files/special_paths.h"
 
-#if OS(WIN)
+namespace nu {
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <Shlobj.h>
+TEST(SpecialPathsTest, Basic) {
+  FilePath path;
 
-#endif  // OS(WIN)
+  ASSERT_TRUE(SpecialPath::Get(SpecialPath::TEMP_DIRECTORY, &path));
+}
 
-#endif  // NUCLEUS_WIN_WINDOWS_MIXIN_H_
+}  // namespace nu
