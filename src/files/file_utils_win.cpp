@@ -14,6 +14,8 @@
 
 #include "nucleus/files/file_utils.h"
 
+#include <iterator>
+
 #include "nucleus/logging.h"
 #include "nucleus/win/windows_mixin.h"
 

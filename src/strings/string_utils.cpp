@@ -14,9 +14,13 @@
 
 #include "nucleus/strings/string_utils.h"
 
-#include <cctype>
-
 #include "nucleus/config.h"
+
+#if COMPILER(MSVC)
+#include <cctype>
+#endif
+
+#include <cstring>
 
 namespace nu {
 
@@ -36,8 +40,10 @@ bool StartsWithASCII(const std::string& str, const std::string& search,
   if (caseSensitive) {
     return str.compare(0, search.length(), search) == 0;
   } else {
-#if OS(WIN)
+#if COMPILER(MSVC)
     return _strnicmp(str.c_str(), search.c_str(), search.length()) == 0;
+#elif COMPILER(GCC)
+    return strncmp(str.c_str(), search.c_str(), search.length()) == 0;
 #endif
   }
   return false;

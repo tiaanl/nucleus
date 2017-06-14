@@ -15,6 +15,7 @@
 #include "nucleus/streams/memory_input_stream.h"
 
 #include <algorithm>
+#include <cstring>
 
 #include "nucleus/logging.h"
 #include "nucleus/types.h"
