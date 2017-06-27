@@ -340,7 +340,7 @@ You can make a matcher from one or more other matchers:
 | `SaveArg<N>(pointer)`    | Save the `N`-th (0-based) argument to `*pointer`. |
 | `SetArgReferee<N>(value)` |	Assign value to the variable referenced by the `N`-th (0-based) argument. |
 |`SetArgumentPointee<N>(value)`|Assign `value` to the variable pointed by the `N`-th (0-based) argument.|
-|`SetArrayArgument<N>(first, last)`|Copies the elements in source range [`first`, `last`) to the array pointed to by the `N`-th (0-based) argument, which can be either a pointer or an iterator. The action does not take ownership of the elements in the source range.|
+|`SetArrayArgument<N>(first, last)`|Copies the elements in source range [`first`, `last`) to the array pointed to by the `N`-th (0-based) argument, which can be either a pointer or an Iterator. The action does not take ownership of the elements in the source range.|
 |`SetErrnoAndReturn(error, value)`|Set `errno` to `error` and return `value`.|
 |`Throw(exception)`        |Throws the given exception, which can be any copyable value. Available since v1.1.0.|
 

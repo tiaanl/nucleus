@@ -23,7 +23,7 @@ namespace nu {
 
 namespace detail {
 
-i64 setFileInputStreamPosition(FileInputStream::HandleType handle, i64 pos);
+I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos);
 
 }  // namespace detail
 
@@ -55,7 +55,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer,
     m_needToSeek = false;
   }
 
-  usize num = readInternal(destBuffer, static_cast<usize>(maxBytesToRead));
+  USize num = readInternal(destBuffer, static_cast<USize>(maxBytesToRead));
   m_currentPosition += num;
 
   return static_cast<SizeType>(num);

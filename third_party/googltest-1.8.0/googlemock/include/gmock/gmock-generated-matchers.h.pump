@@ -40,7 +40,7 @@ $$ }} This line fixes auto-indentation of the following code in Emacs.
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_MATCHERS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_MATCHERS_H_
 
-#include <iterator>
+#include <Iterator>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -461,7 +461,7 @@ $$   // show up in the generated code.
 // In the matcher definition body, you can write 'foo_type' to
 // reference the type of a parameter named 'foo'.  For example, in the
 // body of MATCHER_P(HasAbsoluteValue, value) above, you can write
-// 'value_type' to refer to the type of 'value'.
+// 'ValueType' to refer to the type of 'value'.
 //
 // We also provide MATCHER_P2, MATCHER_P3, ..., up to MATCHER_P$n to
 // support multi-parameter matchers.

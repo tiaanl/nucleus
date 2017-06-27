@@ -27,7 +27,7 @@ namespace detail {
 template <typename ObserverType>
 class ObserverListBase {
 public:
-  // An iterator class that can be used to access the list of observer.
+  // An Iterator class that can be used to access the list of observer.
   class Iterator {
   public:
     explicit Iterator(ObserverListBase<ObserverType>* list) : m_list(list) {
@@ -48,7 +48,7 @@ public:
       ListType& observers = m_list->m_observers;
 
       // Advance if the current element is null.
-      usize maxIndex = observers.size();
+      USize maxIndex = observers.size();
       while (m_index < maxIndex && !observers[m_index]) {
         ++m_index;
       }
@@ -62,7 +62,7 @@ public:
     ObserverListBase<ObserverType>* m_list;
 
     // The current index we are on.
-    usize m_index{0};
+    USize m_index{0};
   };
 
   ObserverListBase() : m_notifyDepth(0) {}
@@ -129,7 +129,7 @@ private:
   ListType m_observers;
 
   // The notify depth.
-  i32 m_notifyDepth{0};
+  I32 m_notifyDepth{0};
 
   DISALLOW_COPY_AND_ASSIGN(ObserverListBase);
 };

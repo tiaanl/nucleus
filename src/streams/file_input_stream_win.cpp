@@ -20,8 +20,8 @@ namespace nu {
 
 namespace detail {
 
-i64 setFileInputStreamPosition(FileInputStream::HandleType handle,
-                                   i64 pos) {
+I64 setFileInputStreamPosition(FileInputStream::HandleType handle,
+                                   I64 pos) {
   LARGE_INTEGER li;
   li.QuadPart = pos;
   li.LowPart =
@@ -33,7 +33,7 @@ i64 setFileInputStreamPosition(FileInputStream::HandleType handle,
 }  // namespace detail
 
 FileInputStream::SizeType FileInputStream::getLength() {
-  i64 fileSize = 0;
+  I64 fileSize = 0;
   DWORD lowSize = ::GetFileSize(static_cast<HANDLE>(m_handle), NULL);
   fileSize = lowSize;
   return fileSize;
@@ -64,7 +64,7 @@ FileInputStream::SizeType FileInputStream::readInternal(void* buffer,
       m_status = false;
     }
 
-    return static_cast<usize>(actualNum);
+    return static_cast<USize>(actualNum);
   }
 
   return 0;

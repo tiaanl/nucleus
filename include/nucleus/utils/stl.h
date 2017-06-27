@@ -31,7 +31,7 @@ inline T* vectorAsArray(std::vector<T>* v) {
 }
 
 template <typename T>
-inline T* vectorAsArray(std::vector<T>* v, usize requiredSize) {
+inline T* vectorAsArray(std::vector<T>* v, USize requiredSize) {
   DCHECK(requiredSize > 0U);
   v->reserve(requiredSize);
   v->resize(requiredSize);
@@ -44,7 +44,7 @@ inline const T* vectorAsArray(const std::vector<T>* v) {
 }
 
 template <typename T>
-inline T* vectorAsArray(const std::vector<T>* v, usize requiredSize) {
+inline T* vectorAsArray(const std::vector<T>* v, USize requiredSize) {
   DCHECK(requiredSize > 0);
   v->reserve(requiredSize);
   v->resize(requiredSize);

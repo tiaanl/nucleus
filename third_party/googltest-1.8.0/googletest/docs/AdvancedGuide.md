@@ -238,11 +238,11 @@ The difference between this and the previous two groups of macros is that instea
 a predicate, `(ASSERT|EXPECT)_PRED_FORMAT*` take a _predicate-formatter_
 (_pred\_formatn_), which is a function or functor with the signature:
 
-`::testing::AssertionResult PredicateFormattern(const char* `_expr1_`, const char* `_expr2_`, ... const char* `_exprn_`, T1 `_val1_`, T2 `_val2_`, ... Tn `_valn_`);`
+`::testing::AssertionResult PredicateFormattern(const char* `_expr1_`, const char* `_expr2_`, ... const char* `_exprn_`, T1 `_val1_`, U `_val2_`, ... Tn `_valn_`);`
 
 where _val1_, _val2_, ..., and _valn_ are the values of the predicate
 arguments, and _expr1_, _expr2_, ..., and _exprn_ are the corresponding
-expressions as they appear in the source code. The types `T1`, `T2`, ..., and
+expressions as they appear in the source code. The types `T1`, `U`, ..., and
 `Tn` can be either value types or reference types. For example, if an
 argument has type `Foo`, you can declare it as either `Foo` or `const Foo&`,
 whichever is appropriate.
@@ -370,16 +370,16 @@ _Availability_: Windows.
 
 You can call the function
 ```
-::testing::StaticAssertTypeEq<T1, T2>();
+::testing::StaticAssertTypeEq<T1, U>();
 ```
-to assert that types `T1` and `T2` are the same.  The function does
+to assert that types `T1` and `U` are the same.  The function does
 nothing if the assertion is satisfied.  If the types are different,
 the function call will fail to compile, and the compiler error message
 will likely (depending on the compiler) show you the actual values of
-`T1` and `T2`.  This is mainly useful inside template code.
+`T1` and `U`.  This is mainly useful inside template code.
 
 _Caveat:_ When used inside a member function of a class template or a
-function template, `StaticAssertTypeEq<T1, T2>()` is effective _only if_
+function template, `StaticAssertTypeEq<T1, U>()` is effective _only if_
 the function is instantiated.  For example, given:
 ```
 template <typename T> class Foo {
@@ -412,7 +412,7 @@ you'll get a confusing compile error like
 
 If you need to use assertions in a function that returns non-void, one option
 is to make the function return the value in an out parameter instead. For
-example, you can rewrite `T2 Foo(T1 x)` to `void Foo(T1 x, T2* result)`. You
+example, you can rewrite `U Foo(T1 x)` to `void Foo(T1 x, U* result)`. You
 need to make sure that `*result` contains some sensible value even when the
 function returns prematurely. As the function now returns `void`, you can use
 any assertion inside of it.
@@ -840,7 +840,7 @@ extra message to each assertion in `Sub1()` to indicate the value of
 Some tips on using `SCOPED_TRACE`:
 
   1. With a suitable message, it's often enough to use `SCOPED_TRACE` at the beginning of a sub-routine, instead of at each call site.
-  1. When calling sub-routines inside a loop, make the loop iterator part of the message in `SCOPED_TRACE` such that you can know which iteration the failure is from.
+  1. When calling sub-routines inside a loop, make the loop Iterator part of the message in `SCOPED_TRACE` such that you can know which iteration the failure is from.
   1. Sometimes the line number of the trace point is enough for identifying the particular invocation of a sub-routine. In this case, you don't have to choose a unique message for `SCOPED_TRACE`. You can simply use `""`.
   1. You can use `SCOPED_TRACE` in an inner scope when there is one in the outer scope. In this case, all active trace points will be included in the failure messages, in reverse order they are encountered.
   1. The trace dump is clickable in Emacs' compilation buffer - hit return on a line number and you'll be taken to that line in the source file!
@@ -1197,7 +1197,7 @@ which are all in the `testing` namespace:
 | `Range(begin, end[, step])` | Yields values `{begin, begin+step, begin+step+step, ...}`. The values do not include `end`. `step` defaults to 1. |
 |:----------------------------|:------------------------------------------------------------------------------------------------------------------|
 | `Values(v1, v2, ..., vN)`   | Yields values `{v1, v2, ..., vN}`.                                                                                |
-| `ValuesIn(container)` and `ValuesIn(begin, end)` | Yields values from a C-style array, an STL-style container, or an iterator range `[begin, end)`. `container`, `begin`, and `end` can be expressions whose values are determined at run time.  |
+| `ValuesIn(container)` and `ValuesIn(begin, end)` | Yields values from a C-style array, an STL-style container, or an Iterator range `[begin, end)`. `container`, `begin`, and `end` can be expressions whose values are determined at run time.  |
 | `Bool()`                    | Yields sequence `{false, true}`.                                                                                  |
 | `Combine(g1, g2, ..., gN)`  | Yields all combinations (the Cartesian product for the math savvy) of the values generated by the `N` generators. This is only available if your system provides the `<tr1/tuple>` header. If you are sure your system does, and Google Test disagrees, you can override it by defining `GTEST_HAS_TR1_TUPLE=1`. See comments in [include/gtest/internal/gtest-port.h](../include/gtest/internal/gtest-port.h) for more information. |
 
@@ -1337,7 +1337,7 @@ TYPED_TEST(FooTest, DoesBlah) {
   // To refer to typedefs in the fixture, add the 'typename TestFixture::'
   // prefix.  The 'typename' is required to satisfy the compiler.
   typename TestFixture::List values;
-  values.push_back(n);
+  values.pushBack(n);
   ...
 }
 

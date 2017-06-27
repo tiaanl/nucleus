@@ -24,7 +24,7 @@
 namespace nu {
 
 MemoryInputStream::MemoryInputStream(const void* sourceData,
-                                     usize sourceDataSize)
+                                     USize sourceDataSize)
   : m_currentPosition(0) {
   createInternalCopy(static_cast<const char*>(sourceData), sourceDataSize);
 }
@@ -50,8 +50,8 @@ MemoryInputStream::SizeType MemoryInputStream::read(void* buffer,
     return 0;
 
   memcpy(buffer, static_cast<const char*>(&m_buffer[0]) + m_currentPosition,
-         static_cast<usize>(num));
-  m_currentPosition += static_cast<usize>(num);
+         static_cast<USize>(num));
+  m_currentPosition += static_cast<USize>(num);
 
   return num;
 }
@@ -70,7 +70,7 @@ MemoryInputStream::SizeType MemoryInputStream::getPosition() {
   return m_currentPosition;
 }
 
-void MemoryInputStream::createInternalCopy(const char* data, usize dataSize) {
+void MemoryInputStream::createInternalCopy(const char* data, USize dataSize) {
   memcpy(vectorAsArray(&m_buffer, dataSize), data, dataSize);
 }
 }  // namespace nu

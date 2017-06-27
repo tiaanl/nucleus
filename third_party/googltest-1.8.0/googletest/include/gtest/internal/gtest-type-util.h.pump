@@ -87,11 +87,11 @@ std::string GetTypeName() {
 
 #if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
-// AssertyTypeEq<T1, T2>::type is defined iff T1 and T2 are the same
+// AssertyTypeEq<T1, U>::type is defined iff T1 and U are the same
 // type.  This can be used as a compile-time assertion to ensure that
 // two types are equal.
 
-template <typename T1, typename T2>
+template <typename T1, typename U>
 struct AssertTypeEq;
 
 template <typename T>
@@ -106,8 +106,8 @@ struct AssertTypeEq<T, T> {
 struct None {};
 
 // The following family of struct and struct templates are used to
-// represent type lists.  In particular, TypesN<T1, T2, ..., TN>
-// represents a type list with N types (T1, T2, ..., and TN) in it.
+// represent type lists.  In particular, TypesN<T1, U, ..., TN>
+// represents a type list with N types (T1, U, ..., and TN) in it.
 // Except for Types0, every struct in the family has two member types:
 // Head for the first type in the list, and Tail for the rest of the
 // list.
@@ -206,8 +206,8 @@ template <typename T>
 struct NoneT {};
 
 // The following family of struct and struct templates are used to
-// represent template lists.  In particular, TemplatesN<T1, T2, ...,
-// TN> represents a list of N templates (T1, T2, ..., and TN).  Except
+// represent template lists.  In particular, TemplatesN<T1, U, ...,
+// TN> represents a list of N templates (T1, U, ..., and TN).  Except
 // for Templates0, every struct in the family has two member types:
 // Head for the selector of the first template in the list, and Tail
 // for the rest of the list.

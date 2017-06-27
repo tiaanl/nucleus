@@ -40,42 +40,42 @@ bool InputStream::readBool() {
   return readByte() != 0;
 }
 
-i16 InputStream::readInt16() {
+I16 InputStream::readInt16() {
   char temp[2];
 
   if (read(temp, 2) == 2)
-    return static_cast<i16>(ByteOrder::littleEndianInt16(temp));
+    return static_cast<I16>(ByteOrder::littleEndianInt16(temp));
 
   return 0;
 }
 
-i32 InputStream::readInt32() {
+I32 InputStream::readInt32() {
   char temp[4];
 
   if (read(temp, 4) == 4)
-    return static_cast<i32>(ByteOrder::littleEndianInt32(temp));
+    return static_cast<I32>(ByteOrder::littleEndianInt32(temp));
 
   return 0;
 }
 
-i64 InputStream::readInt64() {
+I64 InputStream::readInt64() {
   union {
     uint8_t asBytes[8];
-    u64 asInt64;
+    U64 asInt64;
   } n;
 
   if (read(n.asBytes, 8) == 8)
-    return static_cast<i64>(ByteOrder::swapIfBigEndian(n.asInt64));
+    return static_cast<I64>(ByteOrder::swapIfBigEndian(n.asInt64));
 
   return 0;
 }
 
 float InputStream::readFloat() {
-  static_assert(sizeof(i32) == sizeof(float),
+  static_assert(sizeof(I32) == sizeof(float),
                 "Size of int32 and float must match for the union to work.");
 
   union {
-    i32 asInt;
+    I32 asInt;
     float asFloat;
   } n;
   n.asInt = readInt32();
@@ -84,11 +84,11 @@ float InputStream::readFloat() {
 }
 
 double InputStream::readDouble() {
-  static_assert(sizeof(i64) == sizeof(double),
+  static_assert(sizeof(I64) == sizeof(double),
                 "Size of int64 and float must match for the union to work.");
 
   union {
-    i64 asInt;
+    I64 asInt;
     double asDouble;
   } n;
   n.asInt = readInt64();
@@ -106,7 +106,7 @@ std::string InputStream::readNextLine() {
       break;
 
     if (data[i] == '\r') {
-      const i64 lastPos = getPosition();
+      const I64 lastPos = getPosition();
 
       if (readByte() != '\n')
         setPosition(lastPos);

@@ -117,14 +117,14 @@ public:
 
   // Add a new function or lambda as signal handler, returns a handler
   // connection ID.
-  usize connect(const CallbackFunction& function) {
+  USize connect(const CallbackFunction& function) {
     ensureRing();
     return m_callbackRing->addBefore(function);
   }
 
   // Operator to remove a signal handler through it's connection ID, returns if
   // a handler was removed.
-  bool disconnect(usize connection) {
+  bool disconnect(USize connection) {
     return m_callbackRing ? m_callbackRing->removeSiblings(connection) : false;
   }
 
@@ -155,8 +155,8 @@ public:
   }
 
   // Return the number of connected slots.
-  usize getSize() {
-    usize size = 0;
+  USize getSize() {
+    USize size = 0;
     SignalLink* link = m_callbackRing;
     link->incRef();
     do {
@@ -179,7 +179,7 @@ private:
     SignalLink* next{nullptr};
     SignalLink* prev{nullptr};
     CallbackFunction function;
-    i32 refCount{1};
+    I32 refCount{1};
 
     explicit SignalLink(const CallbackFunction& function)
       : function(function) {}
@@ -211,16 +211,16 @@ private:
       decRef();
     }
 
-    usize addBefore(const CallbackFunction& callbackFunction) {
+    USize addBefore(const CallbackFunction& callbackFunction) {
       SignalLink* link = new SignalLink(callbackFunction);
       link->prev = prev;
       link->next = this;
       prev->next = link;
       prev = link;
 
-      static_assert(sizeof(link) == sizeof(usize), "sizeof(usize)");
+      static_assert(sizeof(link) == sizeof(USize), "sizeof(usize)");
 
-      return reinterpret_cast<usize>(link);
+      return reinterpret_cast<USize>(link);
     }
 
     bool deactivate(const CallbackFunction& callbackFunction) {
@@ -240,10 +240,10 @@ private:
       return false;
     }
 
-    bool removeSiblings(usize id) {
+    bool removeSiblings(USize id) {
       for (SignalLink* link = next ? next : this; link != this;
            link = link->next) {
-        if (id == reinterpret_cast<usize>(link)) {
+        if (id == reinterpret_cast<USize>(link)) {
           link->unlink();
           return true;
         }

@@ -21,7 +21,7 @@ Changes for 1.7.0:
   type are compatible, catching potential bugs in tests.
 * Improvement: Pointee() now works on an optional<T>.
 * Improvement: the ElementsAreArray() matcher can now take a vector or
-  iterator range as input, and makes a copy of its input elements
+  Iterator range as input, and makes a copy of its input elements
   before the conversion to a Matcher.
 * Improvement: the Google Mock Generator can now generate mocks for
   some class templates.

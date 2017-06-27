@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.7.2)
 project("nucleus")
 
 # General options
@@ -31,10 +31,15 @@ include_directories("include")
 
 set("nucleus_INCLUDE_FILES"
         "include/nucleus/config.h"
+        "include/nucleus/containers/array.h"
+        "include/nucleus/containers/vector.h"
         "include/nucleus/files/file_path.h"
         "include/nucleus/files/file_utils.h"
         "include/nucleus/logging.h"
         "include/nucleus/macros.h"
+
+        "include/nucleus/Memory/Allocator.h"
+
         "include/nucleus/streams/file_input_stream.h"
         "include/nucleus/streams/input_stream.h"
         "include/nucleus/streams/memory_input_stream.h"
@@ -45,6 +50,7 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/strings/char_ptr_traits_8.h"
         "include/nucleus/strings/char_ptr_traits_a.h"
         "include/nucleus/strings/char_ptr_traits_w.h"
+        "include/nucleus/strings/String.h"
         "include/nucleus/strings/string_utf_conversion.h"
         "include/nucleus/strings/string_utils.h"
         "include/nucleus/synchronization/auto_lock.h"
@@ -61,10 +67,14 @@ set("nucleus_INCLUDE_FILES"
 set("nucleus_SOURCE_FILES"
         "src/files/file_path.cpp"
         "src/logging.cpp"
+
+        "src/Memory/Allocator.cpp"
+
         "src/streams/file_input_stream.cpp"
         "src/streams/input_stream.cpp"
         "src/streams/memory_input_stream.cpp"
         "src/streams/wrapped_memory_input_stream.cpp"
+        "src/strings/String.cpp"
         "src/strings/string_utf_conversion.cpp"
         "src/strings/string_utils.cpp"
         )
@@ -85,6 +95,10 @@ endif ()
 
 if (NUCLEUS_BUILD_UNITTESTS)
     set("nucleus_TEST_FILES"
+            "tests/Memory/AllocatorTests.cpp"
+
+            "tests/containers/array_tests.cpp"
+            "tests/containers/vector_tests.cpp"
             "tests/files/file_path_tests.cpp"
             "tests/logging_test.cpp"
             "tests/strings/char_ptr_tests.cpp"

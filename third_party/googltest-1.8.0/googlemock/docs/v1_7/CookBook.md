@@ -1216,7 +1216,7 @@ using ::testing::ElementsAreArray;
 
 **Tips:**
 
-  * `ElementsAre*()` can be used to match _any_ container that implements the STL iterator pattern (i.e. it has a `const_iterator` type and supports `begin()/end()`), not just the ones defined in STL. It will even work with container types yet to be written - as long as they follows the above pattern.
+  * `ElementsAre*()` can be used to match _any_ container that implements the STL Iterator pattern (i.e. it has a `ConstIterator` type and supports `begin()/end()`), not just the ones defined in STL. It will even work with container types yet to be written - as long as they follows the above pattern.
   * You can use nested `ElementsAre*()` to match nested (multi-dimensional) containers.
   * If the container is passed by pointer instead of by reference, just write `Pointee(ElementsAre*(...))`.
   * The order of elements _matters_ for `ElementsAre*()`. Therefore don't use it with containers whose element order is undefined (e.g. `hash_map`).
@@ -1627,7 +1627,7 @@ class MockArrayMutator : public ArrayMutator {
       .WillOnce(SetArrayArgument<0>(values, values + 5));
 ```
 
-This also works when the argument is an output iterator:
+This also works when the argument is an output Iterator:
 
 ```
 using ::testing::_;
@@ -1642,9 +1642,9 @@ class MockRolodex : public Rolodex {
 
   MockRolodex rolodex;
   vector<string> names;
-  names.push_back("George");
-  names.push_back("John");
-  names.push_back("Thomas");
+  names.pushBack("George");
+  names.pushBack("John");
+  names.pushBack("Thomas");
   EXPECT_CALL(rolodex, GetNames(_))
       .WillOnce(SetArrayArgument<0>(names.begin(), names.end()));
 ```
@@ -2728,7 +2728,7 @@ printed, making the message human-friendly.
 In the matcher definition body, you can write `foo_type` to
 reference the type of a parameter named `foo`.  For example, in the
 body of `MATCHER_P(HasAbsoluteValue, value)` above, you can write
-`value_type` to refer to the type of `value`.
+`ValueType` to refer to the type of `value`.
 
 Google Mock also provides `MATCHER_P2`, `MATCHER_P3`, ..., up to
 `MATCHER_P10` to support multi-parameter matchers:

@@ -59,14 +59,14 @@ namespace testing {
 // include/gtest/gtest-param-test.h.
 template <typename ForwardIterator>
 internal::ParamGenerator<
-  typename ::testing::internal::IteratorTraits<ForwardIterator>::value_type>
+  typename ::testing::internal::IteratorTraits<ForwardIterator>::ValueType>
 ValuesIn(ForwardIterator begin, ForwardIterator end);
 
 template <typename T, size_t N>
 internal::ParamGenerator<T> ValuesIn(const T (&array)[N]);
 
 template <class Container>
-internal::ParamGenerator<typename Container::value_type> ValuesIn(
+internal::ParamGenerator<typename Container::ValueType> ValuesIn(
     const Container& container);
 
 namespace internal {
@@ -134,7 +134,7 @@ class CartesianProductGenerator$i
     Iterator(const ParamGeneratorInterface<ParamType>* base, $for j, [[
 
       const ParamGenerator<T$j>& g$j,
-      const typename ParamGenerator<T$j>::iterator& current$(j)]])
+      const typename ParamGenerator<T$j>::Iterator& current$(j)]])
         : base_(base),
 $for j, [[
 
@@ -168,7 +168,7 @@ $for k [[
     virtual const ParamType* Current() const { return &current_value_; }
     virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
       // Having the same base generator guarantees that the other
-      // iterator is of the same type and we can downcast.
+      // Iterator is of the same type and we can downcast.
       GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
           << "The program attempted to compare iterators "
           << "from different generators." << std::endl;
@@ -200,7 +200,7 @@ $for k [[
         current_value_ = ParamType($for j, [[*current$(j)_]]);
     }
     bool AtEnd() const {
-      // We must report iterator past the end of the range when either of the
+      // We must report Iterator past the end of the range when either of the
       // component iterators has reached the end of its range.
       return
 $for j  || [[
@@ -214,12 +214,12 @@ $for j  || [[
 
     const ParamGeneratorInterface<ParamType>* const base_;
     // begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-    // current[i]_ is the actual traversing iterator.
+    // current[i]_ is the actual traversing Iterator.
 $for j [[
 
-    const typename ParamGenerator<T$j>::iterator begin$(j)_;
-    const typename ParamGenerator<T$j>::iterator end$(j)_;
-    typename ParamGenerator<T$j>::iterator current$(j)_;
+    const typename ParamGenerator<T$j>::Iterator begin$(j)_;
+    const typename ParamGenerator<T$j>::Iterator end$(j)_;
+    typename ParamGenerator<T$j>::Iterator current$(j)_;
 ]]
 
     ParamType current_value_;

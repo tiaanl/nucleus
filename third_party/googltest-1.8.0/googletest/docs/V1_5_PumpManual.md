@@ -50,7 +50,7 @@ The following Pump code (where meta keywords start with `$`, `[[` and `]]` are m
 
 ```
 $var n = 3     $$ Defines a meta variable n.
-$range i 0..n  $$ Declares the range of meta iterator i (inclusive).
+$range i 0..n  $$ Declares the range of meta Iterator i (inclusive).
 $for i [[
                $$ Meta loop.
 // Foo$i does blah for $i-ary predicates.
