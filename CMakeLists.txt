@@ -1,38 +1,28 @@
 cmake_minimum_required(VERSION 3.7.2)
 project("nucleus")
 
-# General options
+#General options
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Compiler options
+#Compiler options
 
 include("cmake/gcc.cmake")
 include("cmake/msvc.cmake")
-
-# Platform options
-
 include("cmake/win32.cmake")
 
-# Options
+#Third party libraries.
 
-# Turn this on to generate projects for unit testing.
-option(NUCLEUS_BUILD_UNITTESTS "Build unittests with library?")
+include("cmake/gtest.cmake")
 
-# Third party libraries.
-
-if (NUCLEUS_BUILD_UNITTESTS)
-    include("cmake/gtest.cmake")
-endif ()
-
-# nucleus
+#nucleus
 
 include_directories("include")
 
 set("nucleus_INCLUDE_FILES"
         "include/nucleus/config.h"
-        "include/nucleus/containers/array.h"
-        "include/nucleus/containers/vector.h"
+        "include/nucleus/Containers/array.h"
+        "include/nucleus/Containers/Vector.h"
         "include/nucleus/files/file_path.h"
         "include/nucleus/files/file_utils.h"
         "include/nucleus/logging.h"
@@ -80,7 +70,8 @@ set("nucleus_SOURCE_FILES"
         )
 
 if (WIN32)
-    list(APPEND "nucleus_SOURCE_FILES"
+    list(APPEND
+            "nucleus_SOURCE_FILES"
             "src/files/file_utils_win.cpp"
             "src/streams/file_input_stream_win.cpp"
             "src/synchronization/lock_win32.cpp"
@@ -88,33 +79,30 @@ if (WIN32)
 endif ()
 
 if (APPLE)
-    list(APPEND "nucleus_SOURCE_FILES"
+    list(APPEND
+            "nucleus_SOURCE_FILES"
             "src/streams/file_input_stream_posix.cpp"
             )
 endif ()
 
-if (NUCLEUS_BUILD_UNITTESTS)
-    set("nucleus_TEST_FILES"
-            "tests/Memory/AllocatorTests.cpp"
+set("nucleus_TEST_FILES"
+        "tests/Memory/AllocatorTests.cpp"
 
-            "tests/containers/array_tests.cpp"
-            "tests/containers/vector_tests.cpp"
-            "tests/files/file_path_tests.cpp"
-            "tests/logging_test.cpp"
-            "tests/strings/char_ptr_tests.cpp"
-            "tests/strings/string_utf_conversion_tests.cpp"
-            "tests/strings/string_utils_tests.cpp"
-            "tests/utils/observer_list_tests.cpp"
-            "tests/utils/signals_tests.cpp"
-            )
-endif ()
+        "tests/containers/array_tests.cpp"
+        "tests/containers/vector_tests.cpp"
+        "tests/files/file_path_tests.cpp"
+        "tests/logging_test.cpp"
+        "tests/strings/char_ptr_tests.cpp"
+        "tests/strings/string_utf_conversion_tests.cpp"
+        "tests/strings/string_utils_tests.cpp"
+        "tests/utils/observer_list_tests.cpp"
+        "tests/utils/signals_tests.cpp"
+        )
 
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 target_include_directories("nucleus" PUBLIC "${nucleus_SOURCE_DIR}/include")
 set_property(TARGET "nucleus" PROPERTY FOLDER "nucleus")
 
-if (NUCLEUS_BUILD_UNITTESTS)
-    add_executable("nucleus_tests" ${nucleus_TEST_FILES})
-    target_link_libraries("nucleus_tests" "gtest" "gmock" "gmock_main" "nucleus")
-    set_property(TARGET "nucleus_tests" PROPERTY FOLDER "nucleus")
-endif()
+add_executable("nucleus_tests" ${nucleus_TEST_FILES})
+target_link_libraries("nucleus_tests" "gtest" "gmock" "gmock_main" "nucleus")
+set_property(TARGET "nucleus_tests" PROPERTY FOLDER "nucleus")

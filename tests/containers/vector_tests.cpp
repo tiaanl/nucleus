@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include "nucleus/containers/vector.h"
+#include "nucleus/containers/Vector.h"
 
 namespace nu {
 
