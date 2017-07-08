@@ -50,6 +50,62 @@ private:
 
 }  // namespace detail
 
+template <typename T>
+class RefCounted : public detail::RefCountedBase {
+public:
+    RefCounted() {}
+
+    void addRef() const {
+        detail::RefCountedBase::addRef();
+    }
+
+    void release() const {
+        if (detail::RefCountedBase::release()) {
+            delete static_cast<const T*>(this);
+        }
+    }
+
+protected:
+    ~RefCounted() {}
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(RefCounted<T>);
+};
+
+template <typename T, typename Traits> class RefCountedThreadSafe;
+
+template <typename T>
+struct DefaultRefCountedThreadSafeTraits {
+    static void destruct(const T* x) {
+        RefCountedThreadSafe<T, DefaultRefCountedThreadSafeTraits>::deleteInternal(x);
+    }
+};
+
+template <typename T, typename Traits = DefaultRefCountedThreadSafeTraits<T>>
+class RefCountedThreadSafe : public detail::RefCountedThreadSafeBase {
+public:
+    RefCountedThreadSafe() {}
+
+    void addRef() const {
+        detail::RefCountedThreadSafeBase::addRef();
+    }
+
+    void release() const {
+        if (detail::RefCountedThreadSafeBase::release()) {
+            Traits::destruct(static_cast<const T*>(this));
+        }
+    }
+
+protected:
+    friend struct DefaultRefCountedThreadSafeTraits<T>;
+
+    ~RefCountedThreadSafe() {}
+
+    static void deleteInternal(const T* x) { delete x; }
+
+    DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
+};
+
 }  // namespace nu
 
 #endif  // NUCLEUS_MEMORY_REFCOUNTED_H_

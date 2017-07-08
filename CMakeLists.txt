@@ -99,6 +99,7 @@ set("nucleus_TEST_FILES"
         "tests/Atomics/AtomicsTests.cpp"
 
         "tests/Memory/AllocatorTests.cpp"
+        "tests/Memory/RefCountedTests.cpp"
 
         "tests/containers/array_tests.cpp"
         "tests/containers/vector_tests.cpp"
