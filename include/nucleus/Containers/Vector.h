@@ -11,8 +11,8 @@ namespace nu {
 template <typename T>
 class Vector {
 public:
-    Vector();
-    Vector(Allocator* allocator);
+    Vector() {}
+    Vector(Allocator* allocator) {}
 private:
 };
 

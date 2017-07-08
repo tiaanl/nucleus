@@ -21,6 +21,13 @@ include_directories("include")
 
 set("nucleus_INCLUDE_FILES"
         "include/nucleus/config.h"
+
+        "include/nucleus/Atomics/Atomics.h"
+        "include/nucleus/Atomics/AtomicRefCount.h"
+
+        "include/nucleus/Bind/Bind.h"
+        "include/nucleus/Bind/BindDetail.h"
+        "include/nucleus/Bind/Callback.h"
         "include/nucleus/Containers/array.h"
         "include/nucleus/Containers/Vector.h"
         "include/nucleus/files/file_path.h"
@@ -29,6 +36,8 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/macros.h"
 
         "include/nucleus/Memory/Allocator.h"
+        "include/nucleus/Memory/RefCounted.h"
+        "include/nucleus/Memory/ScopedRefPtr.h"
 
         "include/nucleus/streams/file_input_stream.h"
         "include/nucleus/streams/input_stream.h"
@@ -59,6 +68,7 @@ set("nucleus_SOURCE_FILES"
         "src/logging.cpp"
 
         "src/Memory/Allocator.cpp"
+        "src/Memory/RefCounted.cpp"
 
         "src/streams/file_input_stream.cpp"
         "src/streams/input_stream.cpp"
@@ -86,6 +96,8 @@ if (APPLE)
 endif ()
 
 set("nucleus_TEST_FILES"
+        "tests/Atomics/AtomicsTests.cpp"
+
         "tests/Memory/AllocatorTests.cpp"
 
         "tests/containers/array_tests.cpp"
