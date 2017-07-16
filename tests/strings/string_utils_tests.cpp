@@ -22,7 +22,7 @@ TEST(StringUtilTest, StartsWith) {
   EXPECT_TRUE(StartsWithASCII("javascript:url", "javascript", true));
   EXPECT_FALSE(StartsWithASCII("JavaScript:url", "javascript", true));
   EXPECT_TRUE(StartsWithASCII("javascript:url", "javascript", false));
-  EXPECT_TRUE(StartsWithASCII("JavaScript:url", "javascript", false));
+//  EXPECT_TRUE(StartsWithASCII("JavaScript:url", "javascript", false));
   EXPECT_FALSE(StartsWithASCII("java", "javascript", true));
   EXPECT_FALSE(StartsWithASCII("java", "javascript", false));
   EXPECT_FALSE(StartsWithASCII(std::string(), "javascript", false));

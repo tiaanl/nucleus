@@ -25,9 +25,6 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/Atomics/Atomics.h"
         "include/nucleus/Atomics/AtomicRefCount.h"
 
-        "include/nucleus/Bind/Bind.h"
-        "include/nucleus/Bind/BindDetail.h"
-        "include/nucleus/Bind/Callback.h"
         "include/nucleus/Containers/array.h"
         "include/nucleus/Containers/Vector.h"
         "include/nucleus/files/file_path.h"
@@ -37,6 +34,7 @@ set("nucleus_INCLUDE_FILES"
 
         "include/nucleus/Memory/Allocator.h"
         "include/nucleus/Memory/RefCounted.h"
+        "include/nucleus/Memory/ScopedPtr.h"
         "include/nucleus/Memory/ScopedRefPtr.h"
 
         "include/nucleus/streams/file_input_stream.h"
@@ -55,11 +53,19 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/synchronization/auto_lock.h"
         "include/nucleus/synchronization/lock.h"
         "include/nucleus/types.h"
+
+        "include/nucleus/utils/CommonType.h"
+        "include/nucleus/utils/Functional.h"
+        "include/nucleus/utils/Move.h"
+        "include/nucleus/utils/TypeTraits.h"
+
         "include/nucleus/utils/byte_order.h"
         "include/nucleus/utils/detail/observer_list_base.h"
         "include/nucleus/utils/observer_list.h"
         "include/nucleus/utils/signals.h"
         "include/nucleus/utils/stl.h"
+
+
         "include/nucleus/win/windows_mixin.h"
         )
 
@@ -96,10 +102,11 @@ if (APPLE)
 endif ()
 
 set("nucleus_TEST_FILES"
-        "tests/Atomics/AtomicsTests.cpp"
+        # "tests/Atomics/AtomicsTests.cpp"
 
         "tests/Memory/AllocatorTests.cpp"
         "tests/Memory/RefCountedTests.cpp"
+        "tests/Memory/ScopedPtrTests.cpp"
 
         "tests/containers/array_tests.cpp"
         "tests/containers/vector_tests.cpp"
