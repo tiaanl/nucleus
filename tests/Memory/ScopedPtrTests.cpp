@@ -127,5 +127,8 @@ TEST(ScopedPtrTests, Basic) {
     nu::ScopedPtr<A, CustomDeleter> t8(nu::move(t7));
     EXPECT_EQ(18, t8->ch);
 
-    nu::ScopedPtr<A, nu::detail::DefaultDelete<A>> t9(nu::move(t7));
+    nu::ScopedPtr<A, nu::detail::DefaultDelete<A>> t9(nu::move(t2));
+
+    t6 = nullptr;
+    EXPECT_EQ(nullptr, t6.get());
 }
