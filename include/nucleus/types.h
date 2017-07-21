@@ -18,8 +18,7 @@
 #include <cstddef>
 #include <cstdint>
 
-// Common types with fixed sizes.  We put this in the global namespace for
-// convenience.
+// Common types with fixed sizes.  We put this in the global namespace for convenience.
 
 using I8 = std::int8_t;
 using I16 = std::int16_t;
@@ -34,8 +33,7 @@ using U64 = std::uint64_t;
 using F32 = float;
 using F64 = double;
 
-using UIntPtr = std::uintptr_t;
-
 using USize = std::size_t;
+using PtrDiff = std::ptrdiff_t;
 
 #endif  // NUCLEUS_TYPES_H_

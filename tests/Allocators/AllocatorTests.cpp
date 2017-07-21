@@ -1,6 +1,7 @@
 
 #include <gtest/gtest.h>
 
+#if 0
 #include "nucleus/Memory/Allocator.h"
 #include "nucleus/config.h"
 
@@ -32,3 +33,4 @@ TEST(AllocatorTests, Name) {
     allocator.setName("AnotherAllocator");
     ASSERT_STREQ(anotherAllocatorName, allocator.getName());
 }
+#endif  // 0

@@ -22,6 +22,8 @@ include_directories("include")
 set("nucleus_INCLUDE_FILES"
         "include/nucleus/config.h"
 
+        "include/nucleus/Allocators/Allocator.h"
+
         "include/nucleus/Atomics/Atomics.h"
         "include/nucleus/Atomics/AtomicRefCount.h"
 
@@ -32,7 +34,6 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/logging.h"
         "include/nucleus/macros.h"
 
-        "include/nucleus/Memory/Allocator.h"
         "include/nucleus/Memory/RefCounted.h"
         "include/nucleus/Memory/ScopedPtr.h"
         "include/nucleus/Memory/ScopedRefPtr.h"
@@ -55,7 +56,9 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/types.h"
 
         "include/nucleus/utils/CommonType.h"
+        "include/nucleus/utils/Copy.h"
         "include/nucleus/utils/Functional.h"
+        "include/nucleus/utils/Memory.h"
         "include/nucleus/utils/Move.h"
         "include/nucleus/utils/TypeTraits.h"
 
@@ -73,7 +76,8 @@ set("nucleus_SOURCE_FILES"
         "src/files/file_path.cpp"
         "src/logging.cpp"
 
-        "src/Memory/Allocator.cpp"
+        "src/Allocators/Allocator.cpp"
+
         "src/Memory/RefCounted.cpp"
 
         "src/streams/file_input_stream.cpp"
@@ -104,7 +108,8 @@ endif ()
 set("nucleus_TEST_FILES"
         # "tests/Atomics/AtomicsTests.cpp"
 
-        "tests/Memory/AllocatorTests.cpp"
+        "tests/Allocators/AllocatorTests.cpp"
+
         "tests/Memory/RefCountedTests.cpp"
         "tests/Memory/ScopedPtrTests.cpp"
 
