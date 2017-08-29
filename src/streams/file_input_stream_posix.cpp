@@ -31,7 +31,7 @@ namespace nu {
     
     namespace detail {
         
-        i64 setFileInputStreamPosition(FileInputStream::HandleType handle, i64 pos) {
+        I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
             if (handle != 0 && lseek(handle, pos, SEEK_SET) == pos) {
                 return pos;
             }

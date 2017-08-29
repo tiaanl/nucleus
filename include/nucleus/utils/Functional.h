@@ -2,7 +2,7 @@
 #ifndef NUCLEUS_FUNCTIONAL_H_
 #define NUCLEUS_FUNCTIONAL_H_
 
-#include "nucleus/Utils/Move.h"
+#include "nucleus/utils/Move.h"
 
 namespace nu {
 

@@ -21,7 +21,7 @@
 #if OS(WIN)
 #include "nucleus/win/windows_mixin.h"
 #elif OS(POSIX)
-#include <pthreads.h>
+#include <pthread.h>
 #endif
 
 namespace nu {

@@ -2,7 +2,7 @@
 #ifndef NUCLEUS_UTILS_MOVE_H_
 #define NUCLEUS_UTILS_MOVE_H_
 
-#include "nucleus/Utils/TypeTraits.h"
+#include "nucleus/utils/TypeTraits.h"
 
 namespace nu {
 

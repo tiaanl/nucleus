@@ -22,6 +22,8 @@ include_directories("include")
 set("nucleus_INCLUDE_FILES"
         "include/nucleus/config.h"
 
+        "include/nucleus/Optional.h"
+
         "include/nucleus/Allocators/Allocator.h"
 
         "include/nucleus/Atomics/Atomics.h"
@@ -87,6 +89,7 @@ set("nucleus_SOURCE_FILES"
         "src/strings/String.cpp"
         "src/strings/string_utf_conversion.cpp"
         "src/strings/string_utils.cpp"
+        "src/synchronization/Lock.cpp"
         )
 
 if (WIN32)
@@ -94,7 +97,6 @@ if (WIN32)
             "nucleus_SOURCE_FILES"
             "src/files/file_utils_win.cpp"
             "src/streams/file_input_stream_win.cpp"
-            "src/synchronization/lock_win32.cpp"
             )
 endif ()
 
@@ -107,6 +109,8 @@ endif ()
 
 set("nucleus_TEST_FILES"
         # "tests/Atomics/AtomicsTests.cpp"
+
+        "tests/OptionalTests.cpp"
 
         "tests/Allocators/AllocatorTests.cpp"
 
