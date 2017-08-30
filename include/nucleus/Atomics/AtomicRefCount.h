@@ -1,6 +1,6 @@
 
-#ifndef NUCLEUS_ATOMICS_ATOMICREFCOUNT_H_
-#define NUCLEUS_ATOMICS_ATOMICREFCOUNT_H_
+#ifndef NUCLEUS_ATOMICS_ATOMIC_REF_COUNT_H_
+#define NUCLEUS_ATOMICS_ATOMIC_REF_COUNT_H_
 
 #include "nucleus/Atomics/Atomics.h"
 
@@ -42,4 +42,4 @@ inline bool atomicRefCountIsZero(volatile AtomicRefCount* ptr) {
 
 }  // namespace nu
 
-#endif  // NUCLEUS_ATOMICS_ATOMICREFCOUNT_H_
+#endif  // NUCLEUS_ATOMICS_ATOMIC_REF_COUNT_H_

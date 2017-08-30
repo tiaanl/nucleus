@@ -56,8 +56,10 @@ public:
 
     // Reset back to empty value.
     void reset() {
-        // We have to manually call the destructor here.
-        m_value.~T();
+        // We have to manually call the destructor here if applicable.
+        if (m_valid && std::is_destructible<T>::value) {
+            m_value.~T();
+        }
 
         m_empty = detail::emptyValue;
         m_valid = false;
