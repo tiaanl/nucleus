@@ -9,19 +9,19 @@ struct CommonTypeImpl;
 
 template <typename T>
 struct CommonTypeImpl<T> {
-    using Type = T;
+  using Type = T;
 };
 
 template <typename T, typename U>
 struct CommonTypeImpl<T, U> {
-    static T&& t();
-    static U&& u();
-    using Type = decltype(true ? t() : u());
+  static T&& t();
+  static U&& u();
+  using Type = decltype(true ? t() : u());
 };
 
 template <typename T, typename U, typename... V>
 struct CommonTypeImpl<T, U, V...> {
-    using Type = typename CommonTypeImpl<typename CommonTypeImpl<T, U>::Type, V...>::Type;
+  using Type = typename CommonTypeImpl<typename CommonTypeImpl<T, U>::Type, V...>::Type;
 };
 
 template <typename... T>

@@ -8,12 +8,12 @@ namespace nu {
 
 class String {
 public:
-    typedef U8 CharType;
-    typedef USize SizeType;
+  typedef U8 CharType;
+  typedef USize SizeType;
 
 private:
-    CharType* begin;
-    CharType* end;
+  CharType* begin;
+  CharType* end;
 };
 
 }  // namespace nu

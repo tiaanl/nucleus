@@ -2,8 +2,8 @@
 #ifndef NUCLEUS_MEMORY_REFCOUNTED_H_
 #define NUCLEUS_MEMORY_REFCOUNTED_H_
 
-#include "nucleus/macros.h"
 #include "nucleus/Atomics/AtomicRefCount.h"
+#include "nucleus/macros.h"
 
 namespace nu {
 
@@ -11,41 +11,37 @@ namespace detail {
 
 class RefCountedBase {
 public:
-    bool hasOneRef() const { return m_refCount == 1; }
+  bool hasOneRef() const { return m_refCount == 1; }
 
 protected:
-    RefCountedBase() : m_refCount(0) {}
-    ~RefCountedBase() {}
+  RefCountedBase() : m_refCount(0) {}
+  ~RefCountedBase() {}
 
-    void addRef() const {
-        ++m_refCount;
-    }
+  void addRef() const { ++m_refCount; }
 
-    bool release() const {
-        return --m_refCount == 0;
-    }
+  bool release() const { return --m_refCount == 0; }
 
 private:
-    mutable I32 m_refCount;
+  mutable I32 m_refCount;
 
-    DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
+  DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
 };
 
 class RefCountedThreadSafeBase {
 public:
-    bool hasOneRef() const;
+  bool hasOneRef() const;
 
 protected:
-    RefCountedThreadSafeBase();
-    ~RefCountedThreadSafeBase();
+  RefCountedThreadSafeBase();
+  ~RefCountedThreadSafeBase();
 
-    void addRef() const;
-    bool release() const;
+  void addRef() const;
+  bool release() const;
 
 private:
-    mutable AtomicRefCount m_refCount;
+  mutable AtomicRefCount m_refCount;
 
-    DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
+  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
 };
 
 }  // namespace detail
@@ -53,57 +49,52 @@ private:
 template <typename T>
 class RefCounted : public detail::RefCountedBase {
 public:
-    RefCounted() {}
+  RefCounted() {}
 
-    void addRef() const {
-        detail::RefCountedBase::addRef();
-    }
+  void addRef() const { detail::RefCountedBase::addRef(); }
 
-    void release() const {
-        if (detail::RefCountedBase::release()) {
-            delete static_cast<const T*>(this);
-        }
+  void release() const {
+    if (detail::RefCountedBase::release()) {
+      delete static_cast<const T*>(this);
     }
+  }
 
 protected:
-    ~RefCounted() {}
+  ~RefCounted() {}
 
 private:
-    DISALLOW_COPY_AND_ASSIGN(RefCounted<T>);
+  DISALLOW_COPY_AND_ASSIGN(RefCounted<T>);
 };
 
-template <typename T, typename Traits> class RefCountedThreadSafe;
+template <typename T, typename Traits>
+class RefCountedThreadSafe;
 
 template <typename T>
 struct DefaultRefCountedThreadSafeTraits {
-    static void destruct(const T* x) {
-        RefCountedThreadSafe<T, DefaultRefCountedThreadSafeTraits>::deleteInternal(x);
-    }
+  static void destruct(const T* x) { RefCountedThreadSafe<T, DefaultRefCountedThreadSafeTraits>::deleteInternal(x); }
 };
 
 template <typename T, typename Traits = DefaultRefCountedThreadSafeTraits<T>>
 class RefCountedThreadSafe : public detail::RefCountedThreadSafeBase {
 public:
-    RefCountedThreadSafe() {}
+  RefCountedThreadSafe() {}
 
-    void addRef() const {
-        detail::RefCountedThreadSafeBase::addRef();
-    }
+  void addRef() const { detail::RefCountedThreadSafeBase::addRef(); }
 
-    void release() const {
-        if (detail::RefCountedThreadSafeBase::release()) {
-            Traits::destruct(static_cast<const T*>(this));
-        }
+  void release() const {
+    if (detail::RefCountedThreadSafeBase::release()) {
+      Traits::destruct(static_cast<const T*>(this));
     }
+  }
 
 protected:
-    friend struct DefaultRefCountedThreadSafeTraits<T>;
+  friend struct DefaultRefCountedThreadSafeTraits<T>;
 
-    ~RefCountedThreadSafe() {}
+  ~RefCountedThreadSafe() {}
 
-    static void deleteInternal(const T* x) { delete x; }
+  static void deleteInternal(const T* x) { delete x; }
 
-    DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
+  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
 };
 
 }  // namespace nu

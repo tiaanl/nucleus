@@ -1,16 +1,3 @@
-// Copyright (c) 2015, Tiaan Louw
-//
-// Permission to use, copy, modify, and/or distribute this software for any
-// purpose with or without fee is hereby granted, provided that the above
-// copyright notice and this permission notice appear in all copies.
-//
-// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-// REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-// AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-// INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-// LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-// PERFORMANCE OF THIS SOFTWARE.
 
 #ifndef NUCLEUS_STRINGS_CHAR_PTR_H_
 #define NUCLEUS_STRINGS_CHAR_PTR_H_
@@ -30,9 +17,7 @@ public:
 
   // Return the number of bytes required to represent the given character in
   // this encoding.
-  static uint8_t bytesRequiredFor(CharType ch) {
-    return Traits::bytesRequiredFor(ch);
-  }
+  static uint8_t bytesRequiredFor(CharType ch) { return Traits::bytesRequiredFor(ch); }
 
   // Construct a CharPtrBase which is wrapping a null pointer.
   CharPtrBase() {}
@@ -42,29 +27,17 @@ public:
 
   // Comparison operators.
 
-  bool operator==(const CharPtrBase& other) const {
-    return m_ptr == other.m_ptr;
-  }
+  bool operator==(const CharPtrBase& other) const { return m_ptr == other.m_ptr; }
 
-  bool operator!=(const CharPtrBase& other) const {
-    return m_ptr != other.m_ptr;
-  }
+  bool operator!=(const CharPtrBase& other) const { return m_ptr != other.m_ptr; }
 
-  bool operator<(const CharPtrBase& other) const {
-    return m_ptr < other.m_ptr;
-  }
+  bool operator<(const CharPtrBase& other) const { return m_ptr < other.m_ptr; }
 
-  bool operator<=(const CharPtrBase& other) const {
-    return m_ptr <= other.m_ptr;
-  }
+  bool operator<=(const CharPtrBase& other) const { return m_ptr <= other.m_ptr; }
 
-  bool operator>(const CharPtrBase& other) const {
-    return m_ptr > other.m_ptr;
-  }
+  bool operator>(const CharPtrBase& other) const { return m_ptr > other.m_ptr; }
 
-  bool operator>=(const CharPtrBase& other) const {
-    return m_ptr >= other.m_ptr;
-  }
+  bool operator>=(const CharPtrBase& other) const { return m_ptr >= other.m_ptr; }
 
   // Return the unicode character that we are currently pointing to.
   char32_t getUnicodeChar() const { return Traits::getUnicodeChar(m_ptr); }

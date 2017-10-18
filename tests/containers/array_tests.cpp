@@ -6,7 +6,7 @@
 namespace nu {
 
 TEST(ArrayTests, Basic) {
-//    Vector<int, 4> arr1;
+  //    Vector<int, 4> arr1;
 }
 
 }  // namespace nu

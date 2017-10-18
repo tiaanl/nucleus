@@ -10,17 +10,17 @@ namespace nu {
 
 template <typename T>
 struct RemoveReference {
-    using Type = T;
+  using Type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&> {
-    using Type = T;
+  using Type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&&> {
-    using Type = T;
+  using Type = T;
 };
 
 }  // namespace nu

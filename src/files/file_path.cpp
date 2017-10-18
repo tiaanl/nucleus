@@ -1,16 +1,3 @@
-// Copyright (c) 2015, Tiaan Louw
-//
-// Permission to use, copy, modify, and/or distribute this software for any
-// purpose with or without fee is hereby granted, provided that the above
-// copyright notice and this permission notice appear in all copies.
-//
-// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-// REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-// AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-// INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-// LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-// PERFORMANCE OF THIS SOFTWARE.
 
 #include "nucleus/files/file_path.h"
 
@@ -31,8 +18,7 @@ using StringType = FilePath::StringType;
 StringType::size_type findDriveLetter(const StringType& path) {
 #if OS(WIN)
   if (path.length() >= 2 && path[1] == L':' &&
-      ((path[0] >= L'A' && path[0] <= L'Z') ||
-       (path[0] >= L'a' && path[0] <= L'z'))) {
+      ((path[0] >= L'A' && path[0] <= L'Z') || (path[0] >= L'a' && path[0] <= L'z'))) {
     return 1;
   }
 #endif  // FILE_PATH_USES_DRIVE_LETTERS
@@ -40,8 +26,7 @@ StringType::size_type findDriveLetter(const StringType& path) {
 }
 
 #if OS(WIN)
-bool equalDriveLetterCaseInsensitive(const StringType& left,
-                                     const StringType& right) {
+bool equalDriveLetterCaseInsensitive(const StringType& left, const StringType& right) {
   auto leftLetterPos = findDriveLetter(left);
   auto rightLetterPos = findDriveLetter(right);
 
@@ -87,17 +72,13 @@ bool FilePath::isSeparator(CharType ch) {
   return false;
 }
 
-FilePath::FilePath() {
-}
+FilePath::FilePath() {}
 
-FilePath::FilePath(const FilePath& other) : m_path(other.m_path) {
-}
+FilePath::FilePath(const FilePath& other) : m_path(other.m_path) {}
 
-FilePath::FilePath(const StringType& path) : m_path(path) {
-}
+FilePath::FilePath(const StringType& path) : m_path(path) {}
 
-FilePath::~FilePath() {
-}
+FilePath::~FilePath() {}
 
 FilePath& FilePath::operator=(const FilePath& other) {
   m_path = other.m_path;
@@ -116,8 +97,7 @@ bool FilePath::operator!=(const FilePath& other) const {
   return !(*this == other);
 }
 
-void FilePath::clear() {
-}
+void FilePath::clear() {}
 
 FilePath FilePath::dirName() const {
   FilePath newPath{m_path};
@@ -125,16 +105,15 @@ FilePath FilePath::dirName() const {
 
   StringType::size_type letter = findDriveLetter(newPath.m_path);
 
-  StringType::size_type lastSeparator = newPath.m_path.find_last_of(
-      kSeparators, StringType::npos, ARRAY_SIZE(kSeparators) - 1);
+  StringType::size_type lastSeparator =
+      newPath.m_path.find_last_of(kSeparators, StringType::npos, ARRAY_SIZE(kSeparators) - 1);
   if (lastSeparator == StringType::npos) {
     // m_path is in the current directory.
     newPath.m_path.resize(letter + 1);
   } else if (lastSeparator == letter + 1) {
     // m_path is in the root directory.
     newPath.m_path.resize(letter + 2);
-  } else if (lastSeparator == letter + 2 &&
-             isSeparator(newPath.m_path[letter + 1])) {
+  } else if (lastSeparator == letter + 2 && isSeparator(newPath.m_path[letter + 1])) {
     // m_path is in "//" (possibly with a drive letter), so leave the double
     // separator intact indicating alternate root.
     newPath.m_path.resize(letter + 3);
@@ -163,10 +142,9 @@ FilePath FilePath::baseName() const {
 
   // Keep everything after the final separator, but if the pathname is only one
   // character and it's a separator, leave it alone.
-  StringType::size_type lastSeparator = newPath.m_path.find_last_of(
-      kSeparators, StringType::npos, ARRAY_SIZE(kSeparators) - 1);
-  if (lastSeparator != StringType::npos &&
-      lastSeparator < newPath.m_path.length() - 1) {
+  StringType::size_type lastSeparator =
+      newPath.m_path.find_last_of(kSeparators, StringType::npos, ARRAY_SIZE(kSeparators) - 1);
+  if (lastSeparator != StringType::npos && lastSeparator < newPath.m_path.length() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
   }
 
@@ -232,12 +210,10 @@ void FilePath::stripTrailingSeparatorsInternal() {
   StringType::size_type start = findDriveLetter(m_path) + 2;
 
   StringType::size_type lastStripped = StringType::npos;
-  for (StringType::size_type pos = m_path.length();
-       pos > start && isSeparator(m_path[pos - 1]); --pos) {
+  for (StringType::size_type pos = m_path.length(); pos > start && isSeparator(m_path[pos - 1]); --pos) {
     // If the string only has two separators and they're at the beginning, don't
     // strip them, unless the string began with more than two separators.
-    if (pos != start + 1 || lastStripped == start + 2 ||
-        !isSeparator(m_path[start - 1])) {
+    if (pos != start + 1 || lastStripped == start + 2 || !isSeparator(m_path[start - 1])) {
       m_path.resize(pos - 1);
       lastStripped = pos;
     }

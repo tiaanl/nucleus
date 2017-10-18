@@ -1,16 +1,3 @@
-// Copyright (c) 2015, Tiaan Louw
-//
-// Permission to use, copy, modify, and/or distribute this software for any
-// purpose with or without fee is hereby granted, provided that the above
-// copyright notice and this permission notice appear in all copies.
-//
-// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-// REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-// AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-// INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-// LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-// PERFORMANCE OF THIS SOFTWARE.
 
 #include <gtest/gtest.h>
 
@@ -26,7 +13,7 @@ static std::string accu;
 
 static char floatCallback(float f, int, std::string) {
   std::stringstream ss;
-  ss.setf(std::ios::fixed, std:: ios::floatfield);
+  ss.setf(std::ios::fixed, std::ios::floatfield);
   ss.precision(2);
   ss << "float: " << f << "\n";
   accu.append(ss.str());
@@ -36,7 +23,7 @@ static char floatCallback(float f, int, std::string) {
 struct Foo {
   char fooBool(float f, int i, std::string s) {
     std::stringstream ss;
-    ss.setf(std::ios::fixed, std:: ios::floatfield);
+    ss.setf(std::ios::fixed, std::ios::floatfield);
     ss.precision(2);
     ss << "Foo: " << f + i + s.size() << "\n";
     accu.append(ss.str());
@@ -101,14 +88,14 @@ TEST(SignalsTest, Basic) {
 
   accu.append("DONE");
 
-  const char* expected = 
-        "float: 0.30\n"
-        "int: 4\n"
-        "string: huhu\n"
-        "Foo: 3.50\n"
-        "Foo: 3.50\n"
-        "msg: in sig2 *17*\n"
-        "DONE";
+  const char* expected =
+      "float: 0.30\n"
+      "int: 4\n"
+      "string: huhu\n"
+      "Foo: 3.50\n"
+      "Foo: 3.50\n"
+      "msg: in sig2 *17*\n"
+      "DONE";
 
   EXPECT_STREQ(expected, accu.c_str());
 }

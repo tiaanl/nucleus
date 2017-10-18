@@ -26,12 +26,12 @@ namespace nu {
 
 template <typename T>
 constexpr T&& forward(typename RemoveReference<T>::Type& x) {
-    return static_cast<T&&>(x);
+  return static_cast<T&&>(x);
 }
 
 template <typename T>
 constexpr T&& forward(typename RemoveReference<T>::Type&& x) {
-    return static_cast<T&&>(x);
+  return static_cast<T&&>(x);
 }
 
 // move
@@ -43,7 +43,7 @@ constexpr T&& forward(typename RemoveReference<T>::Type&& x) {
 
 template <typename T>
 constexpr typename RemoveReference<T>::Type&& move(T&& x) {
-    return static_cast<typename RemoveReference<T>::Type&&>(x);
+  return static_cast<typename RemoveReference<T>::Type&&>(x);
 }
 
 }  // namespace nu
