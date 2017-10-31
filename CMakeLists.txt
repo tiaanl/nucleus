@@ -25,6 +25,9 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/Optional.h"
 
         "include/nucleus/Allocators/Allocator.h"
+        "include/nucleus/Allocators/DebugAllocator.h"
+        "include/nucleus/Allocators/DefaultAllocator.h"
+        "include/nucleus/Allocators/GlobalAllocator.h"
 
         "include/nucleus/Atomics/Atomics.h"
         "include/nucleus/Atomics/AtomicRefCount.h"
@@ -78,7 +81,9 @@ set("nucleus_SOURCE_FILES"
         "src/files/file_path.cpp"
         "src/logging.cpp"
 
-        "src/Allocators/Allocator.cpp"
+        "src/Allocators/DebugAllocator.cpp"
+        "src/Allocators/DefaultAllocator.cpp"
+        "src/Allocators/GlobalAllocator.cpp"
 
         "src/Memory/RefCounted.cpp"
 
