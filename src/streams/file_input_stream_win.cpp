@@ -28,7 +28,7 @@ void FileInputStream::openHandle() {
     m_handle = (void*)h;
   } else {
     m_status = false;
-   }
+  }
 }
 
 void FileInputStream::closeHandle() {
