@@ -130,6 +130,6 @@ void InputStream::skipNextBytes(SizeType numBytesToSkip) {
   }
 }
 
-InputStream::InputStream() {}
+InputStream::InputStream() = default;
 
 }  // namespace nu

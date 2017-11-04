@@ -72,18 +72,15 @@ bool FilePath::isSeparator(CharType ch) {
   return false;
 }
 
-FilePath::FilePath() {}
+FilePath::FilePath() = default;
 
-FilePath::FilePath(const FilePath& other) : m_path(other.m_path) {}
+FilePath::FilePath(const FilePath& other)  = default;
 
 FilePath::FilePath(const StringType& path) : m_path(path) {}
 
-FilePath::~FilePath() {}
+FilePath::~FilePath() = default;
 
-FilePath& FilePath::operator=(const FilePath& other) {
-  m_path = other.m_path;
-  return *this;
-}
+FilePath& FilePath::operator=(const FilePath& other) = default;
 
 bool FilePath::operator==(const FilePath& other) const {
 #if OS(WIN)

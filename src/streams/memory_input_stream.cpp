@@ -18,7 +18,7 @@ MemoryInputStream::MemoryInputStream(const std::vector<char>& data) : m_currentP
   createInternalCopy(&data[0], data.size());
 }
 
-MemoryInputStream::~MemoryInputStream() {}
+MemoryInputStream::~MemoryInputStream() = default;
 
 MemoryInputStream::SizeType MemoryInputStream::getLength() {
   return m_buffer.size();

@@ -3,9 +3,9 @@
 
 namespace nu {
 
-Lock::Lock() {}
+Lock::Lock() = default;
 
-Lock::~Lock() {}
+Lock::~Lock() = default;
 
 void Lock::Acquire() {}
 

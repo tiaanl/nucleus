@@ -11,7 +11,7 @@ bool RefCountedThreadSafeBase::hasOneRef() const {
 
 RefCountedThreadSafeBase::RefCountedThreadSafeBase() : m_refCount(0) {}
 
-RefCountedThreadSafeBase::~RefCountedThreadSafeBase() {}
+RefCountedThreadSafeBase::~RefCountedThreadSafeBase() = default;
 
 void RefCountedThreadSafeBase::addRef() const {
   atomicRefCountInc(&m_refCount);
