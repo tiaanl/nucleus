@@ -1,21 +1,22 @@
 cmake_minimum_required(VERSION 3.7.2)
+
 project("nucleus")
 
-#General options
+# General options
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#Compiler options
+# Compiler options
 
 include("cmake/gcc.cmake")
 include("cmake/msvc.cmake")
 include("cmake/win32.cmake")
 
-#Third party libraries.
+# Third party libraries.
 
-include("cmake/gtest.cmake")
+add_subdirectory("third_party")
 
-#nucleus
+# nucleus
 
 include_directories("include")
 
@@ -112,31 +113,9 @@ if (APPLE)
             )
 endif ()
 
-set("nucleus_TEST_FILES"
-        # "tests/Atomics/AtomicsTests.cpp"
-
-        "tests/OptionalTests.cpp"
-
-        "tests/Allocators/AllocatorTests.cpp"
-
-        "tests/Memory/RefCountedTests.cpp"
-        "tests/Memory/ScopedPtrTests.cpp"
-
-        "tests/containers/array_tests.cpp"
-        "tests/containers/vector_tests.cpp"
-        "tests/files/file_path_tests.cpp"
-        "tests/logging_test.cpp"
-        "tests/strings/char_ptr_tests.cpp"
-        "tests/strings/string_utf_conversion_tests.cpp"
-        "tests/strings/string_utils_tests.cpp"
-        "tests/utils/observer_list_tests.cpp"
-        "tests/utils/signals_tests.cpp"
-        )
-
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 target_include_directories("nucleus" PUBLIC "${nucleus_SOURCE_DIR}/include")
 set_property(TARGET "nucleus" PROPERTY FOLDER "nucleus")
 
-add_executable("nucleus_tests" ${nucleus_TEST_FILES})
-target_link_libraries("nucleus_tests" "gtest" "gmock" "gmock_main" "nucleus")
-set_property(TARGET "nucleus_tests" PROPERTY FOLDER "nucleus")
+
+add_subdirectory(tests nucleus_tests)

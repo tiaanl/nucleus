@@ -11,7 +11,7 @@ namespace nu {
 
 class Allocator {
 public:
-  virtual ~Allocator();
+  virtual ~Allocator() {}
 
   void* allocate(USize bytes, USize alignment = kMaxAlign) { return doAllocate(bytes, alignment); }
   void free(void* p, USize bytes, USize alignment = kMaxAlign) { return doFree(p, bytes, alignment); }
