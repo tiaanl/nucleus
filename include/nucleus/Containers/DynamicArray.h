@@ -2,7 +2,9 @@
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
-#include <new>
+#include <cstring>  // memcpy
+#include <new>      // new
+#include <utility>  // std::forward
 
 #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/algorithms/Utility.h"
@@ -17,11 +19,55 @@ public:
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
 
+  // Construct/desctruct
+
   DynamicArray(Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_size(0), m_allocated(0) {}
 
+  DynamicArray(const DynamicArray& other)
+    : m_allocator(other.m_allocator), m_data(nullptr), m_size(other.m_size), m_allocated(0) {
+    ensureAllocated(m_size);
+    ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
+  }
+
+  DynamicArray(DynamicArray&& other)
+    : m_allocator(other.m_allocator), m_data(other.m_data), m_size(other.m_size), m_allocated(other.m_allocated) {
+    other.m_allocator = nullptr;
+    other.m_data = nullptr;
+    other.m_size = 0;
+    other.m_allocated = 0;
+  }
+
   ~DynamicArray() {
     free();
+  }
+
+  // Operators
+
+  DynamicArray& operator=(const DynamicArray& other) {
+    m_allocator = other.m_allocator;
+    m_data = nullptr;
+    m_size = other.m_size;
+    m_allocated = 0;
+
+    ensureAllocated(m_size);
+    ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
+
+    return *this;
+  }
+
+  DynamicArray& operator=(DynamicArray&& other) {
+    m_allocator = other.m_allocator;
+    m_data = other.m_data;
+    m_size = other.m_size;
+    m_allocated = other.m_allocated;
+
+    other.m_allocator = nullptr;
+    other.m_data = nullptr;
+    other.m_size = 0;
+    other.m_allocated = 0;
+
+    return *this;
   }
 
   // State

@@ -14,6 +14,62 @@ TEST(DynamicArrayTests, Basic) {
   ASSERT_EQ(10, buffer.get(0));
 }
 
+TEST(DynamicArrayTests, CopyConstruct) {
+  nu::DynamicArray<U32> buffer;
+  buffer.pushBack(10);
+  buffer.pushBack(20);
+
+  nu::DynamicArray<U32> buffer2{buffer};
+
+  ASSERT_EQ(buffer.getSize(), buffer2.getSize());
+  ASSERT_EQ(buffer.get(0), buffer2.get(0));
+  ASSERT_EQ(buffer.get(1), buffer2.get(1));
+}
+
+TEST(DynamicArrayTests, CopyAssignment) {
+  nu::DynamicArray<U32> buffer;
+  buffer.pushBack(10);
+  buffer.pushBack(20);
+
+  nu::DynamicArray<U32> buffer2;
+  ASSERT_EQ(0, buffer2.getSize());
+
+  buffer2 = buffer;
+
+  ASSERT_EQ(buffer.getSize(), buffer2.getSize());
+  ASSERT_EQ(buffer.get(0), buffer2.get(0));
+  ASSERT_EQ(buffer.get(1), buffer2.get(1));
+}
+
+TEST(DynamicArrayTests, MoveConstruct) {
+  nu::DynamicArray<U32> buffer;
+  buffer.pushBack(10);
+  buffer.pushBack(20);
+
+  nu::DynamicArray<U32> buffer2{std::move(buffer)};
+
+  ASSERT_EQ(0, buffer.getSize());
+  ASSERT_EQ(2, buffer2.getSize());
+  ASSERT_EQ(10, buffer2.get(0));
+  ASSERT_EQ(20, buffer2.get(1));
+}
+
+TEST(DynamicArrayTests, MoveAssignment) {
+  nu::DynamicArray<U32> buffer;
+  buffer.pushBack(10);
+  buffer.pushBack(20);
+
+  nu::DynamicArray<U32> buffer2;
+  ASSERT_EQ(0, buffer2.getSize());
+
+  buffer2 = std::move(buffer);
+
+  ASSERT_EQ(0, buffer.getSize());
+  ASSERT_EQ(2, buffer2.getSize());
+  ASSERT_EQ(10, buffer2.get(0));
+  ASSERT_EQ(20, buffer2.get(1));
+}
+
 class LifetimeType {
 public:
   static I32 creates;

@@ -104,7 +104,7 @@ endif ()
 
 add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 target_include_directories("nucleus" PUBLIC "${nucleus_SOURCE_DIR}/include")
-set_property(TARGET "nucleus" PROPERTY FOLDER "nucleus")
-
+set_property(TARGET nucleus PROPERTY FOLDER nucleus)
+set_property(TARGET nucleus PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(tests nucleus_tests)
