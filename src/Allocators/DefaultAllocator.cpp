@@ -10,6 +10,7 @@ Allocator* getDefaultAllocator() {
 
   if (ret == nullptr) {
     ret = globalAllocatorSingleton();
+    gs_defaultAllocator.store(ret);
   }
 
   return ret;

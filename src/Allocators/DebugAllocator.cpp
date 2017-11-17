@@ -32,7 +32,7 @@ void DebugAllocator::clearLeaked() {
 void* DebugAllocator::doAllocate(USize bytes, USize alignment) {
   void* ret = m_parent->allocate(bytes, alignment);
 
-  m_blocks.emplace_back(ret, bytes, alignment);
+  m_blocks.emplaceBack(ret, bytes, alignment);
   m_bytesAllocated += bytes;
   m_bytesOutstanding += bytes;
   if (m_bytesOutstanding > m_maxAllocated) {
@@ -55,7 +55,7 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   }
 
   m_parent->free(p, bytes, alignment);
-  m_blocks.erase(it);
+  m_blocks.remove(it);
   m_bytesOutstanding -= bytes;
 }
 

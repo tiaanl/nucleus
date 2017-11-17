@@ -20,30 +20,26 @@ add_subdirectory("third_party")
 
 include_directories("include")
 
-set("nucleus_INCLUDE_FILES"
-        "include/nucleus/config.h"
-
-        "include/nucleus/Optional.h"
-
+set(nucleus_INCLUDE_FILES
+        "include/nucleus/algorithms/Utility.h"
         "include/nucleus/Allocators/Allocator.h"
         "include/nucleus/Allocators/DebugAllocator.h"
         "include/nucleus/Allocators/DefaultAllocator.h"
         "include/nucleus/Allocators/GlobalAllocator.h"
-
-        "include/nucleus/Atomics/Atomics.h"
         "include/nucleus/Atomics/AtomicRefCount.h"
-
+        "include/nucleus/Atomics/Atomics.h"
+        "include/nucleus/config.h"
         "include/nucleus/Containers/array.h"
+        "include/nucleus/Containers/DynamicArray.h"
         "include/nucleus/Containers/Vector.h"
         "include/nucleus/files/file_path.h"
         "include/nucleus/files/file_utils.h"
         "include/nucleus/logging.h"
         "include/nucleus/macros.h"
-
         "include/nucleus/Memory/RefCounted.h"
         "include/nucleus/Memory/ScopedPtr.h"
         "include/nucleus/Memory/ScopedRefPtr.h"
-
+        "include/nucleus/Optional.h"
         "include/nucleus/streams/file_input_stream.h"
         "include/nucleus/streams/input_stream.h"
         "include/nucleus/streams/memory_input_stream.h"
@@ -60,34 +56,27 @@ set("nucleus_INCLUDE_FILES"
         "include/nucleus/synchronization/auto_lock.h"
         "include/nucleus/synchronization/lock.h"
         "include/nucleus/types.h"
-
+        "include/nucleus/utils/byte_order.h"
         "include/nucleus/utils/CommonType.h"
         "include/nucleus/utils/Copy.h"
+        "include/nucleus/utils/detail/observer_list_base.h"
         "include/nucleus/utils/Functional.h"
         "include/nucleus/utils/Memory.h"
         "include/nucleus/utils/Move.h"
-        "include/nucleus/utils/TypeTraits.h"
-
-        "include/nucleus/utils/byte_order.h"
-        "include/nucleus/utils/detail/observer_list_base.h"
         "include/nucleus/utils/observer_list.h"
         "include/nucleus/utils/signals.h"
         "include/nucleus/utils/stl.h"
-
-
+        "include/nucleus/utils/TypeTraits.h"
         "include/nucleus/win/windows_mixin.h"
         )
 
-set("nucleus_SOURCE_FILES"
-        "src/files/file_path.cpp"
-        "src/logging.cpp"
-
+set(nucleus_SOURCE_FILES
         "src/Allocators/DebugAllocator.cpp"
         "src/Allocators/DefaultAllocator.cpp"
         "src/Allocators/GlobalAllocator.cpp"
-
+        "src/files/file_path.cpp"
+        "src/logging.cpp"
         "src/Memory/RefCounted.cpp"
-
         "src/streams/file_input_stream.cpp"
         "src/streams/input_stream.cpp"
         "src/streams/memory_input_stream.cpp"

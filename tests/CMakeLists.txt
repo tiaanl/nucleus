@@ -1,23 +1,20 @@
 
 set(nucleus_TEST_FILES
-    # "Atomics/AtomicsTests.cpp"
-
-    "OptionalTests.cpp"
-
     "Allocators/AllocatorTests.cpp"
-
-    "Memory/RefCountedTests.cpp"
-    "Memory/ScopedPtrTests.cpp"
-
     "containers/array_tests.cpp"
+    "Containers/DynamicArrayTests.cpp"
     "containers/vector_tests.cpp"
     "files/file_path_tests.cpp"
     "logging_test.cpp"
+    "Memory/RefCountedTests.cpp"
+    "Memory/ScopedPtrTests.cpp"
+    "OptionalTests.cpp"
     "strings/char_ptr_tests.cpp"
     "strings/string_utf_conversion_tests.cpp"
     "strings/string_utils_tests.cpp"
     "utils/observer_list_tests.cpp"
     "utils/signals_tests.cpp"
+    # "Atomics/AtomicsTests.cpp"
 )
 
 add_executable(nucleus_tests ${nucleus_TEST_FILES})
