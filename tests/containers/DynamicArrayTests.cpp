@@ -194,6 +194,22 @@ TEST(DynamicArrayTests, Remove) {
   ASSERT_EQ(buffer.end(), &buffer.get(3));
 }
 
+TEST(DynamicArrayTests, RemoveCallsDestructor) {
+  LifetimeType::reset();
+
+  nu::DynamicArray<LifetimeType> buffer;
+  buffer.emplaceBack(1, 2);
+  buffer.emplaceBack(3, 4);
+  buffer.emplaceBack(5, 6);
+  buffer.emplaceBack(6, 7);
+
+  buffer.remove(buffer.begin() + 1);
+
+  ASSERT_EQ(4, LifetimeType::creates);
+  ASSERT_EQ(1, LifetimeType::destroys);
+  ASSERT_EQ(0, LifetimeType::copies);
+}
+
 TEST(DynamicArrayTests, RemoveRange) {
   nu::DynamicArray<U32> buffer;
   buffer.pushBack(10);
@@ -207,4 +223,40 @@ TEST(DynamicArrayTests, RemoveRange) {
   ASSERT_EQ(10, buffer.get(0));
   ASSERT_EQ(40, buffer.get(1));
   ASSERT_EQ(buffer.end(), &buffer.get(2));
+}
+
+TEST(DynamicArrayTests, RemoveRangeCallsDestructors) {
+  LifetimeType::reset();
+
+  nu::DynamicArray<LifetimeType> buffer;
+  buffer.emplaceBack(1, 2);
+  buffer.emplaceBack(3, 4);
+  buffer.emplaceBack(5, 6);
+  buffer.emplaceBack(6, 7);
+
+  buffer.remove(buffer.begin() + 1, buffer.begin() + 3);
+
+  ASSERT_EQ(4, LifetimeType::creates);
+  ASSERT_EQ(2, LifetimeType::destroys);
+  ASSERT_EQ(0, LifetimeType::copies);
+}
+
+TEST(DynamicArrayTests, Clear) {
+  LifetimeType::reset();
+
+  nu::DynamicArray<LifetimeType> buffer;
+  buffer.emplaceBack(1, 2);
+  buffer.emplaceBack(3, 4);
+  buffer.emplaceBack(5, 6);
+  buffer.emplaceBack(6, 7);
+
+  ASSERT_EQ(4, buffer.getSize());
+
+  buffer.clear();
+
+  ASSERT_EQ(0, buffer.getSize());
+
+  ASSERT_EQ(4, LifetimeType::creates);
+  ASSERT_EQ(4, LifetimeType::destroys);
+  ASSERT_EQ(0, LifetimeType::copies);
 }

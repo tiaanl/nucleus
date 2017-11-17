@@ -101,18 +101,38 @@ public:
     new (&m_data[m_size++]) ElementType(std::forward<Args>(args)...);
   }
 
-  // Remove
+  // Modify
 
   void remove(Iterator pos) {
+    // Destroy the object.
+    pos->~ElementType();
     ::memcpy(pos, pos + 1, (m_data + (m_size - 1) - pos) * sizeof(ElementType));
     --m_size;
   }
 
   void remove(Iterator begin, Iterator end) {
+    for (Iterator e = begin; e != end; ++e) {
+      e->~ElementType();
+    }
+
     if (end < m_data + m_size) {
       ::memcpy(begin, end, (end - begin) * sizeof(ElementType));
     }
+
     m_size -= end - begin;
+  }
+
+  void clear(bool deallocate = false) {
+    // Destruct all the elements.
+    for (ElementType* e = m_data; e != m_data + m_size; ++e) {
+      e->~ElementType();
+    }
+
+    if (deallocate) {
+      free();
+    } else {
+      m_size = 0;
+    }
   }
 
   // Iterators
@@ -169,6 +189,10 @@ private:
     }
 
     m_allocator->free(m_data, m_allocated * sizeof(ElementType));
+
+    m_data = nullptr;
+    m_size = 0;
+    m_allocated = 0;
   }
 
   Allocator* m_allocator;
