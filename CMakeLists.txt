@@ -21,6 +21,9 @@ add_subdirectory("third_party")
 include_directories("include")
 
 set(nucleus_INCLUDE_FILES
+        "include/nucleus/streams/OutputStream.h"
+        "include/nucleus/streams/FileOutputStream.h"
+
         "include/nucleus/algorithms/Utility.h"
         "include/nucleus/Allocators/Allocator.h"
         "include/nucleus/Allocators/DebugAllocator.h"
@@ -71,9 +74,13 @@ set(nucleus_INCLUDE_FILES
         )
 
 set(nucleus_SOURCE_FILES
+        "src/streams/OutputStream.cpp"
+        "src/streams/FileOutputStream.cpp"
+
         "src/Allocators/DebugAllocator.cpp"
         "src/Allocators/DefaultAllocator.cpp"
         "src/Allocators/GlobalAllocator.cpp"
+
         "src/files/file_path.cpp"
         "src/logging.cpp"
         "src/Memory/RefCounted.cpp"
