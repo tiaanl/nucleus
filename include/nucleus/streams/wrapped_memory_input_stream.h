@@ -2,9 +2,8 @@
 #ifndef NUCLEUS_STREAMS_WRAPPED_MEMORY_INPUT_STREAM_H_
 #define NUCLEUS_STREAMS_WRAPPED_MEMORY_INPUT_STREAM_H_
 
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/streams/input_stream.h"
-
-#include <vector>
 
 namespace nu {
 
@@ -14,17 +13,21 @@ public:
   // Construct the stream with the specified data and size.
   WrappedMemoryInputStream(const void* data, USize size);
 
-  // Construct the stream with the specified vector data.
-  explicit WrappedMemoryInputStream(const std::vector<char>& data);
+  // Construct the stream with the specified array data.
+  explicit WrappedMemoryInputStream(const nu::DynamicArray<I8>& data);
 
   virtual ~WrappedMemoryInputStream() = default;
 
   // Return a pointer to the source data block from which this stream is
   // reading.
-  const void* getData() const { return m_data; }
+  const void* getData() const {
+    return m_data;
+  }
 
   // Return the size of the source data (in bytes).
-  USize getSize() const { return m_size; }
+  USize getSize() const {
+    return m_size;
+  }
 
   // Override: InputStream
   SizeType getPosition() override;

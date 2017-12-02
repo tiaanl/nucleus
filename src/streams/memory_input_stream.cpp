@@ -6,46 +6,45 @@
 
 #include "nucleus/logging.h"
 #include "nucleus/types.h"
-#include "nucleus/utils/stl.h"
 
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
 MemoryInputStream::MemoryInputStream(const void* sourceData, USize sourceDataSize) : m_currentPosition(0) {
-  createInternalCopy(static_cast<const char*>(sourceData), sourceDataSize);
+  createInternalCopy(static_cast<const I8*>(sourceData), sourceDataSize);
 }
 
-MemoryInputStream::MemoryInputStream(const std::vector<char>& data) : m_currentPosition(0) {
-  createInternalCopy(&data[0], data.size());
+MemoryInputStream::MemoryInputStream(const nu::DynamicArray<I8>& data) : m_currentPosition(0) {
+  createInternalCopy(data.getData(), data.getSize());
 }
 
 MemoryInputStream::~MemoryInputStream() = default;
 
 MemoryInputStream::SizeType MemoryInputStream::getLength() {
-  return m_buffer.size();
+  return m_buffer.getSize();
 }
 
 MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytesToRead) {
   DCHECK(bytesToRead >= 0);
 
-  SizeType num = std::min(bytesToRead, m_buffer.size() - m_currentPosition);
+  SizeType num = std::min(bytesToRead, m_buffer.getSize() - m_currentPosition);
   if (num <= 0)
     return 0;
 
-  memcpy(buffer, static_cast<const char*>(&m_buffer[0]) + m_currentPosition, static_cast<USize>(num));
+  memcpy(buffer, static_cast<const I8*>(m_buffer.getData()) + m_currentPosition, static_cast<USize>(num));
   m_currentPosition += static_cast<USize>(num);
 
   return num;
 }
 
 bool MemoryInputStream::isExhausted() {
-  return m_currentPosition >= m_buffer.size();
+  return m_currentPosition >= m_buffer.getSize();
 }
 
 bool MemoryInputStream::setPosition(SizeType newPosition) {
   m_currentPosition = std::max(newPosition, static_cast<SizeType>(0));
-  m_currentPosition = std::min(newPosition, m_buffer.size());
+  m_currentPosition = std::min(newPosition, m_buffer.getSize());
   return true;
 }
 
@@ -53,7 +52,8 @@ MemoryInputStream::SizeType MemoryInputStream::getPosition() {
   return m_currentPosition;
 }
 
-void MemoryInputStream::createInternalCopy(const char* data, USize dataSize) {
-  memcpy(vectorAsArray(&m_buffer, dataSize), data, dataSize);
+void MemoryInputStream::createInternalCopy(const I8* data, USize dataSize) {
+  m_buffer.resize(dataSize);
+  memcpy(m_buffer.getData(), data, dataSize);
 }
 }  // namespace nu

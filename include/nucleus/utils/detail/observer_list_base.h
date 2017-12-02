@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdint>
 
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/macros.h"
 
 namespace nu {
@@ -17,7 +18,9 @@ public:
   // An Iterator class that can be used to access the list of observer.
   class Iterator {
   public:
-    explicit Iterator(ObserverListBase<ObserverType>* list) : m_list(list) { ++m_list->m_notifyDepth; }
+    explicit Iterator(ObserverListBase<ObserverType>* list) : m_list(list) {
+      ++m_list->m_notifyDepth;
+    }
 
     ~Iterator() {
       if (m_list && --m_list->m_notifyDepth == 0) {
@@ -33,13 +36,13 @@ public:
       ListType& observers = m_list->m_observers;
 
       // Advance if the current element is null.
-      USize maxIndex = observers.size();
-      while (m_index < maxIndex && !observers[m_index]) {
+      USize maxIndex = observers.getSize();
+      while (m_index < maxIndex && !observers.get(m_index)) {
         ++m_index;
       }
 
       // Return the observer or nullptr if we are at the end of the list.
-      return m_index < maxIndex ? observers[m_index++] : nullptr;
+      return m_index < maxIndex ? observers.get(m_index++) : nullptr;
     }
 
   private:
@@ -62,7 +65,7 @@ public:
       return;
     }
 
-    m_observers.push_back(observer);
+    m_observers.pushBack(observer);
   }
 
   // Remove an observer from the list if it is in the list.
@@ -74,7 +77,7 @@ public:
       if (m_notifyDepth) {
         *it = nullptr;
       } else {
-        m_observers.erase(it);
+        m_observers.remove(it);
       }
     }
   }
@@ -94,16 +97,18 @@ public:
   }
 
 protected:
-  bool isEmpty() const { return m_observers.empty(); }
+  bool isEmpty() const {
+    return m_observers.isEmpty();
+  }
 
   void compact() {
-    m_observers.erase(std::remove(std::begin(m_observers), std::end(m_observers), nullptr), std::end(m_observers));
+    // m_observers.erase(std::remove(std::begin(m_observers), std::end(m_observers), nullptr), std::end(m_observers));
   }
 
 private:
   friend class Iterataor;
 
-  using ListType = std::vector<ObserverType*>;
+  using ListType = nu::DynamicArray<ObserverType*>;
 
   // The list of observer.
   ListType m_observers;

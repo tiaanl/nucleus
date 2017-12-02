@@ -2,11 +2,10 @@
 #include "nucleus/streams/input_stream.h"
 
 #include <algorithm>
-#include <vector>
 
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/logging.h"
 #include "nucleus/utils/byte_order.h"
-#include "nucleus/utils/stl.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -83,8 +82,10 @@ double InputStream::readDouble() {
 }
 
 std::string InputStream::readNextLine() {
-  std::vector<char> buffer;
-  char* data = vectorAsArray(&buffer, 256);
+  nu::DynamicArray<char> buffer;
+  buffer.resize(256);
+
+  char* data = buffer.getData();
   SizeType i = 0;
 
   while ((data[i] = readByte()) != 0) {
@@ -100,21 +101,27 @@ std::string InputStream::readNextLine() {
       break;
     }
 
-    if (++i >= buffer.size())
-      data = vectorAsArray(&buffer, buffer.size() + 512);
+    if (++i >= buffer.getSize()) {
+      buffer.resize(buffer.getSize() + 512);
+      data = buffer.getData();
+    }
   }
 
-  return std::string(vectorAsArray(&buffer), i);
+  return std::string(buffer.getData(), i);
 }
 
 std::string InputStream::ReadString() {
-  std::vector<char> buffer;
-  char* data = vectorAsArray(&buffer, 256);
+  nu::DynamicArray<char> buffer;
+  buffer.resize(256);
+
+  char* data = buffer.getData();
   SizeType i = 0;
 
   while ((data[i] = readByte()) != 0) {
-    if (++i >= buffer.size())
-      data = vectorAsArray(&buffer, buffer.size() + 512);
+    if (++i >= buffer.getSize()) {
+      buffer.resize(buffer.getSize() + 512);
+      data = buffer.getData();
+    }
   }
 
   return std::string(data, i);
@@ -124,11 +131,12 @@ void InputStream::skipNextBytes(SizeType numBytesToSkip) {
   enum { BUFFERED_SIZE_TO_SKIP = 16384 };
 
   const SizeType skipBufferSize = std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
-  std::vector<uint8_t> temp(skipBufferSize, 0);
+
+  nu::DynamicArray<I8> temp;
+  temp.resize(skipBufferSize);
 
   while (numBytesToSkip != 0 && !isExhausted()) {
-    numBytesToSkip -=
-        read(vectorAsArray(&temp, 0), std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
+    numBytesToSkip -= read(temp.getData(), std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
   }
 }
 

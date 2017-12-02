@@ -26,7 +26,7 @@ public:
 
   DynamicArray(const DynamicArray& other)
     : m_allocator(other.m_allocator), m_data(nullptr), m_size(other.m_size), m_allocated(0) {
-    ensureAllocated(m_size);
+    ensureAllocated(m_size, false);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
   }
 
@@ -50,7 +50,7 @@ public:
     m_size = other.m_size;
     m_allocated = 0;
 
-    ensureAllocated(m_size);
+    ensureAllocated(m_size, false);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
 
     return *this;
@@ -76,12 +76,19 @@ public:
     return m_size;
   }
 
-  void resize(SizeType newSize) {
-    ensureAllocated(newSize);
-    m_size = newSize;
+  bool isEmpty() const {
+    return m_size == 0;
   }
 
   // Get
+
+  ElementType* getData() {
+    return m_data;
+  }
+
+  const ElementType* getData() const {
+    return m_data;
+  }
 
   const ElementType& get(SizeType index) const {
     return m_data[index];
@@ -91,19 +98,27 @@ public:
     return m_data[index];
   }
 
+  const ElementType& last() const {
+    return m_data[m_size - 1];
+  }
+
+  ElementType& last() {
+    return m_data[m_size - 1];
+  }
+
   // Push
 
   void pushBack(const ElementType& element) {
-    ensureAllocated(m_size + 1);
+    ensureAllocated(m_size + 1, true);
 
     m_data[m_size++] = element;
   }
 
   template <typename... Args>
   void emplaceBack(Args&&... args) {
-    ensureAllocated(m_size + 1);
+    ensureAllocated(m_size + 1, true);
 
-    new (&m_data[m_size++]) ElementType(std::forward<Args>(args)...);
+    new (&m_data[m_size++]) ElementType{std::forward<Args>(args)...};
   }
 
   // Modify
@@ -127,17 +142,31 @@ public:
     m_size -= end - begin;
   }
 
-  void clear(bool deallocate = false) {
-    // Destruct all the elements.
-    for (ElementType* e = m_data; e != m_data + m_size; ++e) {
-      e->~ElementType();
+  void reserve(SizeType size) {
+    if (size <= m_allocated) {
+      return;
     }
 
-    if (deallocate) {
-      free();
-    } else {
-      m_size = 0;
+    ensureAllocated(size, true);
+  }
+
+  void resize(SizeType newSize) {
+    ensureAllocated(newSize, true);
+    m_size = newSize;
+  }
+
+  void resize(SizeType newSize, const ElementType& fillValue) {
+    ensureAllocated(newSize, true);
+
+    for (SizeType i = m_size; i < newSize; ++i) {
+      m_data[i] = fillValue;
     }
+
+    m_size = newSize;
+  }
+
+  void clear() {
+    free();
   }
 
   // Iterators
@@ -159,7 +188,7 @@ public:
   }
 
 private:
-  void ensureAllocated(SizeType newSize) {
+  void ensureAllocated(SizeType newSize, bool keepOld) {
     if (newSize > m_allocated) {
       allocateData(nu::max<SizeType>(newSize << 1, 1 << 4), true);
     }
@@ -184,16 +213,14 @@ private:
   }
 
   void free() {
-    if (!m_data) {
-      return;
-    }
+    if (m_data) {
+      // Destruct all the objects we contain.
+      for (ElementType* el = m_data; el != m_data + m_size; el++) {
+        el->~ElementType();
+      }
 
-    // Destruct all the objects we contain.
-    for (ElementType* el = m_data; el != m_data + m_size; el++) {
-      el->~ElementType();
+      m_allocator->free(m_data, m_allocated * sizeof(ElementType));
     }
-
-    m_allocator->free(m_data, m_allocated * sizeof(ElementType));
 
     m_data = nullptr;
     m_size = 0;

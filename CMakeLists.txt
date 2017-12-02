@@ -37,7 +37,6 @@ set(nucleus_INCLUDE_FILES
         "include/nucleus/Containers/DynamicArray.h"
         "include/nucleus/Containers/Vector.h"
         "include/nucleus/files/file_path.h"
-        "include/nucleus/files/file_utils.h"
         "include/nucleus/logging.h"
         "include/nucleus/macros.h"
         "include/nucleus/Memory/RefCounted.h"
@@ -69,7 +68,6 @@ set(nucleus_INCLUDE_FILES
         "include/nucleus/utils/Move.h"
         "include/nucleus/utils/observer_list.h"
         "include/nucleus/utils/signals.h"
-        "include/nucleus/utils/stl.h"
         "include/nucleus/utils/TypeTraits.h"
         "include/nucleus/win/windows_mixin.h"
         )
@@ -100,7 +98,6 @@ set(nucleus_SOURCE_FILES
 if (WIN32)
     list(APPEND
             "nucleus_SOURCE_FILES"
-            "src/files/file_utils_win.cpp"
             "src/streams/file_input_stream_win.cpp"
             )
 endif ()
