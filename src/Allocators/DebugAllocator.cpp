@@ -4,6 +4,9 @@
 #include <algorithm>
 
 #include "nucleus/logging.h"
+#include "nucleus/win/windows_mixin.h"
+
+#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
@@ -11,7 +14,7 @@ USize DebugAllocator::s_leakedBytes = 0;
 USize DebugAllocator::s_leakedBlocks = 0;
 
 DebugAllocator::DebugAllocator(Allocator* parent)
-  : m_parent(parent), m_bytesAllocated(0), m_bytesOutstanding(0), m_maxAllocated(0) {}
+  : m_parent(parent), m_bytesAllocated(0), m_bytesOutstanding(0), m_maxAllocated(0), m_blocks(parent) {}
 
 DebugAllocator::~DebugAllocator() {
   // If any blocks have not been released, report them as leaked.
@@ -20,7 +23,7 @@ DebugAllocator::~DebugAllocator() {
   // Reclaim blocks that would have been leaked.
   for (auto& record : m_blocks) {
     s_leakedBytes += record.bytes;
-    m_parent->free(record.ptr, record.bytes, record.alignment);
+    // m_parent->free(record.ptr, record.bytes, record.alignment);
   }
 }
 
@@ -47,16 +50,24 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   auto it = std::find_if(std::begin(m_blocks), std::end(m_blocks), [p](Record& r) { return r.ptr = p; });
 
   if (it == std::end(m_blocks)) {
-    LOG(Fatal) << "Invalid pointer passed to free().";
-  } else if (it->bytes != bytes) {
-    LOG(Fatal) << "Block size mismatch on free().";
-  } else if (it->alignment != alignment) {
-    LOG(Fatal) << "Alignment mismatch on free().";
+    // LOG(Fatal) << "Invalid pointer passed to free().";
+    ::OutputDebugStringA("Invalid pointer passed to free().\n");
+  } /*else if (it->bytes != bytes) {
+    // LOG(Fatal) << "Block size mismatch on free().";
+    ::OutputDebugStringA("Block size mismatch on free().\n");
+  }*/
+  else if (it->alignment != alignment) {
+    // LOG(Fatal) << "Alignment mismatch on free().";
+    ::OutputDebugStringA("Alignment mismatch on free().\n");
   }
 
   m_parent->free(p, bytes, alignment);
   m_blocks.remove(it);
   m_bytesOutstanding -= bytes;
+}
+
+void* DebugAllocator::doAllocate(USize bytes, USize alignment, const char*) {
+  return doAllocate(bytes, alignment);
 }
 
 }  // namespace nu

@@ -1,6 +1,8 @@
 
 #include "nucleus/streams/OutputStream.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 void OutputStream::writeBool(bool data) {

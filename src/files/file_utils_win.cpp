@@ -6,6 +6,8 @@
 #include "nucleus/logging.h"
 #include "nucleus/win/windows_mixin.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 bool readFileToVector(const std::string& path, std::vector<char>* bufferOut) {

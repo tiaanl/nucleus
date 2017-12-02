@@ -48,6 +48,7 @@ protected:
   bool doIsEqual(const Allocator& other) const noexcept override {
     return this == &other;
   }
+  void* doAllocate(USize bytes, USize alignment, const char* file) override;
 
 private:
   struct Record {

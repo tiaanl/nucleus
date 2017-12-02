@@ -1,6 +1,8 @@
 
 #include "nucleus/Memory/RefCounted.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace detail {

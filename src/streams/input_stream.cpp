@@ -8,6 +8,8 @@
 #include "nucleus/utils/byte_order.h"
 #include "nucleus/utils/stl.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 InputStream::SizeType InputStream::getBytesRemaining() {

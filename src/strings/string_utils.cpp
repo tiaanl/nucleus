@@ -9,13 +9,17 @@
 
 #include <cstring>
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace {
 
 template <typename CharType>
 struct CaseInsensitiveCompare {
-  bool operator()(CharType left, CharType right) const { return std::tolower(left) == std::tolower(right); }
+  bool operator()(CharType left, CharType right) const {
+    return std::tolower(left) == std::tolower(right);
+  }
 };
 
 }  // namespace

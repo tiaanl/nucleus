@@ -1,6 +1,8 @@
 
 #include "nucleus/synchronization/lock.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 Lock::Lock() = default;

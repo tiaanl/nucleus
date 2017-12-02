@@ -6,6 +6,8 @@
 #include "nucleus/logging.h"
 #include "nucleus/types.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace detail {

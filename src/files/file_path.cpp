@@ -5,6 +5,8 @@
 #include "nucleus/macros.h"
 #include "nucleus/strings/string_utils.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace {
@@ -74,7 +76,7 @@ bool FilePath::isSeparator(CharType ch) {
 
 FilePath::FilePath() = default;
 
-FilePath::FilePath(const FilePath& other)  = default;
+FilePath::FilePath(const FilePath& other) = default;
 
 FilePath::FilePath(const StringType& path) : m_path(path) {}
 

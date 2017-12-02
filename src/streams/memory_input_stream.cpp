@@ -8,6 +8,8 @@
 #include "nucleus/types.h"
 #include "nucleus/utils/stl.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 MemoryInputStream::MemoryInputStream(const void* sourceData, USize sourceDataSize) : m_currentPosition(0) {

@@ -14,6 +14,8 @@
 #include "nucleus/win/windows_mixin.h"
 #endif
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace detail {

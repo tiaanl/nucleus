@@ -1,6 +1,8 @@
 
 #include "nucleus/streams/file_input_stream.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 namespace detail {

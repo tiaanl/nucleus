@@ -3,6 +3,8 @@
 
 #include "nucleus/logging.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 std::u16string ASCIIToUTF16(const std::string& ascii) {

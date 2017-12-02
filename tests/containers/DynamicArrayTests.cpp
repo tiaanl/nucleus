@@ -4,6 +4,8 @@
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/types.h"
 
+#include "nucleus/MemoryDebug.h"
+
 #include "gtest/gtest.h"
 
 TEST(DynamicArrayTests, Basic) {

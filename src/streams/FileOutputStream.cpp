@@ -1,6 +1,8 @@
 
 #include "nucleus/streams/FileOutputStream.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 FileOutputStream::FileOutputStream(const FilePath& path) : m_path(path) {

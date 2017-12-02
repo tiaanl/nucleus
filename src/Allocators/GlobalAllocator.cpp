@@ -3,12 +3,14 @@
 
 #include <cstdlib>
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
 #if COMPILER(GCC)
   return ::malloc(bytes);
-#else  // COMPILER(GCC)
+#else   // COMPILER(GCC)
   return ::_aligned_malloc(bytes, alignment);
 #endif  // COMPILER(GCC)
 }
@@ -25,9 +27,8 @@ bool GlobalAllocator::doIsEqual(const Allocator& other) const noexcept {
   return this == &other;
 }
 
-GlobalAllocator* globalAllocatorSingleton() {
-  static GlobalAllocator singleton;
-  return &singleton;
+void* GlobalAllocator::doAllocate(USize bytes, USize alignment, const char*) {
+  return doAllocate(bytes, alignment);
 }
 
 }  // namespace nu

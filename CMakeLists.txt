@@ -23,6 +23,7 @@ include_directories("include")
 set(nucleus_INCLUDE_FILES
         "include/nucleus/streams/OutputStream.h"
         "include/nucleus/streams/FileOutputStream.h"
+        "include/nucleus/MemoryDebug.h"
 
         "include/nucleus/algorithms/Utility.h"
         "include/nucleus/Allocators/Allocator.h"
@@ -81,6 +82,8 @@ set(nucleus_SOURCE_FILES
         "src/Allocators/DefaultAllocator.cpp"
         "src/Allocators/GlobalAllocator.cpp"
 
+        "src/MemoryDebug.cpp"
+
         "src/files/file_path.cpp"
         "src/logging.cpp"
         "src/Memory/RefCounted.cpp"
@@ -113,5 +116,6 @@ add_library("nucleus" STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 target_include_directories("nucleus" PUBLIC "${nucleus_SOURCE_DIR}/include")
 set_property(TARGET nucleus PROPERTY FOLDER nucleus)
 set_property(TARGET nucleus PROPERTY CXX_STANDARD 11)
+target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 
 add_subdirectory(tests nucleus_tests)

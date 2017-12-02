@@ -7,6 +7,8 @@
 #include "nucleus/logging.h"
 #include "nucleus/types.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, USize size) : m_data(data), m_size(size) {}

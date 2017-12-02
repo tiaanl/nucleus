@@ -1,6 +1,11 @@
 
 #include "nucleus/Allocators/DefaultAllocator.h"
 
+#include "nucleus/Allocators/DebugAllocator.h"
+#include "nucleus/Allocators/GlobalAllocator.h"
+
+#include "nucleus/MemoryDebug.h"
+
 namespace nu {
 
 static std::atomic<Allocator*> gs_defaultAllocator;
@@ -8,8 +13,16 @@ static std::atomic<Allocator*> gs_defaultAllocator;
 Allocator* getDefaultAllocator() {
   Allocator* ret = gs_defaultAllocator.load();
 
+  static nu::GlobalAllocator globalAllocator;
+
   if (ret == nullptr) {
-    ret = globalAllocatorSingleton();
+#if BUILD(DEBUG)
+    static nu::DebugAllocator debugAllocator{&globalAllocator};
+    ret = &debugAllocator;
+#else
+    ret = &globalAllocator;
+#endif
+
     gs_defaultAllocator.store(ret);
   }
 
@@ -17,10 +30,6 @@ Allocator* getDefaultAllocator() {
 }
 
 Allocator* setDefaultAllocator(Allocator* allocator) {
-  if (allocator == nullptr) {
-    allocator = globalAllocatorSingleton();
-  }
-
   // TODO: Use atomic swap to set the allocator.
   Allocator* prev = getDefaultAllocator();
   gs_defaultAllocator.store(allocator);
