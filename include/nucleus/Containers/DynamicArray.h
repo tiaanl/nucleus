@@ -76,6 +76,11 @@ public:
     return m_size;
   }
 
+  void resize(SizeType newSize) {
+    ensureAllocated(newSize);
+    m_size = newSize;
+  }
+
   // Get
 
   const ElementType& get(SizeType index) const {
@@ -156,7 +161,7 @@ public:
 private:
   void ensureAllocated(SizeType newSize) {
     if (newSize > m_allocated) {
-      allocateData(nu::min<SizeType>(newSize << 1, 1 << 4), true);
+      allocateData(nu::max<SizeType>(newSize << 1, 1 << 4), true);
     }
   }
 
