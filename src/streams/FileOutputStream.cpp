@@ -26,9 +26,11 @@ void FileOutputStream::closeHandle() {
 }
 
 FileOutputStream::SizeType FileOutputStream::write(void* buffer, SizeType size) {
+  // static_assert(sizeof(DWORD) == sizeof(SizeType), "Sizes must match");
+
   DWORD bytesWritten = 0;
   if (m_handle) {
-    ::WriteFile(m_handle, buffer, size, &bytesWritten, nullptr);
+    ::WriteFile(m_handle, buffer, static_cast<DWORD>(size), &bytesWritten, nullptr);
   }
 
   return static_cast<SizeType>(bytesWritten);
