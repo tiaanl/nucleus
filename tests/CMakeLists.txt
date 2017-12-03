@@ -20,5 +20,5 @@ set(nucleus_TEST_FILES
 )
 
 add_executable(nucleus_tests ${nucleus_TEST_FILES})
-target_link_libraries(nucleus_tests nucleus gtest_main)
+target_link_libraries(nucleus_tests nucleus googletest)
 set_property(TARGET nucleus_tests PROPERTY FOLDER nucleus)
