@@ -1,6 +1,9 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Optional.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 static int constructorCalled = 0;
 static int destructorCalled = 0;
@@ -10,13 +13,21 @@ static int moveCalled = 0;
 struct MockObject {
   int value;
 
-  explicit MockObject(int value) : value(value) { constructorCalled++; }
+  explicit MockObject(int value) : value(value) {
+    constructorCalled++;
+  }
 
-  MockObject(const MockObject& other) : value(other.value) { copyCalled++; }
+  MockObject(const MockObject& other) : value(other.value) {
+    copyCalled++;
+  }
 
-  MockObject(MockObject&& other) : value(other.value) { moveCalled++; }
+  MockObject(MockObject&& other) : value(other.value) {
+    moveCalled++;
+  }
 
-  ~MockObject() { destructorCalled++; }
+  ~MockObject() {
+    destructorCalled++;
+  }
 
   MockObject& operator=(const MockObject& other) {
     copyCalled++;

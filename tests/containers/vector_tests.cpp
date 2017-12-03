@@ -1,9 +1,11 @@
 
-#include <gtest/gtest.h>
-
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Containers/Vector.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 TEST(VectorTests, DefaultConstruct) {
   nu::Vector<int> v;

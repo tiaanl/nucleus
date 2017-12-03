@@ -1,11 +1,13 @@
 
-#include <gtest/gtest.h>
-
 #include <cstdarg>
 #include <cstdio>
 #include <string>
 
 #include "nucleus/utils/signals.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 namespace {
 

@@ -4,6 +4,8 @@
 
 #include "gtest/gtest.h"
 
+#include "nucleus/MemoryDebug.h"
+
 namespace {
 
 class SelfAssign : public nu::RefCounted<SelfAssign> {
@@ -25,13 +27,19 @@ class ScopedRefPtrToSelf : public nu::RefCounted<ScopedRefPtrToSelf> {
 public:
   ScopedRefPtrToSelf() : m_selfPtr(this) {}
 
-  static bool wasDestroyed() { return m_wasDestroyed; }
+  static bool wasDestroyed() {
+    return m_wasDestroyed;
+  }
 
-  void SelfDestruct() { m_selfPtr = nullptr; }
+  void SelfDestruct() {
+    m_selfPtr = nullptr;
+  }
 
 private:
   friend class nu::RefCounted<ScopedRefPtrToSelf>;
-  ~ScopedRefPtrToSelf() { m_wasDestroyed = true; }
+  ~ScopedRefPtrToSelf() {
+    m_wasDestroyed = true;
+  }
 
   static bool m_wasDestroyed;
 

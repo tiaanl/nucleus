@@ -1,7 +1,9 @@
 
-#include <gtest/gtest.h>
-
 #include "nucleus/utils/observer_list.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
@@ -18,7 +20,9 @@ struct Adder : public Foo {
 
   ~Adder() override {}
 
-  void observe(int x) override { total += x * scaler; }
+  void observe(int x) override {
+    total += x * scaler;
+  }
 };
 
 struct Disruptor : public Foo {
@@ -29,7 +33,9 @@ struct Disruptor : public Foo {
 
   ~Disruptor() override {}
 
-  void observe(int x) override { list->removeObserver(doomed); }
+  void observe(int x) override {
+    list->removeObserver(doomed);
+  }
 };
 
 struct AddInObserve : public Foo {

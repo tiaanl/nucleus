@@ -4,9 +4,9 @@
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/types.h"
 
-#include "nucleus/MemoryDebug.h"
-
 #include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 TEST(DynamicArrayTests, Basic) {
   nu::DynamicArray<U8> buffer;

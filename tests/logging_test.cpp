@@ -1,7 +1,9 @@
 
-#include <gtest/gtest.h>
-
 #include "nucleus/logging.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 

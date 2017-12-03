@@ -1,8 +1,10 @@
 
-#include <gtest/gtest.h>
-
 #include "nucleus/files/file_path.h"
 #include "nucleus/macros.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 #define FPL(Str) FILE_PATH_LITERAL(Str)
 

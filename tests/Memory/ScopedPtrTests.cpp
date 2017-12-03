@@ -1,6 +1,9 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Memory/ScopedPtr.h"
+
+#include "gtest/gtest.h"
+
+#include "nucleus/MemoryDebug.h"
 
 namespace {
 
@@ -22,16 +25,22 @@ struct A {
   char ch;
   static int count;
 
-  A(char c = 0) : ch(c) { ++count; }
+  A(char c = 0) : ch(c) {
+    ++count;
+  }
 
-  A(const A& other) : ch(other.ch) { ++count; }
+  A(const A& other) : ch(other.ch) {
+    ++count;
+  }
 
   A& operator=(const A& other) {
     ch = other.ch;
     return *this;
   }
 
-  virtual ~A() { --count; }
+  virtual ~A() {
+    --count;
+  }
 };
 
 int A::count = 0;
