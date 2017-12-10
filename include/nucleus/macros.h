@@ -6,6 +6,7 @@
 #include "nucleus/types.h"
 
 #define DISALLOW_COPY_AND_ASSIGN(ClassName)                                                                            \
+public:                                                                                                                \
   ClassName(const ClassName&) = delete;                                                                                \
   ClassName& operator=(const ClassName&) = delete
 

@@ -11,12 +11,16 @@ namespace detail {
 
 template <typename T>
 struct DefaultDelete {
-  void operator()(T* ptr) const { delete ptr; }
+  void operator()(T* ptr) const {
+    delete ptr;
+  }
 };
 
 template <typename T>
 struct DefaultDelete<T[]> {
-  void operator()(T* ptr) const { delete[] ptr; }
+  void operator()(T* ptr) const {
+    delete[] ptr;
+  }
 };
 
 }  // namespace detail
@@ -47,7 +51,9 @@ public:
   ScopedPtr(ScopedPtr<T2, D2>&& other) : m_ptr(other.release()), m_deleter(forward<D2>(other.getDeleter())) {}
 
   // Destruct the ScopedPtr and delete the pointer we might own.
-  ~ScopedPtr() { reset(); }
+  ~ScopedPtr() {
+    reset();
+  }
 
   // We do not allow copying of ScopedPtr's.
   ScopedPtr& operator=(const ScopedPtr&) = delete;
@@ -66,14 +72,22 @@ public:
   };
 
   // Dereference the ScopedPtr to get a reference to the original type.
-  ElementType* operator->() const { return m_ptr; }
-  ElementType& operator*() const { return *m_ptr; }
+  ElementType* operator->() const {
+    return m_ptr;
+  }
+  ElementType& operator*() const {
+    return *m_ptr;
+  }
 
   // Return the pointer we own.
-  ElementType* get() const { return m_ptr; }
+  ElementType* get() const {
+    return m_ptr;
+  }
 
   // Return the deleter that we use to delete the owned pointer.
-  DeleterType getDeleter() const { return m_deleter; }
+  DeleterType getDeleter() const {
+    return m_deleter;
+  }
 
   // Release the pointer we own to the caller.
   ElementType* release() {
@@ -95,7 +109,9 @@ public:
     other.m_ptr = tmp;
   }
 
-  explicit operator bool() const { return m_ptr != nullptr; }
+  explicit operator bool() const {
+    return m_ptr != nullptr;
+  }
 
 protected:
   ElementType* m_ptr;
