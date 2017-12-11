@@ -28,62 +28,61 @@
 #endif  // OS(POSIX)
 
 namespace nu {
-    
-    namespace detail {
-        
-        I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
-            if (handle != 0 && lseek(handle, pos, SEEK_SET) == pos) {
-                return pos;
-            }
-            return -1;
-        }
-        
-    }  // namespace detail
-    
-    FileInputStream::SizeType FileInputStream::getLength() {
-        long size = 0;
-        FILE* fp = fopen(m_path.getPath().c_str(), "rb");
-        if (fp != 0) {
-            fseek(fp, 0, SEEK_END);
-            size = ftell(fp);
-            fclose(fp);
-        }
-        
-        return static_cast<SizeType>(size);
-    }
-    
-    void FileInputStream::openHandle() {
-        int f = open(m_path.getPath().c_str(), O_RDONLY, 00644);
-        if (f != -1) {
-            m_handle = f;
-        } else {
-            m_status = false;
-        }
-    }
-    
-    void FileInputStream::closeHandle() {
-        if (m_handle != 0) {
-            close(m_handle);
-            m_handle = 0;
-        }
-    }
-    
-    size_t FileInputStream::readInternal(void* buffer, size_t numBytes) {
-        ssize_t result = 0;
-        
-        if (m_handle != 0) {
-            result = ::read(m_handle, buffer, numBytes);
-            
-            if (result < 0) {
-                m_status = false;
-                result = 0;
-            }
-        }
-        
-        return (size_t)result;
-    }
-    
-}  // namespace nu
 
+namespace detail {
+
+I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
+  if (handle != 0 && lseek(handle, pos, SEEK_SET) == pos) {
+    return pos;
+  }
+  return -1;
+}
+
+}  // namespace detail
+
+FileInputStream::SizeType FileInputStream::getLength() {
+  long size = 0;
+  FILE* fp = fopen(m_path.getPath().c_str(), "rb");
+  if (fp != 0) {
+    fseek(fp, 0, SEEK_END);
+    size = ftell(fp);
+    fclose(fp);
+  }
+
+  return static_cast<SizeType>(size);
+}
+
+void FileInputStream::openHandle() {
+  int f = open(m_path.getPath().c_str(), O_RDONLY, 00644);
+  if (f != -1) {
+    m_handle = f;
+  } else {
+    m_status = false;
+  }
+}
+
+void FileInputStream::closeHandle() {
+  if (m_handle != 0) {
+    close(m_handle);
+    m_handle = 0;
+  }
+}
+
+size_t FileInputStream::readInternal(void* buffer, size_t numBytes) {
+  ssize_t result = 0;
+
+  if (m_handle != 0) {
+    result = ::read(m_handle, buffer, numBytes);
+
+    if (result < 0) {
+      m_status = false;
+      result = 0;
+    }
+  }
+
+  return (size_t)result;
+}
+
+}  // namespace nu
 
 #endif  // NUCLEUS_STREAMS_FILE_INPUT_STREAM_POSIX_H_

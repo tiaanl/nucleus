@@ -34,11 +34,17 @@ public:
     }
   }
 
-  T* get() const { return m_ptr; }
+  T* get() const {
+    return m_ptr;
+  }
 
-  operator T*() const { return m_ptr; }
+  operator T*() const {
+    return m_ptr;
+  }
 
-  T* operator->() const { return m_ptr; }
+  T* operator->() const {
+    return m_ptr;
+  }
 
   ScopedRefPtr<T>& operator=(T* ptr) {
     // addRef() first so that self assignment works.
@@ -56,7 +62,9 @@ public:
     return *this;
   }
 
-  ScopedRefPtr<T>& operator=(const ScopedRefPtr<T>& other) { return *this = other.m_ptr; }
+  ScopedRefPtr<T>& operator=(const ScopedRefPtr<T>& other) {
+    return *this = other.m_ptr;
+  }
 
   template <typename U>
   ScopedRefPtr<T>& operator=(const ScopedRefPtr<U>& other) {
@@ -69,7 +77,9 @@ public:
     *pptr = ptr;
   }
 
-  void swap(ScopedRefPtr<T>& other) { swap(&other.m_ptr); }
+  void swap(ScopedRefPtr<T>& other) {
+    swap(&other.m_ptr);
+  }
 
 protected:
   T* m_ptr;

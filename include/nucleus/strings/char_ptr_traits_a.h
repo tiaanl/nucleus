@@ -11,11 +11,15 @@ struct CharPtrTraitsA {
   using SizeType = size_t;
 
   // Return the unicode character that the pointer is pointing to.
-  static char32_t getUnicodeChar(CharType* ptr) { return static_cast<char32_t>(*ptr); }
+  static char32_t getUnicodeChar(CharType* ptr) {
+    return static_cast<char32_t>(*ptr);
+  }
 
   // Return the number of bytes required to represent the given character in
   // this encoding.
-  static uint8_t bytesRequiredFor(char32_t ch) { return 1; }
+  static uint8_t bytesRequiredFor(char32_t ch) {
+    return 1;
+  }
 
   // Given a pointer to an array of characters, advance the pointer to the
   // beginning of the next character.

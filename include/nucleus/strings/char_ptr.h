@@ -17,7 +17,9 @@ public:
 
   // Return the number of bytes required to represent the given character in
   // this encoding.
-  static uint8_t bytesRequiredFor(CharType ch) { return Traits::bytesRequiredFor(ch); }
+  static uint8_t bytesRequiredFor(CharType ch) {
+    return Traits::bytesRequiredFor(ch);
+  }
 
   // Construct a CharPtrBase which is wrapping a null pointer.
   CharPtrBase() {}
@@ -27,23 +29,39 @@ public:
 
   // Comparison operators.
 
-  bool operator==(const CharPtrBase& other) const { return m_ptr == other.m_ptr; }
+  bool operator==(const CharPtrBase& other) const {
+    return m_ptr == other.m_ptr;
+  }
 
-  bool operator!=(const CharPtrBase& other) const { return m_ptr != other.m_ptr; }
+  bool operator!=(const CharPtrBase& other) const {
+    return m_ptr != other.m_ptr;
+  }
 
-  bool operator<(const CharPtrBase& other) const { return m_ptr < other.m_ptr; }
+  bool operator<(const CharPtrBase& other) const {
+    return m_ptr < other.m_ptr;
+  }
 
-  bool operator<=(const CharPtrBase& other) const { return m_ptr <= other.m_ptr; }
+  bool operator<=(const CharPtrBase& other) const {
+    return m_ptr <= other.m_ptr;
+  }
 
-  bool operator>(const CharPtrBase& other) const { return m_ptr > other.m_ptr; }
+  bool operator>(const CharPtrBase& other) const {
+    return m_ptr > other.m_ptr;
+  }
 
-  bool operator>=(const CharPtrBase& other) const { return m_ptr >= other.m_ptr; }
+  bool operator>=(const CharPtrBase& other) const {
+    return m_ptr >= other.m_ptr;
+  }
 
   // Return the unicode character that we are currently pointing to.
-  char32_t getUnicodeChar() const { return Traits::getUnicodeChar(m_ptr); }
+  char32_t getUnicodeChar() const {
+    return Traits::getUnicodeChar(m_ptr);
+  }
 
   // Return true if we are pointing to a null terminator.
-  bool isNull() const { return getUnicodeChar() == 0; }
+  bool isNull() const {
+    return getUnicodeChar() == 0;
+  }
 
 private:
   CharType* m_ptr{nullptr};

@@ -21,10 +21,6 @@ add_subdirectory("third_party")
 include_directories("include")
 
 set(nucleus_INCLUDE_FILES
-    "include/nucleus/streams/OutputStream.h"
-    "include/nucleus/streams/FileOutputStream.h"
-    "include/nucleus/MemoryDebug.h"
-
     "include/nucleus/algorithms/Utility.h"
     "include/nucleus/Allocators/Allocator.h"
     "include/nucleus/Allocators/DebugAllocator.h"
@@ -33,19 +29,20 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Atomics/AtomicRefCount.h"
     "include/nucleus/Atomics/Atomics.h"
     "include/nucleus/config.h"
-    "include/nucleus/Containers/array.h"
     "include/nucleus/Containers/DynamicArray.h"
-    "include/nucleus/Containers/Vector.h"
     "include/nucleus/files/file_path.h"
     "include/nucleus/logging.h"
     "include/nucleus/macros.h"
     "include/nucleus/Memory/RefCounted.h"
     "include/nucleus/Memory/ScopedPtr.h"
     "include/nucleus/Memory/ScopedRefPtr.h"
+    "include/nucleus/MemoryDebug.h"
     "include/nucleus/Optional.h"
     "include/nucleus/streams/file_input_stream.h"
+    "include/nucleus/streams/FileOutputStream.h"
     "include/nucleus/streams/input_stream.h"
     "include/nucleus/streams/memory_input_stream.h"
+    "include/nucleus/streams/OutputStream.h"
     "include/nucleus/streams/wrapped_memory_input_stream.h"
     "include/nucleus/strings/char_ptr.h"
     "include/nucleus/strings/char_ptr_traits_16.h"
@@ -70,44 +67,39 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/utils/signals.h"
     "include/nucleus/utils/TypeTraits.h"
     "include/nucleus/win/windows_mixin.h"
-)
+    )
 
 set(nucleus_SOURCE_FILES
-        "src/streams/OutputStream.cpp"
-        "src/streams/FileOutputStream.cpp"
+    "src/Allocators/DebugAllocator.cpp"
+    "src/Allocators/DefaultAllocator.cpp"
+    "src/Allocators/GlobalAllocator.cpp"
+    "src/files/file_path.cpp"
+    "src/logging.cpp"
+    "src/Memory/RefCounted.cpp"
+    "src/MemoryDebug.cpp"
+    "src/streams/file_input_stream.cpp"
+    "src/streams/FileOutputStream.cpp"
+    "src/streams/input_stream.cpp"
+    "src/streams/memory_input_stream.cpp"
+    "src/streams/OutputStream.cpp"
+    "src/streams/wrapped_memory_input_stream.cpp"
+    "src/strings/String.cpp"
+    "src/strings/string_utf_conversion.cpp"
+    "src/strings/string_utils.cpp"
+    "src/synchronization/Lock.cpp"
+    )
 
-        "src/Allocators/DebugAllocator.cpp"
-        "src/Allocators/DefaultAllocator.cpp"
-        "src/Allocators/GlobalAllocator.cpp"
-
-        "src/MemoryDebug.cpp"
-
-        "src/files/file_path.cpp"
-        "src/logging.cpp"
-        "src/Memory/RefCounted.cpp"
-        "src/streams/file_input_stream.cpp"
-        "src/streams/input_stream.cpp"
-        "src/streams/memory_input_stream.cpp"
-        "src/streams/wrapped_memory_input_stream.cpp"
-        "src/strings/String.cpp"
-        "src/strings/string_utf_conversion.cpp"
-        "src/strings/string_utils.cpp"
-        "src/synchronization/Lock.cpp"
-)
-
-if (WIN32)
-        list(APPEND
-                "nucleus_SOURCE_FILES"
-                "src/streams/file_input_stream_win.cpp"
+if(WIN32)
+    list(APPEND nucleus_SOURCE_FILES
+        "src/streams/file_input_stream_win.cpp"
         )
-endif ()
+endif()
 
-if (APPLE)
-        list(APPEND
-                "nucleus_SOURCE_FILES"
-                "src/streams/file_input_stream_posix.cpp"
+if(APPLE)
+    list(APPEND nucleus_SOURCE_FILES
+        "src/streams/file_input_stream_posix.cpp"
         )
-endif ()
+endif()
 
 add_library(nucleus STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
 target_include_directories(nucleus PUBLIC "${nucleus_SOURCE_DIR}/include")

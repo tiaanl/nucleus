@@ -55,10 +55,14 @@ public:
   bool operator<(const FilePath& other) const;
 
   // Return the path as a string.
-  const StringType& getPath() const { return m_path; }
+  const StringType& getPath() const {
+    return m_path;
+  }
 
   // Return true if the path is empty.
-  bool isEmpty() const { return m_path.empty(); }
+  bool isEmpty() const {
+    return m_path.empty();
+  }
 
   // Clear our the path.
   void clear();

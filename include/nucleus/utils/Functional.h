@@ -17,7 +17,9 @@ struct BinaryFunction {
 // Less comparison of two values.
 template <typename T = void>
 struct Less : public BinaryFunction<T, T, bool> {
-  bool operator()(const T& left, const T& right) const { return left < right; }
+  bool operator()(const T& left, const T& right) const {
+    return left < right;
+  }
 };
 
 template <>

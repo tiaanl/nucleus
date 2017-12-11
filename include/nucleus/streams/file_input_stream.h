@@ -24,7 +24,9 @@ public:
   ~FileInputStream() override;
 
   // Returns the file path that this stream is pointing to.
-  const FilePath& getFile() const { return m_path; }
+  const FilePath& getFile() const {
+    return m_path;
+  }
 
   // Returns the status of the file stream.  The result will be ok if the file
   // opened successfully.  If an error occurred while opening or reading from

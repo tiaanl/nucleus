@@ -3,9 +3,7 @@
 
 set(nucleus_TEST_FILES
     "Allocators/AllocatorTests.cpp"
-    "containers/array_tests.cpp"
     "Containers/DynamicArrayTests.cpp"
-    "containers/vector_tests.cpp"
     "files/file_path_tests.cpp"
     "logging_test.cpp"
     "Memory/RefCountedTests.cpp"
@@ -16,8 +14,7 @@ set(nucleus_TEST_FILES
     "strings/string_utils_tests.cpp"
     "utils/observer_list_tests.cpp"
     "utils/signals_tests.cpp"
-    # "Atomics/AtomicsTests.cpp"
-)
+    )
 
 add_executable(nucleus_tests ${nucleus_TEST_FILES})
 target_link_libraries(nucleus_tests nucleus googletest)

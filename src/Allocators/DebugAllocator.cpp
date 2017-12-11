@@ -51,14 +51,18 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
 
   if (it == std::end(m_blocks)) {
     // LOG(Fatal) << "Invalid pointer passed to free().";
+#if OS(WIN)
     ::OutputDebugStringA("Invalid pointer passed to free().\n");
-  } /*else if (it->bytes != bytes) {
-    // LOG(Fatal) << "Block size mismatch on free().";
-    ::OutputDebugStringA("Block size mismatch on free().\n");
-  }*/
+#endif  // OS(WIN)
+  }     /*else if (it->bytes != bytes) {
+        // LOG(Fatal) << "Block size mismatch on free().";
+        ::OutputDebugStringA("Block size mismatch on free().\n");
+      }*/
   else if (it->alignment != alignment) {
     // LOG(Fatal) << "Alignment mismatch on free().";
+#if OS(WIN)
     ::OutputDebugStringA("Alignment mismatch on free().\n");
+#endif  // OS(WIN)
   }
 
   m_parent->free(p, bytes, alignment);

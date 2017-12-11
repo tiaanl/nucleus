@@ -28,7 +28,9 @@ public:
   // This does the output part of the logging.
   ~LogEntry();
 
-  std::ostream& getStream() { return m_stream; }
+  std::ostream& getStream() {
+    return m_stream;
+  }
 
 private:
   // Fields that control how the log messages are printed.

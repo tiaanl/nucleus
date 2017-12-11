@@ -11,15 +11,21 @@ namespace detail {
 
 class RefCountedBase {
 public:
-  bool hasOneRef() const { return m_refCount == 1; }
+  bool hasOneRef() const {
+    return m_refCount == 1;
+  }
 
 protected:
   RefCountedBase() : m_refCount(0) {}
   ~RefCountedBase() {}
 
-  void addRef() const { ++m_refCount; }
+  void addRef() const {
+    ++m_refCount;
+  }
 
-  bool release() const { return --m_refCount == 0; }
+  bool release() const {
+    return --m_refCount == 0;
+  }
 
 private:
   mutable I32 m_refCount;
@@ -51,7 +57,9 @@ class RefCounted : public detail::RefCountedBase {
 public:
   RefCounted() {}
 
-  void addRef() const { detail::RefCountedBase::addRef(); }
+  void addRef() const {
+    detail::RefCountedBase::addRef();
+  }
 
   void release() const {
     if (detail::RefCountedBase::release()) {
@@ -71,7 +79,9 @@ class RefCountedThreadSafe;
 
 template <typename T>
 struct DefaultRefCountedThreadSafeTraits {
-  static void destruct(const T* x) { RefCountedThreadSafe<T, DefaultRefCountedThreadSafeTraits>::deleteInternal(x); }
+  static void destruct(const T* x) {
+    RefCountedThreadSafe<T, DefaultRefCountedThreadSafeTraits>::deleteInternal(x);
+  }
 };
 
 template <typename T, typename Traits = DefaultRefCountedThreadSafeTraits<T>>
@@ -79,7 +89,9 @@ class RefCountedThreadSafe : public detail::RefCountedThreadSafeBase {
 public:
   RefCountedThreadSafe() {}
 
-  void addRef() const { detail::RefCountedThreadSafeBase::addRef(); }
+  void addRef() const {
+    detail::RefCountedThreadSafeBase::addRef();
+  }
 
   void release() const {
     if (detail::RefCountedThreadSafeBase::release()) {
@@ -92,7 +104,9 @@ protected:
 
   ~RefCountedThreadSafe() {}
 
-  static void deleteInternal(const T* x) { delete x; }
+  static void deleteInternal(const T* x) {
+    delete x;
+  }
 
   DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
 };

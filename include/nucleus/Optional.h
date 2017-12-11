@@ -66,11 +66,17 @@ public:
   }
 
   // Return a reference to the value we hold.
-  T& get() { return m_value; }
-  const T& get() const { return m_value; }
+  T& get() {
+    return m_value;
+  }
+  const T& get() const {
+    return m_value;
+  }
 
   // Returns true if the value is valid.
-  bool isValid() const { return m_valid; }
+  bool isValid() const {
+    return m_valid;
+  }
 
 private:
   // The value we're holding.

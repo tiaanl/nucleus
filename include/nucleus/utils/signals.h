@@ -34,7 +34,9 @@ struct CollectorLast {
     return true;
   }
 
-  CollectorResult getResult() { return m_last; }
+  CollectorResult getResult() {
+    return m_last;
+  }
 
 private:
   Result m_last;
@@ -51,7 +53,9 @@ struct CollectorDefault<void> {
 
   void getResult() {}
 
-  bool operator()(void) { return true; }
+  bool operator()(void) {
+    return true;
+  }
 };
 
 // CollectorInvocation specialization for regular signals.
@@ -107,7 +111,9 @@ public:
 
   // Operator to remove a signal handler through it's connection ID, returns if
   // a handler was removed.
-  bool disconnect(USize connection) { return m_callbackRing ? m_callbackRing->removeSiblings(connection) : false; }
+  bool disconnect(USize connection) {
+    return m_callbackRing ? m_callbackRing->removeSiblings(connection) : false;
+  }
 
   // Emit a signal, i.e. invoke it's callbacks and collect return types with the
   // Collector.
@@ -164,7 +170,9 @@ private:
 
     explicit SignalLink(const CallbackFunction& function) : function(function) {}
 
-    ~SignalLink() { DCHECK(refCount == 0); }
+    ~SignalLink() {
+      DCHECK(refCount == 0);
+    }
 
     void incRef() {
       ++refCount;

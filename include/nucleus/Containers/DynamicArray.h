@@ -195,7 +195,6 @@ private:
   }
 
   void allocateData(SizeType size, bool keepOld) {
-    const USize newSizeInBytes = size * sizeof(ElementType);
     const USize oldSizeInBytes = m_size * sizeof(ElementType);
 
     ElementType* newData = static_cast<ElementType*>(m_allocator->allocate(size * sizeof(ElementType)));

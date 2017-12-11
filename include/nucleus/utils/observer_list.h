@@ -20,7 +20,9 @@ public:
     }
   }
 
-  bool isEmpty() const { return detail::ObserverListBase<ObserverType>::isEmpty(); }
+  bool isEmpty() const {
+    return detail::ObserverListBase<ObserverType>::isEmpty();
+  }
 };
 
 }  // namespace nu
