@@ -1,0 +1,3 @@
+
+add_executable(AllocatorBenchmarks Allocators/AllocatorBenchmarks.cpp)
+target_link_libraries(AllocatorBenchmarks nucleus benchmark)

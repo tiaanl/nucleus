@@ -11,8 +11,6 @@ protected:
   void* doAllocate(USize bytes, USize alignment) override;
   void doFree(void* p, USize bytes, USize alignment) override;
   bool doIsEqual(const Allocator& other) const noexcept override;
-
-  void* doAllocate(USize bytes, USize alignment, const char* file) override;
 };
 
 }  // namespace nu

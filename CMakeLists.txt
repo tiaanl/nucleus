@@ -26,6 +26,7 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Allocators/DebugAllocator.h"
     "include/nucleus/Allocators/DefaultAllocator.h"
     "include/nucleus/Allocators/GlobalAllocator.h"
+    "include/nucleus/Allocators/LinearAllocator.h"
     "include/nucleus/Atomics/AtomicRefCount.h"
     "include/nucleus/Atomics/Atomics.h"
     "include/nucleus/config.h"
@@ -73,6 +74,7 @@ set(nucleus_SOURCE_FILES
     "src/Allocators/DebugAllocator.cpp"
     "src/Allocators/DefaultAllocator.cpp"
     "src/Allocators/GlobalAllocator.cpp"
+    "src/Allocators/LinearAllocator.cpp"
     "src/files/file_path.cpp"
     "src/logging.cpp"
     "src/Memory/RefCounted.cpp"
@@ -108,3 +110,4 @@ set_property(TARGET nucleus PROPERTY CXX_STANDARD 11)
 target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 
 add_subdirectory(tests nucleus_tests)
+add_subdirectory(benchmarks nucleus_benchmarks)

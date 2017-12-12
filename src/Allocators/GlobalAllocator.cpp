@@ -27,8 +27,4 @@ bool GlobalAllocator::doIsEqual(const Allocator& other) const noexcept {
   return this == &other;
 }
 
-void* GlobalAllocator::doAllocate(USize bytes, USize alignment, const char*) {
-  return doAllocate(bytes, alignment);
-}
-
 }  // namespace nu

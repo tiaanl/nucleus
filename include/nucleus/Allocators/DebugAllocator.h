@@ -12,7 +12,7 @@ namespace nu {
 class DebugAllocator : public Allocator {
 public:
   explicit DebugAllocator(Allocator* parent = getDefaultAllocator());
-  ~DebugAllocator();
+  ~DebugAllocator() override;
 
   Allocator* getParent() const {
     return m_parent;
@@ -48,7 +48,6 @@ protected:
   bool doIsEqual(const Allocator& other) const noexcept override {
     return this == &other;
   }
-  void* doAllocate(USize bytes, USize alignment, const char* file) override;
 
 private:
   struct Record {

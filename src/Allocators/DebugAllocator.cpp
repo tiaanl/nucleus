@@ -70,8 +70,4 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   m_bytesOutstanding -= bytes;
 }
 
-void* DebugAllocator::doAllocate(USize bytes, USize alignment, const char*) {
-  return doAllocate(bytes, alignment);
-}
-
 }  // namespace nu
