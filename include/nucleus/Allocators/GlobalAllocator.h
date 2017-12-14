@@ -2,7 +2,7 @@
 #define NUCLEUS_ALLOCATORS_GLOBAL_ALLOCATOR_H_
 
 #include "nucleus/Allocators/Allocator.h"
-#include "nucleus/types.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 

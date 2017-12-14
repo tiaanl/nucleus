@@ -5,7 +5,7 @@
 #include <atomic>
 
 #include "nucleus/Atomics/Atomics.h"
-#include "nucleus/types.h"
+#include "nucleus/Types.h"
 
 #ifdef _CRTDBG_MAP_ALLOC
 #undef free

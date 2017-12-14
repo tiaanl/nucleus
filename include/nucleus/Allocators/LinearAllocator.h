@@ -3,7 +3,7 @@
 #define NUCLEUS_ALLOCATORS_LINEAR_ALLOCATOR_H
 
 #include "nucleus/Allocators/Allocator.h"
-#include "nucleus/types.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 

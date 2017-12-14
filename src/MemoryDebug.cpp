@@ -1,10 +1,13 @@
 
+#include "nucleus/Config.h"
+
+#if OS(WIN)
 #include <cstdlib>
 
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
-#include "nucleus/config.h"
-#include "nucleus/win/windows_mixin.h"
+#include "nucleus/Config.h"
+#include "nucleus/win/WindowsMixin.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -27,3 +30,5 @@ void operator delete(void* ptr) noexcept {
   allocator->free(ptr, 0);
 }
 #endif  // 0
+
+#endif  // OS(WIN)

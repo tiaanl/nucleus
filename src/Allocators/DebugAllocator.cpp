@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
-#include "nucleus/logging.h"
-#include "nucleus/win/windows_mixin.h"
+#include "nucleus/Logging.h"
+#include "nucleus/Win/WindowsMixin.h"
 
 #include "nucleus/MemoryDebug.h"
 

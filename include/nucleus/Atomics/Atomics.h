@@ -2,8 +2,8 @@
 #ifndef NUCLEUS_ATOMICS_ATOMICS_H_
 #define NUCLEUS_ATOMICS_ATOMICS_H_
 
-#include "nucleus/config.h"
-#include "nucleus/types.h"
+#include "nucleus/Config.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 

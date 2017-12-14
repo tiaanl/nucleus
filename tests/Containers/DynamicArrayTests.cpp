@@ -2,7 +2,7 @@
 #include "nucleus/Containers/DynamicArray.h"
 
 #include "nucleus/Allocators/DebugAllocator.h"
-#include "nucleus/types.h"
+#include "nucleus/Types.h"
 
 #include "gtest/gtest.h"
 

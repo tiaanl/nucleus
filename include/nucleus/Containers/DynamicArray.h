@@ -7,7 +7,8 @@
 #include <utility>  // std::forward
 
 #include "nucleus/Allocators/DefaultAllocator.h"
-#include "nucleus/algorithms/Utility.h"
+#include "nucleus/Utils/MinMax.h"
+#include "nucleus/Utils/Move.h"
 
 namespace nu {
 
@@ -19,7 +20,7 @@ public:
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
 
-  // Construct/desctruct
+  // Construct/destruct
 
   DynamicArray(Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_size(0), m_allocated(0) {}
@@ -126,7 +127,13 @@ public:
   void remove(Iterator pos) {
     // Destroy the object.
     pos->~ElementType();
-    ::memcpy(pos, pos + 1, (m_data + (m_size - 1) - pos) * sizeof(ElementType));
+
+    // If we didn't remove the last item, then move all the items one to the left.
+    if (pos + 1 < m_data + m_size) {
+      move(pos + 1, m_data + m_size, pos);
+    }
+
+    // We have 1 item less now.
     --m_size;
   }
 
@@ -190,7 +197,7 @@ public:
 private:
   void ensureAllocated(SizeType newSize, bool keepOld) {
     if (newSize > m_allocated) {
-      allocateData(nu::max<SizeType>(newSize << 1, 1 << 4), keepOld);
+      allocateData(max<SizeType>(newSize << 1, 1 << 4), keepOld);
     }
   }
 

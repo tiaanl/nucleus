@@ -2,8 +2,7 @@
 #ifndef NUCLEUS_MEMORY_SCOPED_PTR_H_
 #define NUCLEUS_MEMORY_SCOPED_PTR_H_
 
-#include "nucleus/utils/CommonType.h"
-#include "nucleus/utils/Functional.h"
+#include "nucleus/Utils/Functional.h"
 
 namespace nu {
 
@@ -121,23 +120,6 @@ protected:
 template <typename T, typename D>
 inline void swap(ScopedPtr<T, D>& left, ScopedPtr<T, D>& right) {
   left.swap(right);
-};
-
-template <typename T1, typename D1, typename T2, typename D2>
-inline bool operator<(const ScopedPtr<T1, D1>& left, const ScopedPtr<T2, D2>& right) {
-  using P1 = typename ScopedPtr<T1, D1>::ElementType*;
-  using P2 = typename ScopedPtr<T2, D2>::ElementType*;
-  using Common = CommonType<P1, P2>;
-
-  Common t1 = left.get();
-  Common t2 = right.get();
-
-  return Less<Common>()(t1, t2);
-};
-
-template <typename T, typename... Args>
-inline ScopedPtr<T> MakeScopedPtr(Args&&... args) {
-  return ScopedPtr<T>(new T(forward<Args>(args)...));
 };
 
 }  // namespace nu

@@ -13,9 +13,9 @@ LinearAllocator::~LinearAllocator() {
   m_parentAllocator->free(m_start, m_totalSize);
 }
 
-void* LinearAllocator::doAllocate(USize bytes, USize alignment) {
+void* LinearAllocator::doAllocate(USize bytes, USize) {
   USize padding = 0;
-  USize paddedAddress = 0;
+//  USize paddedAddress = 0;
 
   const USize currentAddress = (USize)m_start + m_offset;
 
@@ -37,7 +37,7 @@ void* LinearAllocator::doAllocate(USize bytes, USize alignment) {
   return (void*)nextAddress;
 }
 
-void LinearAllocator::doFree(void* p, USize bytes, USize alignment) {
+void LinearAllocator::doFree(void*, USize, USize) {
   // This is a noop.  When the allocator is destroyed, all the parent memory is destroyed as well.
 }
 
