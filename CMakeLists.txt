@@ -2,23 +2,23 @@ cmake_minimum_required(VERSION 3.7.2)
 
 project(nucleus)
 
-# General options
+# Options
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 14)
 
-# Compiler options
-
-include("cmake/gcc.cmake")
-include("cmake/msvc.cmake")
-include("cmake/win32.cmake")
+if(MSVC)
+    message(STATUS "MSVC: Enable CRT memory debugging")
+    target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
+    message(STATUS "MSVC: Enable multi-processor compilation.")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
 
 # Third party libraries.
 
 add_subdirectory("third_party")
 
 # nucleus
-
-include_directories("include")
 
 set(nucleus_INCLUDE_FILES
     "include/nucleus/algorithms/Utility.h"
@@ -104,10 +104,8 @@ if(APPLE)
 endif()
 
 add_library(nucleus STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
-target_include_directories(nucleus PUBLIC "${nucleus_SOURCE_DIR}/include")
+target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
 set_property(TARGET nucleus PROPERTY FOLDER nucleus)
-set_property(TARGET nucleus PROPERTY CXX_STANDARD 11)
-target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 
 add_subdirectory(tests nucleus_tests)
 add_subdirectory(benchmarks nucleus_benchmarks)

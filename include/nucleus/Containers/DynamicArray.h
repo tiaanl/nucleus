@@ -190,7 +190,7 @@ public:
 private:
   void ensureAllocated(SizeType newSize, bool keepOld) {
     if (newSize > m_allocated) {
-      allocateData(nu::max<SizeType>(newSize << 1, 1 << 4), true);
+      allocateData(nu::max<SizeType>(newSize << 1, 1 << 4), keepOld);
     }
   }
 

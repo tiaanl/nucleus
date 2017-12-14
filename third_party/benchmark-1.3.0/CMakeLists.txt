@@ -5,18 +5,18 @@ include("CheckCXXCompilerFlag")
 include("cmake/AddCXXCompilerFlag.cmake")
 include("cmake/CXXFeatureCheck.cmake")
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # Turn compiler warnings up to 11
     string(REGEX REPLACE "[-/]W[1-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-    if (NOT BENCHMARK_ENABLE_EXCEPTIONS)
+    if(NOT BENCHMARK_ENABLE_EXCEPTIONS)
         add_cxx_compiler_flag(-EHs-)
         add_cxx_compiler_flag(-EHa-)
     endif()
     # Link time optimisation
-    if (BENCHMARK_ENABLE_LTO)
+    if(BENCHMARK_ENABLE_LTO)
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
         set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS_RELEASE} /LTCG")
         set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
@@ -39,7 +39,7 @@ else()
     # Try and enable C++11. Don't use C++14 because it doesn't work in some
     # configurations.
     add_cxx_compiler_flag(-std=c++11)
-    if (NOT HAVE_CXX_FLAG_STD_CXX11)
+    if(NOT HAVE_CXX_FLAG_STD_CXX11)
         add_cxx_compiler_flag(-std=c++0x)
     endif()
 
@@ -56,14 +56,14 @@ else()
     add_cxx_compiler_flag(-Wshorten-64-to-32)
     add_cxx_compiler_flag(-Wfloat-equal)
     add_cxx_compiler_flag(-fstrict-aliasing)
-    if (NOT BENCHMARK_ENABLE_EXCEPTIONS)
+    if(NOT BENCHMARK_ENABLE_EXCEPTIONS)
         add_cxx_compiler_flag(-fno-exceptions)
     endif()
-    if (NOT BENCHMARK_USE_LIBCXX)
+    if(NOT BENCHMARK_USE_LIBCXX)
         add_cxx_compiler_flag(-Wzero-as-null-pointer-constant)
     endif()
-    if (HAVE_CXX_FLAG_FSTRICT_ALIASING)
-        if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "Intel") #ICC17u2: Many false positives for Wstrict-aliasing
+    if(HAVE_CXX_FLAG_FSTRICT_ALIASING)
+        if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Intel") #ICC17u2: Many false positives for Wstrict-aliasing
             add_cxx_compiler_flag(-Wstrict-aliasing)
         endif()
     endif()
@@ -71,7 +71,7 @@ else()
     # (because of deprecated overload)
     add_cxx_compiler_flag(-wd654)
     add_cxx_compiler_flag(-Wthread-safety)
-    if (HAVE_CXX_FLAG_WTHREAD_SAFETY)
+    if(HAVE_CXX_FLAG_WTHREAD_SAFETY)
         cxx_feature_check(THREAD_SAFETY_ATTRIBUTES)
     endif()
 
@@ -79,20 +79,20 @@ else()
     # predefined macro, which turns on all of the wonderful libc extensions.
     # However g++ doesn't do this in Cygwin so we have to define it ourselfs
     # since we depend on GNU/POSIX/BSD extensions.
-    if (CYGWIN)
+    if(CYGWIN)
         add_definitions(-D_GNU_SOURCE=1)
     endif()
 
     # Link time optimisation
-    if (BENCHMARK_ENABLE_LTO)
+    if(BENCHMARK_ENABLE_LTO)
         add_cxx_compiler_flag(-flto)
-        if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+        if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
             find_program(GCC_AR gcc-ar)
-            if (GCC_AR)
+            if(GCC_AR)
                 set(CMAKE_AR ${GCC_AR})
             endif()
             find_program(GCC_RANLIB gcc-ranlib)
-            if (GCC_RANLIB)
+            if(GCC_RANLIB)
                 set(CMAKE_RANLIB ${GCC_RANLIB})
             endif()
         endif()
@@ -117,10 +117,10 @@ else()
     add_cxx_compiler_flag(--coverage COVERAGE)
 endif()
 
-if (BENCHMARK_USE_LIBCXX)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if(BENCHMARK_USE_LIBCXX)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         add_cxx_compiler_flag(-stdlib=libc++)
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
         "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         add_cxx_compiler_flag(-nostdinc++)
         message("libc++ header path must be manually specified using CMAKE_CXX_FLAGS")
@@ -143,16 +143,37 @@ cxx_feature_check(POSIX_REGEX)
 if(NOT HAVE_STD_REGEX AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
     message(FATAL_ERROR "Failed to determine the source files for the regular expression backend")
 endif()
-if (NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
+if(NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
     AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
     message(WARNING "Using std::regex with exceptions disabled is not fully supported")
 endif()
 cxx_feature_check(STEADY_CLOCK)
+
 # Ensure we have pthreads
 find_package(Threads REQUIRED)
 
-# Set up directories
-include_directories(${PROJECT_SOURCE_DIR}/include)
+file(GLOB
+    SOURCE_FILES
+    src/*.cc
+    ${PROJECT_SOURCE_DIR}/include/benchmark/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
-# Build the targets
-add_subdirectory(src)
+if(DEFINED BENCHMARK_CXX_LINKER_FLAGS)
+    list(APPEND CMAKE_SHARED_LINKER_FLAGS ${BENCHMARK_CXX_LINKER_FLAGS})
+    list(APPEND CMAKE_MODULE_LINKER_FLAGS ${BENCHMARK_CXX_LINKER_FLAGS})
+endif()
+
+add_library(benchmark ${SOURCE_FILES})
+target_include_directories(benchmark PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(benchmark PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+# Link threads.
+find_library(LIBRT rt)
+if(LIBRT)
+    target_link_libraries(benchmark ${LIBRT})
+endif()
+
+# We need extra libraries on Windows.
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    target_link_libraries(benchmark Shlwapi)
+endif()
