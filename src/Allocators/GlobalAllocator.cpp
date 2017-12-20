@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 
+#include "nucleus/Config.h"
+
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {

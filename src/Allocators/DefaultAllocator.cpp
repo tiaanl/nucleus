@@ -1,8 +1,11 @@
 
 #include "nucleus/Allocators/DefaultAllocator.h"
 
+#include <atomic>
+
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Allocators/GlobalAllocator.h"
+#include "nucleus/Config.h"
 
 #include "nucleus/MemoryDebug.h"
 

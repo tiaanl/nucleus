@@ -6,6 +6,8 @@
 #include <new>      // new
 #include <utility>  // std::forward
 
+#undef free
+
 #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Utils/MinMax.h"
 #include "nucleus/Utils/Move.h"
