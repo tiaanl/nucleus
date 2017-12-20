@@ -11,7 +11,7 @@
 #include "nucleus/Synchronization/Lock.h"
 
 #if OS(WIN)
-#include "nucleus/win/windows_mixin.h"
+#include "nucleus/Win/WindowsMixin.h"
 #endif
 
 #include "nucleus/MemoryDebug.h"

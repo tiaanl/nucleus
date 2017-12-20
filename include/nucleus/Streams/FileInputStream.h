@@ -7,7 +7,7 @@
 #include "nucleus/Streams/InputStream.h"
 
 #if OS(WIN)
-#include "nucleus/win/windows_mixin.h"
+#include "nucleus/Win/WindowsMixin.h"
 #endif
 
 namespace nu {

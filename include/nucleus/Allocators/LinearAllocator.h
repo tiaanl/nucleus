@@ -7,22 +7,20 @@
 
 namespace nu {
 
-    class LinearAllocator : public Allocator {
-    public:
-        LinearAllocator(Allocator* parentAllocator, USize totalSize);
-        ~LinearAllocator() override;
+class LinearAllocator : public Allocator {
+public:
+  LinearAllocator(void* data, USize size);
+  ~LinearAllocator() override;
 
-    protected:
-        void *doAllocate(USize bytes, USize alignment) override;
-        void doFree(void *p, USize bytes, USize alignment) override;
-        bool doIsEqual(const Allocator &other) const noexcept override;
+private:
+  void* doAllocate(USize bytes, USize alignment) override;
+  void doFree(void* p, USize bytes, USize alignment) override;
+  bool doIsEqual(const Allocator& other) const noexcept override;
 
-    private:
-        Allocator* m_parentAllocator;
-        USize m_totalSize;
-        void* m_start;
-        USize m_offset;
-    };
+  void* m_data;
+  USize m_size;
+  USize m_offset;
+};
 
 }  // namespace nu
 

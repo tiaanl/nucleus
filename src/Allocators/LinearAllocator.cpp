@@ -3,27 +3,21 @@
 
 namespace nu {
 
-LinearAllocator::LinearAllocator(Allocator* parentAllocator, USize totalSize)
-  : m_parentAllocator(parentAllocator), m_totalSize(totalSize) {
-  m_start = parentAllocator->allocate(totalSize);
-  m_offset = 0;
-}
+LinearAllocator::LinearAllocator(void* data, USize size) : m_data(data), m_size(size), m_offset(0) {}
 
-LinearAllocator::~LinearAllocator() {
-  m_parentAllocator->free(m_start, m_totalSize);
-}
+LinearAllocator::~LinearAllocator() {}
 
 void* LinearAllocator::doAllocate(USize bytes, USize) {
   USize padding = 0;
 //  USize paddedAddress = 0;
 
-  const USize currentAddress = (USize)m_start + m_offset;
+  const USize currentAddress = (USize)m_data + m_offset;
 
   //  if (alignment != 0 && m_offset % alignment != 0) {
   //    padding = calculatePadding(currentAddress, alignment);
   //  }
 
-  if (m_offset + padding + bytes > m_totalSize) {
+  if (m_offset + padding + bytes > m_size) {
     return nullptr;
   }
 

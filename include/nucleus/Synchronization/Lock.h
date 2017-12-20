@@ -6,7 +6,7 @@
 #include "nucleus/Macros.h"
 
 #if OS(WIN)
-#include "nucleus/win/windows_mixin.h"
+#include "nucleus/Win/WindowsMixin.h"
 #elif OS(POSIX)
 #include <pthread.h>
 #endif

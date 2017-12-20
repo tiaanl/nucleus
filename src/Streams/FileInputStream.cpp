@@ -2,6 +2,7 @@
 #include "nucleus/Streams/FileInputStream.h"
 
 #include "nucleus/Logging.h"
+#include "nucleus/Utils/MinMax.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -58,8 +59,8 @@ bool FileInputStream::setPosition(SizeType newPosition) {
   DCHECK(openedOk());
 
   if (newPosition != m_currentPosition) {
-    newPosition = std::max(newPosition, static_cast<SizeType>(0));
-    newPosition = std::min(newPosition, getLength());
+    newPosition = max(newPosition, static_cast<SizeType>(0));
+    newPosition = min(newPosition, getLength());
 
     m_needToSeek |= (m_currentPosition != newPosition);
     m_currentPosition = newPosition;
