@@ -34,3 +34,25 @@ TEST(AllocatedTests, Not) {
 
   EXPECT_FALSE(!i1);
 }
+
+TEST(AllocatedTests, Move) {
+  nu::TestAllocator alloc;
+
+  {
+    auto i1 = alloc.construct<int>(10);
+
+    nu::Allocated<int> i2{&alloc};
+    i2 = nu::move(i1);
+
+    ASSERT_EQ(nullptr, i1.get());
+    ASSERT_FALSE(!i2);
+  }
+
+  {
+    auto i1 = alloc.construct<int>(10);
+    auto i2{nu::move(i1)};
+
+    ASSERT_EQ(nullptr, i1.get());
+    ASSERT_FALSE(!i2);
+  }
+}

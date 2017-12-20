@@ -20,10 +20,42 @@ public:
   Allocated(Allocator* allocator, ElementType* ptr, USize size, USize alignment)
     : m_allocator(allocator), m_ptr(ptr), m_size(size), m_alignment(alignment) {}
 
+  Allocated(const Allocated& other) = delete;
+
+  Allocated(Allocated&& other)
+    : m_allocator(other.m_allocator), m_ptr(other.m_ptr), m_size(other.m_size), m_alignment(other.m_alignment) {
+    other.m_ptr = nullptr;
+    other.m_size = 0;
+    other.m_alignment = 0;
+  }
+
   ~Allocated() {
     if (m_ptr && m_size) {
       m_allocator->free(m_ptr, m_size, m_alignment);
     }
+  }
+
+  Allocated& operator=(const Allocated& other) = delete;
+
+  Allocated& operator=(Allocated&& other) {
+    m_allocator = other.m_allocator;
+    m_ptr = other.m_ptr;
+    m_size = other.m_size;
+    m_alignment = other.m_alignment;
+
+    other.m_ptr = nullptr;
+    other.m_size = 0;
+    other.m_alignment = 0;
+
+    return *this;
+  }
+
+  ElementType* operator->() const {
+    return m_ptr;
+  }
+
+  ElementType& operator*() const {
+    return *m_ptr;
   }
 
   ElementType* get() const {
