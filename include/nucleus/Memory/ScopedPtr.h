@@ -2,7 +2,7 @@
 #ifndef NUCLEUS_MEMORY_SCOPED_PTR_H_
 #define NUCLEUS_MEMORY_SCOPED_PTR_H_
 
-#include "nucleus/Utils/Functional.h"
+#include "nucleus/Utils/Move.h"
 
 namespace nu {
 
@@ -120,6 +120,11 @@ protected:
 template <typename T, typename D>
 inline void swap(ScopedPtr<T, D>& left, ScopedPtr<T, D>& right) {
   left.swap(right);
+};
+
+template <typename T, typename... Args>
+inline T* makeScopedPtr(Args&&... args) {
+  return new T(forward<Args>(args)...);
 };
 
 }  // namespace nu
