@@ -3,6 +3,8 @@
 
 set(nucleus_TEST_FILES
     "Allocators/AllocatorTests.cpp"
+    "Containers/ArrayTests.cpp"
+    "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
     "Files/FilePathTests.cpp"
     "LoggingTests.cpp"

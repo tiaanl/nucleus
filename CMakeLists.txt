@@ -31,6 +31,8 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Atomics/AtomicRefCount.h"
     "include/nucleus/Atomics/Atomics.h"
     "include/nucleus/Config.h"
+    "include/nucleus/Containers/Array.h"
+    "include/nucleus/Containers/BitSet.h"
     "include/nucleus/Containers/DynamicArray.h"
     "include/nucleus/Files/FilePath.h"
     "include/nucleus/Logging.h"
