@@ -30,9 +30,9 @@ public:
   }
 
   ~Allocated() {
-    if (m_ptr && m_size) {
-      m_allocator->free(m_ptr, m_size, m_alignment);
-    }
+    // if (m_ptr && m_size) {
+    //   m_allocator->free(m_ptr, m_size, m_alignment);
+    // }
   }
 
   Allocated& operator=(const Allocated& other) = delete;

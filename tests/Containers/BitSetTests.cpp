@@ -6,31 +6,31 @@
 
 TEST(BitSetTests, EnoughSpaceForAllBits) {
 #if ARCH(CPU_64_BITS)
-  EXPECT_EQ(8, sizeof(nu::BitSet<8>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<16>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<32>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<49>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<64>{}));
-  EXPECT_EQ(16, sizeof(nu::BitSet<65>{}));
-  EXPECT_EQ(16, sizeof(nu::BitSet<128>{}));
-  EXPECT_EQ(32, sizeof(nu::BitSet<256>{}));
-  EXPECT_EQ(64, sizeof(nu::BitSet<512>{}));
-  EXPECT_EQ(128, sizeof(nu::BitSet<1024>{}));
-  EXPECT_EQ(256, sizeof(nu::BitSet<2048>{}));
-  EXPECT_EQ(512, sizeof(nu::BitSet<4096>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<8>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<16>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<32>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<49>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<64>{}));
+  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<65>{}));
+  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<128>{}));
+  EXPECT_EQ(static_cast<USize>(32), sizeof(nu::BitSet<256>{}));
+  EXPECT_EQ(static_cast<USize>(64), sizeof(nu::BitSet<512>{}));
+  EXPECT_EQ(static_cast<USize>(128), sizeof(nu::BitSet<1024>{}));
+  EXPECT_EQ(static_cast<USize>(256), sizeof(nu::BitSet<2048>{}));
+  EXPECT_EQ(static_cast<USize>(512), sizeof(nu::BitSet<4096>{}));
 #elif ARCH(CPU_32_BITS)
-  EXPECT_EQ(4, sizeof(nu::BitSet<8>{}));
-  EXPECT_EQ(4, sizeof(nu::BitSet<16>{}));
-  EXPECT_EQ(4, sizeof(nu::BitSet<32>{}));
-  EXPECT_EQ(4, sizeof(nu::BitSet<49>{}));
-  EXPECT_EQ(4, sizeof(nu::BitSet<64>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<65>{}));
-  EXPECT_EQ(8, sizeof(nu::BitSet<128>{}));
-  EXPECT_EQ(16, sizeof(nu::BitSet<256>{}));
-  EXPECT_EQ(32, sizeof(nu::BitSet<512>{}));
-  EXPECT_EQ(64, sizeof(nu::BitSet<1024>{}));
-  EXPECT_EQ(128, sizeof(nu::BitSet<2048>{}));
-  EXPECT_EQ(256, sizeof(nu::BitSet<4096>{}));
+  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<8>{}));
+  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<16>{}));
+  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<32>{}));
+  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<49>{}));
+  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<64>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<65>{}));
+  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<128>{}));
+  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<256>{}));
+  EXPECT_EQ(static_cast<USize>(32), sizeof(nu::BitSet<512>{}));
+  EXPECT_EQ(static_cast<USize>(64), sizeof(nu::BitSet<1024>{}));
+  EXPECT_EQ(static_cast<USize>(128), sizeof(nu::BitSet<2048>{}));
+  EXPECT_EQ(static_cast<USize>(256), sizeof(nu::BitSet<4096>{}));
 #endif
 }
 

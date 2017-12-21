@@ -40,7 +40,7 @@ protected:
   virtual bool doIsEqual(const Allocator& other) const = 0;
 
 private:
-  static constexpr USize kMaxAlign = alignof(max_align_t);
+  static constexpr USize kMaxAlign = alignof(MaxAlign);
 };
 
 inline bool operator==(const Allocator& left, const Allocator& right) {

@@ -52,6 +52,7 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Streams/WrappedMemoryInputStream.h"
     "include/nucleus/Synchronization/AutoLock.h"
     "include/nucleus/Synchronization/Lock.h"
+    "include/nucleus/Text/String.h"
     "include/nucleus/Types.h"
     "include/nucleus/Utils/ByteOrder.h"
     "include/nucleus/Utils/Copy.h"

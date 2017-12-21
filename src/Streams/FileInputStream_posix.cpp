@@ -63,7 +63,7 @@ void FileInputStream::closeHandle() {
   }
 }
 
-size_t FileInputStream::readInternal(void* buffer, size_t numBytes) {
+USize FileInputStream::readInternal(void* buffer, USize numBytes) {
   ssize_t result = 0;
 
   if (m_handle != 0) {
