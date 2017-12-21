@@ -93,19 +93,19 @@ private:
   WordType m_data[kWords + 1];
 };
 
-template <USize BitCount>
+template <PtrDiff BitCount>
 inline BitSet<BitCount> operator&(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result &= right);
 }
 
-template <USize BitCount>
+template <PtrDiff BitCount>
 inline BitSet<BitCount> operator|(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result |= right);
 }
 
-template <USize BitCount>
+template <PtrDiff BitCount>
 inline BitSet<BitCount> operator^(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result ^= right);
