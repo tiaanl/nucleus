@@ -8,8 +8,8 @@ TEST(AllocatedTests, Basic) {
   nu::TestAllocator alloc;
 
   {
-    auto i1 = alloc.construct<int>(10);
-    auto i2 = alloc.construct<int>(20);
+    auto i1 = nu::allocate<int>(&alloc, 10);
+    auto i2 = nu::allocate<int>(&alloc, 20);
 
     ASSERT_EQ(2, alloc.getAllocations());
   }
@@ -20,7 +20,7 @@ TEST(AllocatedTests, Basic) {
 TEST(AllocatedTests, Get) {
   nu::TestAllocator alloc;
 
-  auto i1 = alloc.construct<int>(10);
+  auto i1 = nu::allocate<int>(&alloc, 10);
 
   int* i = i1.get();
 
@@ -30,7 +30,7 @@ TEST(AllocatedTests, Get) {
 TEST(AllocatedTests, Not) {
   nu::TestAllocator alloc;
 
-  auto i1 = alloc.construct<int>(10);
+  auto i1 = nu::allocate<int>(&alloc, 10);
 
   EXPECT_FALSE(!i1);
 }
@@ -39,7 +39,7 @@ TEST(AllocatedTests, Move) {
   nu::TestAllocator alloc;
 
   {
-    auto i1 = alloc.construct<int>(10);
+    auto i1 = nu::allocate<int>(&alloc, 10);
 
     nu::Allocated<int> i2{&alloc};
     i2 = nu::move(i1);
@@ -49,7 +49,7 @@ TEST(AllocatedTests, Move) {
   }
 
   {
-    auto i1 = alloc.construct<int>(10);
+    auto i1 = nu::allocate<int>(&alloc, 10);
     auto i2{nu::move(i1)};
 
     ASSERT_EQ(nullptr, i1.get());

@@ -2,7 +2,6 @@
 #ifndef NUCLEUS_ALLOCATORS_ALLOCATOR_H_
 #define NUCLEUS_ALLOCATORS_ALLOCATOR_H_
 
-#include "nucleus/Memory/Allocated.h"
 #include "nucleus/Types.h"
 #include "nucleus/Utils/Move.h"
 
@@ -24,14 +23,6 @@ public:
 
   bool isEqual(const Allocator& other) const noexcept {
     return doIsEqual(other);
-  }
-
-  template <typename T, typename... Args>
-  Allocated<T> construct(Args&&... args) {
-    USize size = sizeof(T);
-    USize alignment = alignof(T);
-    void* data = doAllocate(size, alignment);
-    return Allocated<T>{this, new (data) T(forward<Args>(args)...), size, alignment};
   }
 
 protected:
