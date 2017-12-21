@@ -11,13 +11,15 @@ namespace nu {
 
 void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
 #if COMPILER(GCC)
-  return ::malloc(bytes);
+  void* result;
+  ::posix_memalign(&result, alignment, bytes);
+  return result;
 #else   // COMPILER(GCC)
   return ::_aligned_malloc(bytes, alignment);
 #endif  // COMPILER(GCC)
 }
 
-void GlobalAllocator::doFree(void* p, USize bytes, USize alignment) {
+void GlobalAllocator::doFree(void* p, USize, USize) {
 #if COMPILER(MSVC)
   ::_aligned_free(p);
 #else
