@@ -1,7 +1,6 @@
 
 #include "nucleus/Files/FilePath.h"
 
-#include "nucleus/Logging.h"
 #include "nucleus/Macros.h"
 
 #include "nucleus/MemoryDebug.h"
@@ -72,11 +71,11 @@ bool FilePath::isSeparator(CharType ch) {
   return false;
 }
 
-FilePath::FilePath() = default;
+FilePath::FilePath(Allocator* allocator) : m_allocator(allocator), m_path(allocator) {}
 
-FilePath::FilePath(const FilePath& other) = default;
+FilePath::FilePath(const StringType& path, Allocator* allocator) : m_allocator(allocator), m_path(path) {}
 
-FilePath::FilePath(const StringType& path) : m_path(path) {}
+FilePath::FilePath(const FilePath& other) : m_path(other.m_path) {}
 
 FilePath::~FilePath() = default;
 
@@ -97,13 +96,13 @@ bool FilePath::operator!=(const FilePath& other) const {
 void FilePath::clear() {}
 
 FilePath FilePath::dirName() const {
-  FilePath newPath{m_path};
+  FilePath newPath{m_path, m_allocator};
   newPath.stripTrailingSeparators();
 
   StringType::SizeType letter = findDriveLetter(newPath.m_path);
 
   StringType::SizeType lastSeparator =
-      newPath.m_path.findLastOfAnyChar(String::fromCString(kSeparators, ARRAY_SIZE(kSeparators)));
+      newPath.m_path.findLastOfAnyChar(String{kSeparators, ARRAY_SIZE(kSeparators) - 1, m_allocator});
   if (lastSeparator == StringType::npos) {
     // m_path is in the current directory.
     newPath.m_path.resize(letter + 1);
@@ -121,14 +120,14 @@ FilePath FilePath::dirName() const {
 
   newPath.stripTrailingSeparators();
   if (newPath.m_path.isEmpty()) {
-    newPath.m_path = String::fromCString(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory));
+    newPath.m_path = String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1, m_allocator);
   }
 
   return newPath;
 }
 
 FilePath FilePath::baseName() const {
-  FilePath newPath(m_path);
+  FilePath newPath(m_path, m_allocator);
   newPath.stripTrailingSeparators();
 
   // The drive letter, if any, is always stripped.
@@ -140,7 +139,7 @@ FilePath FilePath::baseName() const {
   // Keep everything after the final separator, but if the pathname is only one
   // character and it's a separator, leave it alone.
   StringType::SizeType lastSeparator =
-      newPath.m_path.findLastOfAnyChar(String::fromCString(kSeparators, ARRAY_SIZE(kSeparators)));
+      newPath.m_path.findLastOfAnyChar(String(kSeparators, ARRAY_SIZE(kSeparators) - 1, m_allocator));
   if (lastSeparator != StringType::npos && lastSeparator < newPath.m_path.getLength() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
   }
@@ -149,37 +148,25 @@ FilePath FilePath::baseName() const {
 }
 
 FilePath FilePath::append(const StringType& component) const {
-  const StringType* appended = &component;
-  StringType withoutNulls;
-
-  StringType::SizeType nulPos = component.find(FILE_PATH_LITERAL('\0'));
-  if (nulPos != StringType::npos) {
-    withoutNulls = component.sub(0, nulPos);
-    appended = &withoutNulls;
-  }
-
 #if 0
   DCHECK(!isPathAbsolute(*appended));
 #endif  // 0
 
-  if (m_path.compare(String::fromCString(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory))) == 0) {
-    // Append normally doesn't do any normalization, but as a special case, when
-    // appending to kCurrentDirectory, just return a new path for the component
-    // argument.  Appending component to kCurrentDirectory would serve no
-    // purpose other than needlessly lengthening the path, and it's likely in
-    // practice to wind up with FilePath objects containing only
-    // kCurrentDirectory when calling DirName on a single relative path
-    // component.
-    return FilePath(*appended);
+  if (m_path.compare(String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1, m_allocator)) == 0 &&
+      !component.isEmpty()) {
+    // Append normally doesn't do any normalization, but as a special case, when appending to `kCurrentDirectory`, just
+    // return a new path for the `component` argument.  Appending `component` to `kCurrentDirectory` would serve no
+    // purpose other than needlessly lengthening the path.
+    return FilePath(component, m_allocator);
   }
 
-  FilePath newPath(m_path);
+  FilePath newPath{m_path, m_allocator};
   newPath.stripTrailingSeparators();
 
   // Don't append a separator if the path is empty (indicating the current
   // directory) or if the path component is empty (indicating nothing to
   // append).
-  if (!appended->isEmpty() && !newPath.m_path.isEmpty()) {
+  if (!component.isEmpty() && !newPath.m_path.isEmpty()) {
     // Don't append a separator if the path still ends with a trailing separator
     // after stripping (indicating the root directory).
     if (!isSeparator(newPath.m_path.at(newPath.m_path.getLength() - 1))) {
@@ -190,7 +177,7 @@ FilePath FilePath::append(const StringType& component) const {
     }
   }
 
-  newPath.m_path.append(*appended);
+  newPath.m_path.append(component);
 
   return newPath;
 }

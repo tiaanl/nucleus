@@ -77,11 +77,13 @@ public:
   static I32 creates;
   static I32 destroys;
   static I32 copies;
+  static I32 moves;
 
   static void reset() {
     LifetimeType::creates = 0;
     LifetimeType::destroys = 0;
     LifetimeType::copies = 0;
+    LifetimeType::moves = 0;
   }
 
   LifetimeType(I32 a, I32 b) : m_a(a), m_b(b) {
@@ -90,6 +92,13 @@ public:
 
   LifetimeType(const LifetimeType& other) : m_a(other.m_a), m_b(other.m_b) {
     creates++;
+  }
+
+  LifetimeType(LifetimeType&& other) : m_a(other.m_a), m_b(other.m_b) {
+    other.m_a = 0;
+    other.m_b = 0;
+
+    moves++;
   }
 
   ~LifetimeType() {
@@ -101,6 +110,18 @@ public:
     m_b = other.m_b;
 
     copies++;
+
+    return *this;
+  }
+
+  LifetimeType& operator=(LifetimeType&& other) {
+    m_a = other.m_a;
+    m_b = other.m_b;
+
+    other.m_a = 0;
+    other.m_b = 0;
+
+    moves++;
 
     return *this;
   }
@@ -121,6 +142,7 @@ private:
 I32 LifetimeType::creates = 0;
 I32 LifetimeType::destroys = 0;
 I32 LifetimeType::copies = 0;
+I32 LifetimeType::moves = 0;
 
 TEST(DynamicArrayTests, EmplaceBack) {
   nu::DynamicArray<LifetimeType> buffer;

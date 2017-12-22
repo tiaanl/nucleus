@@ -5,7 +5,9 @@
 #include <ostream>
 
 #include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/Utils/CString.h"
 #include "nucleus/Utils/Copy.h"
+#include "nucleus/Utils/Numbers.h"
 
 namespace nu {
 
@@ -14,28 +16,22 @@ public:
   using CharType = I8;
   using SizeType = I32;
 
-  // TODO: This needs to be more accurate.
-  static constexpr SizeType npos = 0xffff;
-
-  static String fromCString(const char* text, SizeType length = npos) {
-    SizeType sourceLength = length;
-    if (sourceLength == npos) {
-      sourceLength = 0;
-      for (const char* t = text; *t; t++) {
-        ++sourceLength;
-      }
-    }
-
-    String result;
-    result.ensureAllocated(sourceLength, false);
-    copy(text, text + sourceLength, result.m_data);
-    result.m_length = sourceLength;
-
-    return result;
-  }
+  static constexpr SizeType npos = -1;
 
   explicit String(Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {}
+
+  String(const String& other, Allocator* allocator = getDefaultAllocator())
+    : String(other.m_data, other.getLength(), other.getAllocator()) {}
+
+  String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
+    : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
+    SizeType textLength = (length == npos) ? lengthOf(text) : length;
+    ensureAllocated(textLength, false);
+    copy(text, text + textLength, m_data);
+    m_length = textLength;
+    m_data[m_length] = 0;
+  }
 
   ~String() = default;
 
@@ -48,6 +44,10 @@ public:
     m_data[m_length] = 0;
 
     return *this;
+  }
+
+  Allocator* getAllocator() const {
+    return m_allocator;
   }
 
   // Returns the length of the string.
@@ -78,7 +78,7 @@ public:
   }
 
   String sub(SizeType pos, SizeType count = npos) const {
-    return String::fromCString(m_data + pos, count);
+    return String(m_data + pos, count, m_allocator);
   }
 
   // Mutations
@@ -147,10 +147,9 @@ public:
     return 0;
   }
 
-  // Returns the position of the last occurance of `ch` in the string, starting from `start` and stopping `count`
-  // characters later.  Returns `npos` if the character is not found.
+  // Returns the position of the last occurrence of `ch` in the string.  Returns `npos` if the character is not found.
   SizeType findLastOfChar(CharType ch) const {
-    for (SizeType i = m_length - 1; i >= 0; ++i) {
+    for (SizeType i = m_length - 1; i >= 0; --i) {
       if (m_data[i] == ch) {
         return i;
       }
@@ -161,9 +160,9 @@ public:
   // Find the last occurance of any of the characters in `chars` starting from `start` position.
   SizeType findLastOfAnyChar(const String& chars) const {
     for (SizeType i = m_length - 1; i >= 0; --i) {
-      auto pos = chars.findLastOfChar(m_data[i]);
+      SizeType pos = chars.findLastOfChar(m_data[i]);
       if (pos != npos) {
-        return pos;
+        return i;
       }
     }
     return npos;

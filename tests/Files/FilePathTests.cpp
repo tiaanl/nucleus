@@ -5,8 +5,6 @@
 
 #include "nucleus/MemoryDebug.h"
 
-#define FPL(Str) FILE_PATH_LITERAL(Str)
-
 namespace nu {
 
 TEST(FilePathTest, DirName) {
@@ -42,8 +40,11 @@ TEST(FilePathTest, DirName) {
     {FILE_PATH_LITERAL("{:"), FILE_PATH_LITERAL(".")},
     {FILE_PATH_LITERAL("\xB3:"), FILE_PATH_LITERAL(".")},
     {FILE_PATH_LITERAL("\xC5:"), FILE_PATH_LITERAL(".")},
+    {FILE_PATH_LITERAL("/aa/../bb/cc"), FILE_PATH_LITERAL("/aa/../bb")},
 #if OS(WIN)
     {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL(".")},
+#endif  // OS(WIN)
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("c:")},
     {FILE_PATH_LITERAL("C:"), FILE_PATH_LITERAL("C:")},
     {FILE_PATH_LITERAL("A:"), FILE_PATH_LITERAL("A:")},
@@ -58,6 +59,8 @@ TEST(FilePathTest, DirName) {
     {FILE_PATH_LITERAL("c:/aa/"), FILE_PATH_LITERAL("c:/")},
     {FILE_PATH_LITERAL("c:/aa/bb"), FILE_PATH_LITERAL("c:/aa")},
     {FILE_PATH_LITERAL("c:aa/bb"), FILE_PATH_LITERAL("c:aa")},
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#if defined(FILE_PATH_USES_WIN_SEPARATORS)
     {FILE_PATH_LITERAL("\\aa\\bb"), FILE_PATH_LITERAL("\\aa")},
     {FILE_PATH_LITERAL("\\aa\\bb\\"), FILE_PATH_LITERAL("\\aa")},
     {FILE_PATH_LITERAL("\\aa\\bb\\\\"), FILE_PATH_LITERAL("\\aa")},
@@ -77,6 +80,8 @@ TEST(FilePathTest, DirName) {
     {FILE_PATH_LITERAL("\\\\aa\\bb"), FILE_PATH_LITERAL("\\\\aa")},
     {FILE_PATH_LITERAL("\\\\aa\\"), FILE_PATH_LITERAL("\\\\")},
     {FILE_PATH_LITERAL("\\\\aa"), FILE_PATH_LITERAL("\\\\")},
+    {FILE_PATH_LITERAL("aa\\..\\bb\\c"), FILE_PATH_LITERAL("aa\\..\\bb")},
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:\\"), FILE_PATH_LITERAL("c:\\")},
     {FILE_PATH_LITERAL("c:\\\\"), FILE_PATH_LITERAL("c:\\\\")},
     {FILE_PATH_LITERAL("c:\\\\\\"), FILE_PATH_LITERAL("c:\\")},
@@ -84,14 +89,14 @@ TEST(FilePathTest, DirName) {
     {FILE_PATH_LITERAL("c:\\aa\\"), FILE_PATH_LITERAL("c:\\")},
     {FILE_PATH_LITERAL("c:\\aa\\bb"), FILE_PATH_LITERAL("c:\\aa")},
     {FILE_PATH_LITERAL("c:aa\\bb"), FILE_PATH_LITERAL("c:aa")},
-#endif  // OS(WIN)
+#endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
+#endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(String::fromCString(cases[i].input));
+    FilePath input(cases[i].input);
     FilePath observed = input.dirName();
-    EXPECT_EQ(String::fromCString(cases[i].expected), observed.getPath())
-        << "i: " << i << ", input: " << input.getPath();
+    EXPECT_EQ(String(cases[i].expected), observed.getPath()) << "i: " << i << ", input: " << input.getPath();
   }
 }
 
@@ -129,6 +134,8 @@ TEST(FilePathTest, BaseName) {
     {FILE_PATH_LITERAL("\xC5:"), FILE_PATH_LITERAL("\xC5:")},
 #if OS(WIN)
     {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL("\x0143:")},
+#endif  // OS(WIN)
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("")},
     {FILE_PATH_LITERAL("C:"), FILE_PATH_LITERAL("")},
     {FILE_PATH_LITERAL("A:"), FILE_PATH_LITERAL("")},
@@ -143,6 +150,8 @@ TEST(FilePathTest, BaseName) {
     {FILE_PATH_LITERAL("c:/aa/"), FILE_PATH_LITERAL("aa")},
     {FILE_PATH_LITERAL("c:/aa/bb"), FILE_PATH_LITERAL("bb")},
     {FILE_PATH_LITERAL("c:aa/bb"), FILE_PATH_LITERAL("bb")},
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#if defined(FILE_PATH_USES_WIN_SEPARATORS)
     {FILE_PATH_LITERAL("\\aa\\bb"), FILE_PATH_LITERAL("bb")},
     {FILE_PATH_LITERAL("\\aa\\bb\\"), FILE_PATH_LITERAL("bb")},
     {FILE_PATH_LITERAL("\\aa\\bb\\\\"), FILE_PATH_LITERAL("bb")},
@@ -161,6 +170,7 @@ TEST(FilePathTest, BaseName) {
     {FILE_PATH_LITERAL("\\\\aa\\bb"), FILE_PATH_LITERAL("bb")},
     {FILE_PATH_LITERAL("\\\\aa\\"), FILE_PATH_LITERAL("aa")},
     {FILE_PATH_LITERAL("\\\\aa"), FILE_PATH_LITERAL("aa")},
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:\\"), FILE_PATH_LITERAL("\\")},
     {FILE_PATH_LITERAL("c:\\\\"), FILE_PATH_LITERAL("\\\\")},
     {FILE_PATH_LITERAL("c:\\\\\\"), FILE_PATH_LITERAL("\\")},
@@ -168,13 +178,14 @@ TEST(FilePathTest, BaseName) {
     {FILE_PATH_LITERAL("c:\\aa\\"), FILE_PATH_LITERAL("aa")},
     {FILE_PATH_LITERAL("c:\\aa\\bb"), FILE_PATH_LITERAL("bb")},
     {FILE_PATH_LITERAL("c:aa\\bb"), FILE_PATH_LITERAL("bb")},
-#endif  // OS(WIN)
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(String::fromCString(cases[i].input));
+    FilePath input{cases[i].input};
     FilePath observed = input.baseName();
-    EXPECT_EQ(FilePath::StringType(String::fromCString(cases[i].expected)), observed.getPath())
+    EXPECT_EQ(FilePath::StringType(cases[i].expected), observed.getPath())
         << "i: " << i << ", input: " << input.getPath();
   }
 }
@@ -184,76 +195,85 @@ TEST(FilePathTest, Append) {
     const FilePath::CharType* inputs[2];
     const FilePath::CharType* expected;
   } cases[] = {
-    {{FPL(""), FPL("cc")}, FPL("cc")},
-    {{FPL("."), FPL("ff")}, FPL("ff")},
-    {{FPL("/"), FPL("cc")}, FPL("/cc")},
-    {{FPL("/aa"), FPL("")}, FPL("/aa")},
-    {{FPL("/aa/"), FPL("")}, FPL("/aa")},
-    {{FPL("//aa"), FPL("")}, FPL("//aa")},
-    {{FPL("//aa/"), FPL("")}, FPL("//aa")},
-    {{FPL("//"), FPL("aa")}, FPL("//aa")},
-#if OS(WIN)
-    {{FPL("c:"), FPL("a")}, FPL("c:a")},
-    {{FPL("c:"), FPL("")}, FPL("c:")},
-    {{FPL("c:/"), FPL("a")}, FPL("c:/a")},
-    {{FPL("c://"), FPL("a")}, FPL("c://a")},
-    {{FPL("c:///"), FPL("a")}, FPL("c:/a")},
+#if 0
+    {{FILE_PATH_LITERAL(""), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("cc")},
+    {{FILE_PATH_LITERAL("."), FILE_PATH_LITERAL("ff")}, FILE_PATH_LITERAL("ff")},
+#endif  // 0
+    {{FILE_PATH_LITERAL("."), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL(".")},
+    {{FILE_PATH_LITERAL("/"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("/cc")},
+    {{FILE_PATH_LITERAL("/aa"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("/aa")},
+    {{FILE_PATH_LITERAL("/aa/"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("/aa")},
+    {{FILE_PATH_LITERAL("//aa"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("//aa")},
+    {{FILE_PATH_LITERAL("//aa/"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("//aa")},
+    {{FILE_PATH_LITERAL("//"), FILE_PATH_LITERAL("aa")}, FILE_PATH_LITERAL("//aa")},
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
+    {{FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:a")},
+    {{FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("c:")},
+    {{FILE_PATH_LITERAL("c:/"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:/a")},
+    {{FILE_PATH_LITERAL("c://"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c://a")},
+    {{FILE_PATH_LITERAL("c:///"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:/a")},
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#if defined(FILE_PATH_USES_WIN_SEPARATORS)
     // Append introduces the default separator character, so these test cases
     // need to be defined with different expected results on platforms that use
     // different default separator characters.
-    {{FPL("\\"), FPL("cc")}, FPL("\\cc")},
-    {{FPL("\\aa"), FPL("")}, FPL("\\aa")},
-    {{FPL("\\aa\\"), FPL("")}, FPL("\\aa")},
-    {{FPL("\\\\aa"), FPL("")}, FPL("\\\\aa")},
-    {{FPL("\\\\aa\\"), FPL("")}, FPL("\\\\aa")},
-    {{FPL("\\\\"), FPL("aa")}, FPL("\\\\aa")},
-    {{FPL("/aa/bb"), FPL("cc")}, FPL("/aa/bb\\cc")},
-    {{FPL("/aa/bb/"), FPL("cc")}, FPL("/aa/bb\\cc")},
-    {{FPL("aa/bb/"), FPL("cc")}, FPL("aa/bb\\cc")},
-    {{FPL("aa/bb"), FPL("cc")}, FPL("aa/bb\\cc")},
-    {{FPL("a/b"), FPL("c")}, FPL("a/b\\c")},
-    {{FPL("a/b/"), FPL("c")}, FPL("a/b\\c")},
-    {{FPL("//aa"), FPL("bb")}, FPL("//aa\\bb")},
-    {{FPL("//aa/"), FPL("bb")}, FPL("//aa\\bb")},
-    {{FPL("\\aa\\bb"), FPL("cc")}, FPL("\\aa\\bb\\cc")},
-    {{FPL("\\aa\\bb\\"), FPL("cc")}, FPL("\\aa\\bb\\cc")},
-    {{FPL("aa\\bb\\"), FPL("cc")}, FPL("aa\\bb\\cc")},
-    {{FPL("aa\\bb"), FPL("cc")}, FPL("aa\\bb\\cc")},
-    {{FPL("a\\b"), FPL("c")}, FPL("a\\b\\c")},
-    {{FPL("a\\b\\"), FPL("c")}, FPL("a\\b\\c")},
-    {{FPL("\\\\aa"), FPL("bb")}, FPL("\\\\aa\\bb")},
-    {{FPL("\\\\aa\\"), FPL("bb")}, FPL("\\\\aa\\bb")},
-    {{FPL("c:\\"), FPL("a")}, FPL("c:\\a")},
-    {{FPL("c:\\\\"), FPL("a")}, FPL("c:\\\\a")},
-    {{FPL("c:\\\\\\"), FPL("a")}, FPL("c:\\a")},
-    {{FPL("c:\\"), FPL("")}, FPL("c:\\")},
-    {{FPL("c:\\a"), FPL("b")}, FPL("c:\\a\\b")},
-    {{FPL("c:\\a\\"), FPL("b")}, FPL("c:\\a\\b")},
-#else
-    {{FPL("/aa/bb"), FPL("cc")}, FPL("/aa/bb/cc")},
-    {{FPL("/aa/bb/"), FPL("cc")}, FPL("/aa/bb/cc")},
-    {{FPL("aa/bb/"), FPL("cc")}, FPL("aa/bb/cc")},
-    {{FPL("aa/bb"), FPL("cc")}, FPL("aa/bb/cc")},
-    {{FPL("a/b"), FPL("c")}, FPL("a/b/c")},
-    {{FPL("a/b/"), FPL("c")}, FPL("a/b/c")},
-    {{FPL("//aa"), FPL("bb")}, FPL("//aa/bb")},
-    {{FPL("//aa/"), FPL("bb")}, FPL("//aa/bb")},
-    {{FPL("c:/"), FPL("a")}, FPL("c:/a")},
-    {{FPL("c:/"), FPL("")}, FPL("c:/")},
-    {{FPL("c:/a"), FPL("b")}, FPL("c:/a/b")},
-    {{FPL("c:/a/"), FPL("b")}, FPL("c:/a/b")},
-#endif  // OS(WIN)
+    {{FILE_PATH_LITERAL("\\"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("\\cc")},
+    {{FILE_PATH_LITERAL("\\aa"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("\\aa")},
+    {{FILE_PATH_LITERAL("\\aa\\"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("\\aa")},
+    {{FILE_PATH_LITERAL("\\\\aa"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("\\\\aa")},
+    {{FILE_PATH_LITERAL("\\\\aa\\"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("\\\\aa")},
+    {{FILE_PATH_LITERAL("\\\\"), FILE_PATH_LITERAL("aa")}, FILE_PATH_LITERAL("\\\\aa")},
+    {{FILE_PATH_LITERAL("/aa/bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("/aa/bb\\cc")},
+    {{FILE_PATH_LITERAL("/aa/bb/"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("/aa/bb\\cc")},
+    {{FILE_PATH_LITERAL("aa/bb/"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa/bb\\cc")},
+    {{FILE_PATH_LITERAL("aa/bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa/bb\\cc")},
+    {{FILE_PATH_LITERAL("a/b"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a/b\\c")},
+    {{FILE_PATH_LITERAL("a/b/"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a/b\\c")},
+    {{FILE_PATH_LITERAL("//aa"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("//aa\\bb")},
+    {{FILE_PATH_LITERAL("//aa/"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("//aa\\bb")},
+    {{FILE_PATH_LITERAL("\\aa\\bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("\\aa\\bb\\cc")},
+    {{FILE_PATH_LITERAL("\\aa\\bb\\"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("\\aa\\bb\\cc")},
+    {{FILE_PATH_LITERAL("aa\\bb\\"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa\\bb\\cc")},
+    {{FILE_PATH_LITERAL("aa\\bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa\\bb\\cc")},
+    {{FILE_PATH_LITERAL("a\\b"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a\\b\\c")},
+    {{FILE_PATH_LITERAL("a\\b\\"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a\\b\\c")},
+    {{FILE_PATH_LITERAL("\\\\aa"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("\\\\aa\\bb")},
+    {{FILE_PATH_LITERAL("\\\\aa\\"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("\\\\aa\\bb")},
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
+    {{FILE_PATH_LITERAL("c:\\"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:\\a")},
+    {{FILE_PATH_LITERAL("c:\\\\"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:\\\\a")},
+    {{FILE_PATH_LITERAL("c:\\\\\\"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:\\a")},
+    {{FILE_PATH_LITERAL("c:\\"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("c:\\")},
+    {{FILE_PATH_LITERAL("c:\\a"), FILE_PATH_LITERAL("b")}, FILE_PATH_LITERAL("c:\\a\\b")},
+    {{FILE_PATH_LITERAL("c:\\a\\"), FILE_PATH_LITERAL("b")}, FILE_PATH_LITERAL("c:\\a\\b")},
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#else   // defined(FILE_PATH_USES_WIN_SEPARATORS)
+    {{FILE_PATH_LITERAL("/aa/bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("/aa/bb/cc")},
+    {{FILE_PATH_LITERAL("/aa/bb/"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("/aa/bb/cc")},
+    {{FILE_PATH_LITERAL("aa/bb/"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa/bb/cc")},
+    {{FILE_PATH_LITERAL("aa/bb"), FILE_PATH_LITERAL("cc")}, FILE_PATH_LITERAL("aa/bb/cc")},
+    {{FILE_PATH_LITERAL("a/b"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a/b/c")},
+    {{FILE_PATH_LITERAL("a/b/"), FILE_PATH_LITERAL("c")}, FILE_PATH_LITERAL("a/b/c")},
+    {{FILE_PATH_LITERAL("//aa"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("//aa/bb")},
+    {{FILE_PATH_LITERAL("//aa/"), FILE_PATH_LITERAL("bb")}, FILE_PATH_LITERAL("//aa/bb")},
+#if defined(FILE_PATH_USES_DRIVE_LETTERS)
+    {{FILE_PATH_LITERAL("c:/"), FILE_PATH_LITERAL("a")}, FILE_PATH_LITERAL("c:/a")},
+    {{FILE_PATH_LITERAL("c:/"), FILE_PATH_LITERAL("")}, FILE_PATH_LITERAL("c:/")},
+    {{FILE_PATH_LITERAL("c:/a"), FILE_PATH_LITERAL("b")}, FILE_PATH_LITERAL("c:/a/b")},
+    {{FILE_PATH_LITERAL("c:/a/"), FILE_PATH_LITERAL("b")}, FILE_PATH_LITERAL("c:/a/b")},
+#endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
+#endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath root{String::fromCString(cases[i].inputs[0])};
-    FilePath::StringType leaf{String::fromCString(cases[i].inputs[1])};
+    FilePath root{cases[i].inputs[0]};
+    FilePath::StringType leaf(cases[i].inputs[1]);
+
     FilePath observedStr = root.append(leaf);
-    EXPECT_EQ(String::fromCString(cases[i].expected), observedStr.getPath())
-        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    EXPECT_EQ(String(cases[i].expected), observedStr.getPath()) << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+
     FilePath observedPath = root.append(FilePath(leaf));
-    EXPECT_EQ(String::fromCString(cases[i].expected), observedPath.getPath())
-        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    EXPECT_EQ(String(cases[i].expected), observedPath.getPath()) << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
 #if 0
 #if defined(OS_WIN)

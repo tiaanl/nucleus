@@ -5,6 +5,14 @@
 #include "nucleus/Config.h"
 #include "nucleus/Text/String.h"
 
+#if OS(WIN)
+#define FILE_PATH_USES_DRIVE_LETTERS 1
+#endif  // OS(WIN)
+
+#if OS(WIN)
+#define FILE_PATH_USES_WIN_SEPARATORS 1
+#endif  // OS(WIN)
+
 namespace nu {
 
 class FilePath {
@@ -16,7 +24,7 @@ public:
   using StringType = String;
 #else
   // On Windows, native pathnames are wchar_t arrays encoded in UTF-16.
-  using StringType = nu::String;
+  using StringType = String;
 #endif
 
   using CharType = StringType::CharType;
@@ -38,8 +46,8 @@ public:
   // Returns true if ch is a FilePath separator.
   static bool isSeparator(CharType ch);
 
-  FilePath();
-  explicit FilePath(const StringType& path);
+  explicit FilePath(Allocator* allocator = getDefaultAllocator());
+  explicit FilePath(const StringType& path, Allocator* allocator = getDefaultAllocator());
 
   FilePath(const FilePath& other);
 
@@ -73,6 +81,8 @@ public:
 private:
   // Remove trailing separators from this object.
   void stripTrailingSeparators();
+
+  Allocator* m_allocator;
 
   // A string representation of the path in this object.
   StringType m_path;

@@ -10,7 +10,8 @@ namespace nu {
 template <typename InputIterator, typename OutputIterator>
 OutputIterator copy(InputIterator first, InputIterator last, OutputIterator destinationFirst) {
   while (first != last) {
-    *destinationFirst++ = *first++;
+    *destinationFirst++ = *first;
+    ++first;
   }
   return destinationFirst;
 };

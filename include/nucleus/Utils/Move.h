@@ -48,9 +48,9 @@ constexpr typename RemoveReference<T>::Type&& move(T&& x) {
 template <typename InputIterator, typename OutputIterator>
 inline OutputIterator move(InputIterator first, InputIterator last, OutputIterator destinationFirst) {
   while (first != last) {
-    *destinationFirst++ = move(*first++);
+    *destinationFirst++ = move(*first);
+    first++;
   }
-
   return destinationFirst;
 }
 
