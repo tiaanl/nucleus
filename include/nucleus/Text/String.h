@@ -21,7 +21,7 @@ public:
   explicit String(Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {}
 
-  String(const String& other, Allocator* allocator = getDefaultAllocator())
+  String(const String& other)
     : String(other.m_data, other.getLength(), other.getAllocator()) {}
 
   String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())

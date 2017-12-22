@@ -20,7 +20,7 @@ StringType::SizeType findDriveLetter(const StringType& path) {
       ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))) {
     return 1;
   }
-#endif
+#endif  // OS(WIN)
   return StringType::npos;
 }
 
