@@ -16,8 +16,8 @@ using StringType = FilePath::StringType;
 // followed by a colon.  On other platforms, this always returns npos.
 StringType::SizeType findDriveLetter(const StringType& path) {
 #if OS(WIN)
-  if (path.getLength() >= 2 && path[1] == ':' &&
-      ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))) {
+  if (path.getLength() >= 2 && path.at(1) == ':' &&
+      ((path.at(0) >= 'A' && path.at(0) <= 'Z') || (path.at(0) >= 'a' && path.at(0) <= 'z'))) {
     return 1;
   }
 #endif  // OS(WIN)
@@ -33,15 +33,15 @@ bool equalDriveLetterCaseInsensitive(const StringType& left, const StringType& r
     return leftLetterPos == rightLetterPos;
   }
 
-  StringType leftLetter{left.substr(0, leftLetterPos + 1)};
-  StringType rightLetter{right.substr(0, rightLetterPos + 1)};
+  StringType leftLetter{left.sub(0, leftLetterPos + 1)};
+  StringType rightLetter{right.sub(0, rightLetterPos + 1)};
 #if 0
   if (!StartsWith(leftLetter, rightLetter, false))
     return false;
 #endif  // 0
 
-  StringType leftRest{left.substr(leftLetterPos + 1)};
-  StringType rightRest{right.substr(rightLetterPos + 1)};
+  StringType leftRest{left.sub(leftLetterPos + 1)};
+  StringType rightRest{right.sub(rightLetterPos + 1)};
 
   return leftRest == rightRest;
 }
@@ -75,7 +75,8 @@ FilePath::FilePath(Allocator* allocator) : m_allocator(allocator), m_path(alloca
 
 FilePath::FilePath(const StringType& path, Allocator* allocator) : m_allocator(allocator), m_path(path) {}
 
-FilePath::FilePath(const FilePath& other, Allocator* allocator) : m_allocator(allocator), m_path(other.m_path, allocator) {}
+FilePath::FilePath(const FilePath& other, Allocator* allocator)
+  : m_allocator(allocator), m_path(other.m_path, allocator) {}
 
 FilePath::~FilePath() = default;
 

@@ -91,11 +91,11 @@ private:
 };
 
 // Macro for string literal initialization of FilePath::CharType[].
-#if OS(POSIX)
+//#if OS(POSIX)
 #define FILE_PATH_LITERAL(Str) Str
-#elif OS(WIN)
-#define FILE_PATH_LITERAL(Str) L##Str
-#endif
+//#elif OS(WIN)
+//#define FILE_PATH_LITERAL(Str) L##Str
+//#endif
 
 inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
   os << filePath.getPath();

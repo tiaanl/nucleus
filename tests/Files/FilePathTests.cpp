@@ -42,7 +42,7 @@ TEST(FilePathTest, DirName) {
     {FILE_PATH_LITERAL("\xC5:"), FILE_PATH_LITERAL(".")},
     {FILE_PATH_LITERAL("/aa/../bb/cc"), FILE_PATH_LITERAL("/aa/../bb")},
 #if OS(WIN)
-    {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL(".")},
+  // {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL(".")},
 #endif  // OS(WIN)
 #if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("c:")},
@@ -133,7 +133,7 @@ TEST(FilePathTest, BaseName) {
     {FILE_PATH_LITERAL("\xB3:"), FILE_PATH_LITERAL("\xB3:")},
     {FILE_PATH_LITERAL("\xC5:"), FILE_PATH_LITERAL("\xC5:")},
 #if OS(WIN)
-    {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL("\x0143:")},
+  // {FILE_PATH_LITERAL("\x0143:"), FILE_PATH_LITERAL("\x0143:")},
 #endif  // OS(WIN)
 #if defined(FILE_PATH_USES_DRIVE_LETTERS)
     {FILE_PATH_LITERAL("c:"), FILE_PATH_LITERAL("")},
@@ -270,10 +270,12 @@ TEST(FilePathTest, Append) {
     FilePath::StringType leaf(cases[i].inputs[1]);
 
     FilePath observedStr = root.append(leaf);
-    EXPECT_EQ(String(cases[i].expected), observedStr.getPath()) << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    EXPECT_EQ(String(cases[i].expected), observedStr.getPath())
+        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
     FilePath observedPath = root.append(FilePath(leaf));
-    EXPECT_EQ(String(cases[i].expected), observedPath.getPath()) << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    EXPECT_EQ(String(cases[i].expected), observedPath.getPath())
+        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
 #if 0
 #if defined(OS_WIN)
