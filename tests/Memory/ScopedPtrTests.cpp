@@ -100,7 +100,7 @@ TEST(ScopedPtrTests, Basic) {
   nu::swap(t2, t3);
   EXPECT_EQ(3, t2->ch);
   EXPECT_EQ(4, t3->ch);
-  //EXPECT_EQ(t2 < t3, t2.get() < t3.get());
+  // EXPECT_EQ(t2 < t3, t2.get() < t3.get());
   EXPECT_EQ(2, A::count);
 
   nu::ScopedPtr<A> releasePtr(new A);

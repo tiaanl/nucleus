@@ -1,5 +1,4 @@
 
 #include "gtest/gtest.h"
 
-TEST(ArrayTests, Basic) {
-}
+TEST(ArrayTests, Basic) {}

@@ -162,9 +162,9 @@ void dynamicArrayWithoutConst(nu::DynamicArray<U32>& buffer) {
 }
 
 void dynamicArrayWithConst(const nu::DynamicArray<U32>& buffer) {
-    for (USize i = 0; i < buffer.getSize(); ++i) {
-        ASSERT_EQ((i + 1) * 10, buffer.get(i));
-    }
+  for (USize i = 0; i < buffer.getSize(); ++i) {
+    ASSERT_EQ((i + 1) * 10, buffer.get(i));
+  }
 }
 
 TEST(DynamicArrayTests, RangedBasedForLoops) {

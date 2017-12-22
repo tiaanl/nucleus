@@ -1,8 +1,7 @@
 
+#include "gtest/gtest.h"
 #include "nucleus/Files/FilePath.h"
 #include "nucleus/Macros.h"
-
-#include "gtest/gtest.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -89,9 +88,9 @@ TEST(FilePathTest, DirName) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(cases[i].input);
+    FilePath input(String::fromCString(cases[i].input));
     FilePath observed = input.dirName();
-    EXPECT_EQ(FilePath::StringType(cases[i].expected), observed.getPath())
+    EXPECT_EQ(String::fromCString(cases[i].expected), observed.getPath())
         << "i: " << i << ", input: " << input.getPath();
   }
 }
@@ -173,9 +172,9 @@ TEST(FilePathTest, BaseName) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(cases[i].input);
+    FilePath input(String::fromCString(cases[i].input));
     FilePath observed = input.baseName();
-    EXPECT_EQ(FilePath::StringType(cases[i].expected), observed.getPath())
+    EXPECT_EQ(FilePath::StringType(String::fromCString(cases[i].expected)), observed.getPath())
         << "i: " << i << ", input: " << input.getPath();
   }
 }
@@ -247,13 +246,13 @@ TEST(FilePathTest, Append) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath root(cases[i].inputs[0]);
-    FilePath::StringType leaf(cases[i].inputs[1]);
+    FilePath root{String::fromCString(cases[i].inputs[0])};
+    FilePath::StringType leaf{String::fromCString(cases[i].inputs[1])};
     FilePath observedStr = root.append(leaf);
-    EXPECT_EQ(FilePath::StringType(cases[i].expected), observedStr.getPath())
+    EXPECT_EQ(String::fromCString(cases[i].expected), observedStr.getPath())
         << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
     FilePath observedPath = root.append(FilePath(leaf));
-    EXPECT_EQ(FilePath::StringType(cases[i].expected), observedPath.getPath())
+    EXPECT_EQ(String::fromCString(cases[i].expected), observedPath.getPath())
         << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
 #if 0

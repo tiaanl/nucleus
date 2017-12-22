@@ -37,7 +37,7 @@ I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
 
 FileInputStream::SizeType FileInputStream::getLength() {
   long size = 0;
-  FILE* fp = fopen(m_path.getPath().c_str(), "rb");
+  FILE* fp = fopen(m_path.getPath().getRawBytes(), "rb");
   if (fp != 0) {
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
@@ -48,7 +48,7 @@ FileInputStream::SizeType FileInputStream::getLength() {
 }
 
 void FileInputStream::openHandle() {
-  int f = open(m_path.getPath().c_str(), O_RDONLY, 00644);
+  int f = open(m_path.getPath().getRawBytes(), O_RDONLY, 00644);
   if (f != -1) {
     m_handle = f;
   } else {
