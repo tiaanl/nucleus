@@ -56,6 +56,7 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Types.h"
     "include/nucleus/Utils/ByteOrder.h"
     "include/nucleus/Utils/Copy.h"
+    "include/nucleus/Utils/Files.h"
     "include/nucleus/Utils/Functional.h"
     "include/nucleus/Utils/Move.h"
     "include/nucleus/Utils/Signals.h"
@@ -79,6 +80,7 @@ set(nucleus_SOURCE_FILES
     "src/Streams/OutputStream.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
+    "src/Utils/Files.cpp"
     )
 
 if(WIN32)

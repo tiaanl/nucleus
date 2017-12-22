@@ -75,7 +75,7 @@ FilePath::FilePath(Allocator* allocator) : m_allocator(allocator), m_path(alloca
 
 FilePath::FilePath(const StringType& path, Allocator* allocator) : m_allocator(allocator), m_path(path) {}
 
-FilePath::FilePath(const FilePath& other) : m_path(other.m_path) {}
+FilePath::FilePath(const FilePath& other, Allocator* allocator) : m_allocator(allocator), m_path(other.m_path, allocator) {}
 
 FilePath::~FilePath() = default;
 

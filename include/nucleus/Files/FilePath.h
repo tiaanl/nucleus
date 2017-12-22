@@ -2,6 +2,8 @@
 #ifndef NUCLEUS_FILES_FILE_PATH_H_
 #define NUCLEUS_FILES_FILE_PATH_H_
 
+#include <ostream>
+
 #include "nucleus/Config.h"
 #include "nucleus/Text/String.h"
 
@@ -49,7 +51,7 @@ public:
   explicit FilePath(Allocator* allocator = getDefaultAllocator());
   explicit FilePath(const StringType& path, Allocator* allocator = getDefaultAllocator());
 
-  FilePath(const FilePath& other);
+  FilePath(const FilePath& other, Allocator* allocator = getDefaultAllocator());
 
   ~FilePath();
 
@@ -94,6 +96,11 @@ private:
 #elif OS(WIN)
 #define FILE_PATH_LITERAL(Str) L##Str
 #endif
+
+inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
+  os << filePath.getPath();
+  return os;
+}
 
 }  // namespace nu
 
