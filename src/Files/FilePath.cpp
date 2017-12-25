@@ -74,7 +74,7 @@ FilePath FilePath::normalizeSeparators(const nu::String& path, nu::Allocator* al
   FilePath result{path, allocator};
   for (String::SizeType i = 0; i < result.m_path.getLength(); ++i) {
     String::CharType ch = result.m_path[i];
-    if (isSeparator(result.m_path[ch])) {
+    if (isSeparator(ch)) {
       result.m_path[i] = kSeparators[0];
     }
   }
