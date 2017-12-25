@@ -8,15 +8,13 @@ namespace nu {
 
 template <typename T>
 struct NumericLimits {
+  static constexpr T min() noexcept {
+    return std::numeric_limits<T>::min();
+  }
 
-    static constexpr T min() noexcept {
-        return std::numeric_limits<T>::min();
-    }
-
-    static constexpr T max() noexcept {
-        return std::numeric_limits<T>::max();
-    }
-
+  static constexpr T max() noexcept {
+    return std::numeric_limits<T>::max();
+  }
 };
 
 }  // namespace nu

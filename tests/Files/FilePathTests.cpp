@@ -94,7 +94,7 @@ TEST(FilePathTest, DirName) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(cases[i].input);
+    FilePath input(String{cases[i].input});
     FilePath observed = input.dirName();
     EXPECT_EQ(String(cases[i].expected), observed.getPath()) << "i: " << i << ", input: " << input.getPath();
   }
@@ -183,7 +183,7 @@ TEST(FilePathTest, BaseName) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input{cases[i].input};
+    FilePath input{String{cases[i].input}};
     FilePath observed = input.baseName();
     EXPECT_EQ(FilePath::StringType(cases[i].expected), observed.getPath())
         << "i: " << i << ", input: " << input.getPath();
@@ -266,7 +266,7 @@ TEST(FilePathTest, Append) {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath root{cases[i].inputs[0]};
+    FilePath root{String{cases[i].inputs[0]}};
     FilePath::StringType leaf(cases[i].inputs[1]);
 
     FilePath observedStr = root.append(leaf);

@@ -24,7 +24,8 @@ public:
   String(const String& other, Allocator* allocator = getDefaultAllocator())
     : String(other.m_data, other.getLength(), allocator) {}
 
-  String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
+  // Construct a `String` from a c-string.
+  explicit String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
     SizeType textLength = (length == npos) ? lengthOf(text) : length;
     ensureAllocated(textLength, false);
@@ -33,6 +34,7 @@ public:
     m_data[m_length] = 0;
   }
 
+  // Destruct the string, including the dynamic array holding our data.
   ~String() = default;
 
   // Copy
