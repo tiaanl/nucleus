@@ -71,6 +71,17 @@ bool FilePath::isSeparator(CharType ch) {
   return false;
 }
 
+// static
+FilePath FilePath::normalizeSeparators(const nu::String& path, nu::Allocator* allocator) {
+  FilePath result{path, allocator};
+  for (auto& ch : result.m_path) {
+    if (isSeparator(ch)) {
+      ch = kSeparators[0];
+    }
+  }
+  return result;
+}
+
 FilePath::FilePath(Allocator* allocator) : m_allocator(allocator), m_path(allocator) {}
 
 FilePath::FilePath(const StringType& path, Allocator* allocator) : m_allocator(allocator), m_path(path) {}

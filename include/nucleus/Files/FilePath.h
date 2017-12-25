@@ -48,6 +48,9 @@ public:
   // Returns true if ch is a FilePath separator.
   static bool isSeparator(CharType ch);
 
+  // Normalize separators to all be the default separator for the platform.
+  static FilePath normalizeSeparators(const nu::String& path, Allocator* allocator = getDefaultAllocator());
+
   explicit FilePath(Allocator* allocator = getDefaultAllocator());
   explicit FilePath(const StringType& path, Allocator* allocator = getDefaultAllocator());
 
