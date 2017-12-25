@@ -74,9 +74,10 @@ bool FilePath::isSeparator(CharType ch) {
 // static
 FilePath FilePath::normalizeSeparators(const nu::String& path, nu::Allocator* allocator) {
   FilePath result{path, allocator};
-  for (auto& ch : result.m_path) {
-    if (isSeparator(ch)) {
-      ch = kSeparators[0];
+  for (StringType::SizeType i = 0; i < result.m_path.getLength(); ++i) {
+    StringType::CharType ch = result.m_path[i];
+    if (isSeparator(result.m_path[ch])) {
+      result.m_path[i] = kSeparators[0];
     }
   }
   return result;
@@ -121,7 +122,7 @@ FilePath FilePath::dirName() const {
   } else if (lastSeparator == letter + 1) {
     // m_path is in the root directory.
     newPath.m_path.resize(letter + 2);
-  } else if (lastSeparator == letter + 2 && isSeparator(newPath.m_path.at(letter + 1))) {
+  } else if (lastSeparator == letter + 2 && isSeparator(newPath.m_path[letter + 1])) {
     // m_path is in "//" (possibly with a drive letter), so leave the double
     // separator intact indicating alternate root.
     newPath.m_path.resize(letter + 3);
@@ -181,7 +182,7 @@ FilePath FilePath::append(const StringType& component) const {
   if (!component.isEmpty() && !newPath.m_path.isEmpty()) {
     // Don't append a separator if the path still ends with a trailing separator
     // after stripping (indicating the root directory).
-    if (!isSeparator(newPath.m_path.at(newPath.m_path.getLength() - 1))) {
+    if (!isSeparator(newPath.m_path[newPath.m_path.getLength() - 1])) {
       // Don't append a separator if the path is just a drive letter.
       if (findDriveLetter(newPath.m_path) + 1 != newPath.m_path.getLength()) {
         newPath.m_path.append(kSeparators[0]);
@@ -207,10 +208,10 @@ void FilePath::stripTrailingSeparators() {
   StringType::SizeType start = findDriveLetter(m_path) + 2;
 
   StringType::SizeType lastStripped = StringType::npos;
-  for (StringType::SizeType pos = m_path.getLength(); pos > start && isSeparator(m_path.at(pos - 1)); --pos) {
+  for (StringType::SizeType pos = m_path.getLength(); pos > start && isSeparator(m_path[pos - 1]); --pos) {
     // If the string only has two separators and they're at the beginning, don't
     // strip them, unless the string began with more than two separators.
-    if (pos != start + 1 || lastStripped == start + 2 || !isSeparator(m_path.at(start - 1))) {
+    if (pos != start + 1 || lastStripped == start + 2 || !isSeparator(m_path[start - 1])) {
       m_path.resize(pos - 1);
       lastStripped = pos;
     }

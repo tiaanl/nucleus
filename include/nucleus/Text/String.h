@@ -59,7 +59,11 @@ public:
     return m_data;
   }
 
-  CharType at(SizeType index) const {
+  CharType& operator[](SizeType index) {
+    return m_data[index];
+  }
+
+  CharType operator[](SizeType index) const {
     return m_data[index];
   }
 
