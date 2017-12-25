@@ -93,11 +93,11 @@ public:
     return m_data;
   }
 
-  const ElementType& get(SizeType index) const {
+  const ElementType& operator[](SizeType index) const {
     return m_data[index];
   }
 
-  ElementType& get(SizeType index) {
+  ElementType& operator[](SizeType index) {
     return m_data[index];
   }
 

@@ -25,7 +25,7 @@ public:
     : String(other.m_data, other.getLength(), allocator) {}
 
   // Construct a `String` from a c-string.
-  explicit String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
+  String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
     SizeType textLength = (length == npos) ? lengthOf(text) : length;
     ensureAllocated(textLength, false);

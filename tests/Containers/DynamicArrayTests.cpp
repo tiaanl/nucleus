@@ -13,7 +13,7 @@ TEST(DynamicArrayTests, Basic) {
   buffer.pushBack(10);
 
   ASSERT_EQ(static_cast<USize>(1), buffer.getSize());
-  ASSERT_EQ(10, buffer.get(0));
+  ASSERT_EQ(10, buffer[0]);
 }
 
 TEST(DynamicArrayTests, CopyConstruct) {
@@ -24,8 +24,8 @@ TEST(DynamicArrayTests, CopyConstruct) {
   nu::DynamicArray<U32> buffer2{buffer};
 
   ASSERT_EQ(buffer.getSize(), buffer2.getSize());
-  ASSERT_EQ(buffer.get(0), buffer2.get(0));
-  ASSERT_EQ(buffer.get(1), buffer2.get(1));
+  ASSERT_EQ(buffer[0], buffer2[0]);
+  ASSERT_EQ(buffer[1], buffer2[1]);
 }
 
 TEST(DynamicArrayTests, CopyAssignment) {
@@ -39,8 +39,8 @@ TEST(DynamicArrayTests, CopyAssignment) {
   buffer2 = buffer;
 
   ASSERT_EQ(buffer.getSize(), buffer2.getSize());
-  ASSERT_EQ(buffer.get(0), buffer2.get(0));
-  ASSERT_EQ(buffer.get(1), buffer2.get(1));
+  ASSERT_EQ(buffer[0], buffer2[0]);
+  ASSERT_EQ(buffer[1], buffer2[1]);
 }
 
 TEST(DynamicArrayTests, MoveConstruct) {
@@ -52,8 +52,8 @@ TEST(DynamicArrayTests, MoveConstruct) {
 
   ASSERT_EQ(static_cast<USize>(0), buffer.getSize());
   ASSERT_EQ(static_cast<USize>(2), buffer2.getSize());
-  ASSERT_EQ(static_cast<USize>(10), buffer2.get(0));
-  ASSERT_EQ(static_cast<USize>(20), buffer2.get(1));
+  ASSERT_EQ(static_cast<USize>(10), buffer2[0]);
+  ASSERT_EQ(static_cast<USize>(20), buffer2[1]);
 }
 
 TEST(DynamicArrayTests, MoveAssignment) {
@@ -68,8 +68,8 @@ TEST(DynamicArrayTests, MoveAssignment) {
 
   ASSERT_EQ(static_cast<USize>(0), buffer.getSize());
   ASSERT_EQ(static_cast<USize>(2), buffer2.getSize());
-  ASSERT_EQ(10, buffer2.get(0));
-  ASSERT_EQ(20, buffer2.get(1));
+  ASSERT_EQ(10, buffer2[0]);
+  ASSERT_EQ(20, buffer2[1]);
 }
 
 class LifetimeType {
@@ -150,10 +150,10 @@ TEST(DynamicArrayTests, EmplaceBack) {
   buffer.emplaceBack(3, 4);
 
   ASSERT_EQ(static_cast<USize>(2), buffer.getSize());
-  ASSERT_EQ(1, buffer.get(0).getA());
-  ASSERT_EQ(2, buffer.get(0).getB());
-  ASSERT_EQ(3, buffer.get(1).getA());
-  ASSERT_EQ(4, buffer.get(1).getB());
+  ASSERT_EQ(1, buffer[0].getA());
+  ASSERT_EQ(2, buffer[0].getB());
+  ASSERT_EQ(3, buffer[1].getA());
+  ASSERT_EQ(4, buffer[1].getB());
 }
 
 TEST(DynamicArrayTests, CreateAndDestroyElements) {
@@ -179,13 +179,13 @@ TEST(DynamicArrayTests, CreateAndDestroyElements) {
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U32>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
-    ASSERT_EQ((i + 1) * 10, buffer.get(i));
+    ASSERT_EQ((i + 1) * 10, buffer[i]);
   }
 }
 
 void dynamicArrayWithConst(const nu::DynamicArray<U32>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
-    ASSERT_EQ((i + 1) * 10, buffer.get(i));
+    ASSERT_EQ((i + 1) * 10, buffer[i]);
   }
 }
 
@@ -209,9 +209,9 @@ TEST(DynamicArrayTests, Remove) {
   buffer.remove(buffer.begin() + 1);
 
   ASSERT_EQ(static_cast<USize>(3), buffer.getSize());
-  ASSERT_EQ(10, buffer.get(0));
-  ASSERT_EQ(30, buffer.get(1));
-  ASSERT_EQ(buffer.end(), &buffer.get(3));
+  ASSERT_EQ(10, buffer[0]);
+  ASSERT_EQ(30, buffer[1]);
+  ASSERT_EQ(buffer.end(), &buffer[3]);
 }
 
 TEST(DynamicArrayTests, RemoveCallsDestructor) {
@@ -240,9 +240,9 @@ TEST(DynamicArrayTests, RemoveRange) {
   buffer.remove(buffer.begin() + 1, buffer.begin() + 3);
 
   ASSERT_EQ(static_cast<USize>(2), buffer.getSize());
-  ASSERT_EQ(10, buffer.get(0));
-  ASSERT_EQ(40, buffer.get(1));
-  ASSERT_EQ(buffer.end(), &buffer.get(2));
+  ASSERT_EQ(10, buffer[0]);
+  ASSERT_EQ(40, buffer[1]);
+  ASSERT_EQ(buffer.end(), &buffer[2]);
 }
 
 TEST(DynamicArrayTests, RemoveRangeCallsDestructors) {

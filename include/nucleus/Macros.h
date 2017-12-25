@@ -14,6 +14,14 @@ public:                                                                         
   DISALLOW_COPY_AND_ASSIGN(ClassName);                                                                                 \
   ClassName() = delete
 
+#define COPY_DELETE(ClassName)                                                                                         \
+  ClassName(const ClassName&) = delete;                                                                                \
+  ClassName& operator=(const ClassName&)
+
+#define MOVE_DELETE(ClassName)                                                                                         \
+  ClassName(ClassName&&) = delete;                                                                                     \
+  ClassName& operator=(ClassName&&) = delete
+
 // ARRAY_SIZE
 
 // Helper to figure out the item count of a static array of elements, c++ style!
