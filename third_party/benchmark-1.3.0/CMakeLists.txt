@@ -136,18 +136,24 @@ if(BENCHMARK_USE_LIBCXX)
 endif(BENCHMARK_USE_LIBCXX)
 
 # C++ feature checks
+
+# For regular expressions we just assume we have it.
+set(HAVE_STD_REGEX)
+
 # Determine the correct regular expression engine to use
-cxx_feature_check(STD_REGEX)
-cxx_feature_check(GNU_POSIX_REGEX)
-cxx_feature_check(POSIX_REGEX)
-if(NOT HAVE_STD_REGEX AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
-    message(FATAL_ERROR "Failed to determine the source files for the regular expression backend")
-endif()
-if(NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
-    AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
-    message(WARNING "Using std::regex with exceptions disabled is not fully supported")
-endif()
-cxx_feature_check(STEADY_CLOCK)
+# cxx_feature_check(STD_REGEX)
+# cxx_feature_check(GNU_POSIX_REGEX)
+# cxx_feature_check(POSIX_REGEX)
+# if(NOT HAVE_STD_REGEX AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
+#     message(FATAL_ERROR "Failed to determine the source files for the regular expression backend")
+# endif()
+# if(NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
+#     AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
+#     message(WARNING "Using std::regex with exceptions disabled is not fully supported")
+# endif()
+
+#cxx_feature_check(STEADY_CLOCK)
+set(HAVE_STEADY_CLOCK)
 
 # Ensure we have pthreads
 find_package(Threads REQUIRED)
@@ -168,10 +174,10 @@ target_include_directories(benchmark PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_include_directories(benchmark PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 # Link threads.
-find_library(LIBRT rt)
-if(LIBRT)
-    target_link_libraries(benchmark ${LIBRT})
-endif()
+# find_library(LIBRT rt)
+# if(LIBRT)
+#     target_link_libraries(benchmark ${LIBRT})
+# endif()
 
 # We need extra libraries on Windows.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")

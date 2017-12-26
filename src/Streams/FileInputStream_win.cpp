@@ -24,8 +24,8 @@ FileInputStream::SizeType FileInputStream::getLength() {
 }
 
 void FileInputStream::openHandle() {
-  HANDLE h = ::CreateFileW((LPCWSTR)m_path.getPath().getRawBytes(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-                           nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+  HANDLE h = ::CreateFileA(m_path.getPath().getRawBytes(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   } else {
