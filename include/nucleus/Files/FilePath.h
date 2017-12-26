@@ -19,20 +19,6 @@ namespace nu {
 
 class FilePath {
 public:
-  // Null-terminated array of separators used to separate components in hierarchical paths.  Each character in this
-  // array is a valid separator, but kSeparators[0] is treated as the canonical separator and will be used when
-  // composing path names.
-  static const String::CharType kSeparators[];
-
-  // A special path component meaning "this directory."
-  static const String::CharType kCurrentDirectory[];
-
-  // A special path component meaning "the parent directory."
-  static const String::CharType kParentDirectory[];
-
-  // The character used to identify a file extension.
-  static const String::CharType kExtensionSeparator;
-
   // Returns true if ch is a FilePath separator.
   static bool isSeparator(String::CharType ch);
 
