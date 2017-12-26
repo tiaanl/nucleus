@@ -27,8 +27,7 @@ bool FileInputStream::openedOk() const {
 
 FileInputStream::SizeType FileInputStream::read(void* destBuffer, SizeType maxBytesToRead) {
   if (!openedOk()) {
-    LOG(Warning) << "Trying to read from an invalid stream.";
-    NOTREACHED() << "Do not read from an invalid stream.";
+    LOG(Fatal) << "Trying to read from an invalid stream.";
     return 0;
   }
   DCHECK(destBuffer != NULL && maxBytesToRead >= 0);
