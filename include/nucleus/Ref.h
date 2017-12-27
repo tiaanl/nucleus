@@ -1,34 +1,34 @@
 
-#ifndef NUCLEUS_MEMORY_SCOPEDREFPTR_H_
-#define NUCLEUS_MEMORY_SCOPEDREFPTR_H_
+#ifndef NUCLEUS_MEMORY_REF_H_
+#define NUCLEUS_MEMORY_REF_H_
 
 namespace nu {
 
 template <typename T>
-class ScopedRefPtr {
+class Ref {
 public:
-  ScopedRefPtr() : m_ptr(nullptr) {}
+  Ref() : m_ptr(nullptr) {}
 
-  ScopedRefPtr(T* ptr) : m_ptr(ptr) {
+  Ref(T* ptr) : m_ptr(ptr) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
-  ScopedRefPtr(const ScopedRefPtr<T>& other) : m_ptr(other.m_ptr) {
+  Ref(const Ref<T>& other) : m_ptr(other.m_ptr) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
   template <typename U>
-  ScopedRefPtr(const ScopedRefPtr<U>& other) : m_ptr(other.get()) {
+  Ref(const Ref<U>& other) : m_ptr(other.get()) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
-  ~ScopedRefPtr() {
+  ~Ref() {
     if (m_ptr) {
       m_ptr->release();
     }
@@ -46,7 +46,7 @@ public:
     return m_ptr;
   }
 
-  ScopedRefPtr<T>& operator=(T* ptr) {
+  Ref<T>& operator=(T* ptr) {
     // addRef() first so that self assignment works.
     if (ptr) {
       ptr->addRef();
@@ -62,23 +62,13 @@ public:
     return *this;
   }
 
-  ScopedRefPtr<T>& operator=(const ScopedRefPtr<T>& other) {
+  Ref<T>& operator=(const Ref<T>& other) {
     return *this = other.m_ptr;
   }
 
   template <typename U>
-  ScopedRefPtr<T>& operator=(const ScopedRefPtr<U>& other) {
+  Ref<T>& operator=(const Ref<U>& other) {
     return *this = other.get();
-  }
-
-  void swap(T** pptr) {
-    T* ptr = m_ptr;
-    m_ptr = *pptr;
-    *pptr = ptr;
-  }
-
-  void swap(ScopedRefPtr<T>& other) {
-    swap(&other.m_ptr);
   }
 
 protected:
@@ -87,4 +77,4 @@ protected:
 
 }  // namespace nu
 
-#endif  // NUCLEUS_MEMORY_SCOPEDREFPTR_H_
+#endif  // NUCLEUS_MEMORY_REF_H_

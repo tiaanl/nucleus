@@ -5,6 +5,10 @@
 #include "nucleus/Config.h"
 #include "nucleus/Types.h"
 
+#if OS(WIN)
+#include "nucleus/Win/WindowsMixin.h"
+#endif  // OS(WIN)
+
 namespace nu {
 
 namespace detail {
@@ -70,6 +74,10 @@ Atomic64 atomicLoadRelease(volatile const Atomic64* ptr);
 #if COMPILER(GCC)
 #include "nucleus/Atomics/AtomicsX86GCC.h"
 #endif  // COMPILER(GCC)
+
+#if COMPILER(MSVC)
+#include "nucleus/Atomics/AtomicsX86MSVC.h"
+#endif  // COMPILER(MSVC)
 
 #undef ATOMICS_INTERNAL
 

@@ -39,9 +39,7 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Logging.h"
     "include/nucleus/Macros.h"
     "include/nucleus/Memory/Allocated.h"
-    "include/nucleus/Memory/RefCounted.h"
     "include/nucleus/Memory/ScopedPtr.h"
-    "include/nucleus/Memory/ScopedRefPtr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/Optional.h"
     "include/nucleus/Streams/FileInputStream.h"
@@ -62,6 +60,8 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Utils/Signals.h"
     "include/nucleus/Utils/TypeTraits.h"
     "include/nucleus/Win/WindowsMixin.h"
+    "include/nucleus/RefCounted.h"
+    "include/nucleus/Ref.h"
     )
 
 set(nucleus_SOURCE_FILES
@@ -71,7 +71,6 @@ set(nucleus_SOURCE_FILES
     "src/Allocators/LinearAllocator.cpp"
     "src/Files/FilePath.cpp"
     "src/Logging.cpp"
-    "src/Memory/RefCounted.cpp"
     "src/MemoryDebug.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
@@ -81,6 +80,7 @@ set(nucleus_SOURCE_FILES
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
     "src/Utils/Files.cpp"
+    "src/RefCounted.cpp"
     )
 
 if(WIN32)

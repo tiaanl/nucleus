@@ -12,7 +12,7 @@ set(nucleus_TEST_SOURCE_FILES
     "Files/FilePathTests.cpp"
     "LoggingTests.cpp"
     "Memory/AllocatedTests.cpp"
-    "Memory/RefCountedTests.cpp"
+    "RefCountedTests.cpp"
     "Memory/ScopedPtrTests.cpp"
     "OptionalTests.cpp"
     "Text/StringTests.cpp"
