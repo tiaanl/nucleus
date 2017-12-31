@@ -1,6 +1,6 @@
 
-#include "nucleus/Memory/RefCounted.h"
-#include "nucleus/Memory/ScopedRefPtr.h"
+#include "nucleus/Ref.h"
+#include "nucleus/RefCounted.h"
 
 #include "gtest/gtest.h"
 
@@ -8,13 +8,13 @@
 
 namespace {
 
-class SelfAssign : public nu::RefCounted<SelfAssign> {
-  friend class nu::RefCounted<SelfAssign>;
+class SelfAssign : public nu::RefCounted {
+  friend class nu::RefCounted;
 
   ~SelfAssign() {}
 };
 
-class CheckDerivedMemberAccess : public nu::ScopedRefPtr<SelfAssign> {
+class CheckDerivedMemberAccess : public nu::Ref<SelfAssign> {
 public:
   CheckDerivedMemberAccess() {
     // This shouldn't compile if we don't have access to the member variable.
@@ -23,9 +23,9 @@ public:
   }
 };
 
-class ScopedRefPtrToSelf : public nu::RefCounted<ScopedRefPtrToSelf> {
+class RefToSelf : public nu::RefCounted {
 public:
-  ScopedRefPtrToSelf() : m_selfPtr(this) {}
+  RefToSelf() : m_selfPtr(this) {}
 
   static bool wasDestroyed() {
     return m_wasDestroyed;
@@ -36,41 +36,42 @@ public:
   }
 
 private:
-  friend class nu::RefCounted<ScopedRefPtrToSelf>;
-  ~ScopedRefPtrToSelf() {
+  friend class nu::RefCounted;
+
+  ~RefToSelf() {
     m_wasDestroyed = true;
   }
 
   static bool m_wasDestroyed;
 
-  nu::ScopedRefPtr<ScopedRefPtrToSelf> m_selfPtr;
+  nu::Ref<RefToSelf> m_selfPtr;
 };
 
-bool ScopedRefPtrToSelf::m_wasDestroyed = false;
+bool RefToSelf::m_wasDestroyed = false;
 
 }  // namespace
 
-TEST(RefCountedUnitTest, TestSelfAssignment) {
+TEST(RefCountedTests, TestSelfAssignment) {
   SelfAssign* p = new SelfAssign;
-  nu::ScopedRefPtr<SelfAssign> var(p);
+  nu::Ref<SelfAssign> var(p);
   var = var;
   EXPECT_EQ(var.get(), p);
 }
 
-TEST(RefCountedUnitTest, ScopedRefPtrMemberAccess) {
+TEST(RefCountedTests, ScopedRefPtrMemberAccess) {
   CheckDerivedMemberAccess check;
 }
 
-TEST(RefCountedUnitTest, ScopedRefPtrToSelf) {
-  ScopedRefPtrToSelf* check = new ScopedRefPtrToSelf();
-  EXPECT_FALSE(ScopedRefPtrToSelf::wasDestroyed());
+TEST(RefCountedTests, RefToSelf) {
+  RefToSelf* check = new RefToSelf();
+  EXPECT_FALSE(RefToSelf::wasDestroyed());
   check->SelfDestruct();
-  EXPECT_TRUE(ScopedRefPtrToSelf::wasDestroyed());
+  EXPECT_TRUE(RefToSelf::wasDestroyed());
 }
 
-TEST(RefCountedUnitTest, ScopedRefPtrBooleanOperations) {
-  nu::ScopedRefPtr<SelfAssign> p1 = new SelfAssign;
-  nu::ScopedRefPtr<SelfAssign> p2;
+TEST(RefCountedTests, RefBooleanOperations) {
+  nu::Ref<SelfAssign> p1 = new SelfAssign;
+  nu::Ref<SelfAssign> p2;
 
   EXPECT_TRUE(p1);
   EXPECT_FALSE(!p1);

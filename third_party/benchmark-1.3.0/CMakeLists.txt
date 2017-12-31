@@ -137,9 +137,6 @@ endif(BENCHMARK_USE_LIBCXX)
 
 # C++ feature checks
 
-# For regular expressions we just assume we have it.
-set(HAVE_STD_REGEX)
-
 # Determine the correct regular expression engine to use
 # cxx_feature_check(STD_REGEX)
 # cxx_feature_check(GNU_POSIX_REGEX)
@@ -151,9 +148,6 @@ set(HAVE_STD_REGEX)
 #     AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
 #     message(WARNING "Using std::regex with exceptions disabled is not fully supported")
 # endif()
-
-#cxx_feature_check(STEADY_CLOCK)
-set(HAVE_STEADY_CLOCK)
 
 # Ensure we have pthreads
 find_package(Threads REQUIRED)
@@ -173,6 +167,13 @@ add_library(benchmark ${SOURCE_FILES})
 target_include_directories(benchmark PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_include_directories(benchmark PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
+#cxx_feature_check(STEADY_CLOCK)
+target_compile_definitions(benchmark PRIVATE "-DSTEADY_CLOCK")
+
+# For regular expressions we just assume we have it.
+target_compile_definitions(benchmark PRIVATE "-DHAVE_STD_REGEX")
+
+
 # Link threads.
 # find_library(LIBRT rt)
 # if(LIBRT)
@@ -183,3 +184,5 @@ target_include_directories(benchmark PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SO
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     target_link_libraries(benchmark Shlwapi)
 endif()
+
+set_property(TARGET benchmark PROPERTY FOLDER third_party)
