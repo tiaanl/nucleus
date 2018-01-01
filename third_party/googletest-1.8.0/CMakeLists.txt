@@ -11,3 +11,5 @@ add_library(googletest ${googletest_SOURCE_FILES})
 target_include_directories(googletest PUBLIC "${googletest_SOURCE_DIR}/include")
 target_include_directories(googletest PRIVATE "${googletest_SOURCE_DIR}")
 set_property(TARGET googletest PROPERTY FOLDER third_party)
+
+target_compile_definitions(googletest PUBLIC "-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
