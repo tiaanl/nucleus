@@ -5,20 +5,24 @@
 
 namespace nu {
 
-bool RefCounted::hasOneRef() const {
-  return atomicRefCountIsOne(&const_cast<RefCounted*>(this)->m_refCount);
+namespace detail {
+
+bool RefCountedBase::hasOneRef() const {
+  return atomicRefCountIsOne(&const_cast<RefCountedBase*>(this)->m_refCount);
 }
 
-void RefCounted::addRef() const {
+void RefCountedBase::addRef() const {
   atomicRefCountInc(&m_refCount);
 }
 
-bool RefCounted::release() const {
+bool RefCountedBase::release() const {
   return !atomicRefCountDec(&m_refCount);
 }
 
-RefCounted::RefCounted() : m_refCount(0) {}
+RefCountedBase::RefCountedBase() : m_refCount(0) {}
 
-RefCounted::~RefCounted() = default;
+RefCountedBase::~RefCountedBase() = default;
+
+}  // namespace detail
 
 }  // namespace nu

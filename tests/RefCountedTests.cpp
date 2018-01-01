@@ -1,16 +1,16 @@
 
+#include "gtest/gtest.h"
+#include "nucleus/Allocators/DefaultAllocator.h"
+#include "nucleus/Memory/Allocated.h"
 #include "nucleus/Ref.h"
 #include "nucleus/RefCounted.h"
-
-#include "gtest/gtest.h"
 
 #include "nucleus/MemoryDebug.h"
 
 namespace {
 
-class SelfAssign : public nu::RefCounted {
-  friend class nu::RefCounted;
-
+class SelfAssign : public nu::RefCounted<SelfAssign> {
+public:
   ~SelfAssign() {}
 };
 
@@ -23,54 +23,32 @@ public:
   }
 };
 
-class RefToSelf : public nu::RefCounted {
+class RefToSelf : public nu::RefCounted<RefToSelf> {
 public:
   RefToSelf() : m_selfPtr(this) {}
-
-  static bool wasDestroyed() {
-    return m_wasDestroyed;
-  }
-
-  void SelfDestruct() {
-    m_selfPtr = nullptr;
-  }
+  ~RefToSelf() = default;
 
 private:
-  friend class nu::RefCounted;
-
-  ~RefToSelf() {
-    m_wasDestroyed = true;
-  }
-
-  static bool m_wasDestroyed;
-
   nu::Ref<RefToSelf> m_selfPtr;
 };
-
-bool RefToSelf::m_wasDestroyed = false;
 
 }  // namespace
 
 TEST(RefCountedTests, TestSelfAssignment) {
-  SelfAssign* p = new SelfAssign;
+  SelfAssign sa;
+  SelfAssign* p = &sa;
+
   nu::Ref<SelfAssign> var(p);
   var = var;
   EXPECT_EQ(var.get(), p);
 }
 
-TEST(RefCountedTests, ScopedRefPtrMemberAccess) {
+TEST(RefCountedTests, MemberAccess) {
   CheckDerivedMemberAccess check;
 }
 
-TEST(RefCountedTests, RefToSelf) {
-  RefToSelf* check = new RefToSelf();
-  EXPECT_FALSE(RefToSelf::wasDestroyed());
-  check->SelfDestruct();
-  EXPECT_TRUE(RefToSelf::wasDestroyed());
-}
-
-TEST(RefCountedTests, RefBooleanOperations) {
-  nu::Ref<SelfAssign> p1 = new SelfAssign;
+TEST(RefCountedTests, BooleanOperations) {
+  SelfAssign* p1 = &(SelfAssign{});
   nu::Ref<SelfAssign> p2;
 
   EXPECT_TRUE(p1);
@@ -81,12 +59,33 @@ TEST(RefCountedTests, RefBooleanOperations) {
 
   EXPECT_NE(p1, p2);
 
-  SelfAssign* raw_p = new SelfAssign;
-  p2 = raw_p;
+  SelfAssign* raw = &(SelfAssign{});
+
+  p2 = raw;
   EXPECT_NE(p1, p2);
-  EXPECT_EQ(raw_p, p2);
+  EXPECT_EQ(raw, p2);
 
   p2 = p1;
-  EXPECT_NE(raw_p, p2);
+  EXPECT_NE(raw, p2);
   EXPECT_EQ(p1, p2);
+}
+
+struct RefCountedWithTraits;
+
+struct TestTraits {
+  static bool s_destructred;
+
+  static void destruct(const RefCountedWithTraits* o) {
+    s_destructred = true;
+  }
+};
+
+// static
+bool TestTraits::s_destructred = false;
+
+struct RefCountedWithTraits : nu::RefCounted<RefCountedWithTraits, TestTraits> {};
+
+TEST(RefCountedTests, CallsDestruct) {
+  { nu::Ref<RefCountedWithTraits> p{&(RefCountedWithTraits{})}; }
+  EXPECT_TRUE(TestTraits::s_destructred);
 }
