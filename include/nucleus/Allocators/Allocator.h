@@ -42,6 +42,18 @@ inline bool operator!=(const Allocator& left, const Allocator& right) {
   return !(left == right);
 }
 
+template <typename T, typename... Args>
+T* construct(Allocator* allocator, Args&&... args) {
+  void* data = allocator->allocate(sizeof(T), alignof(T));
+  return new (data) T(forward(args)...);
+}
+
+template <typename T>
+void destruct(Allocator* allocator, T* ptr) {
+  ptr->~T();
+  allocator->free(ptr, sizeof(T), alignof(T));
+}
+
 }  // namespace nu
 
 #endif  // NUCLEUS_ALLOCATORS_ALLOCATOR_H_

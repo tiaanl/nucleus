@@ -56,3 +56,19 @@ TEST(AllocatedTests, Move) {
     ASSERT_FALSE(!i2);
   }
 }
+
+TEST(AllocatedTests, Construct) {
+  nu::TestAllocator alloc;
+
+  {
+    nu::Allocated<I32> a(&alloc);
+    EXPECT_TRUE(a.isEmpty());
+    EXPECT_EQ(0, alloc.getAllocations());
+
+    a.allocate(10);
+    EXPECT_EQ(10, *a);
+  }
+
+  EXPECT_EQ(1, alloc.getAllocations());
+  EXPECT_EQ(1, alloc.getFrees());
+}

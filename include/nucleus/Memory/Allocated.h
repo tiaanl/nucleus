@@ -3,6 +3,7 @@
 #define NUCLEUS_MEMORY_ALLOCATED_H_
 
 #include "nucleus/Allocators/Allocator.h"
+#include "nucleus/Macros.h"
 #include "nucleus/Types.h"
 #include "nucleus/Utils/Move.h"
 
@@ -15,36 +16,50 @@ class Allocated {
 public:
   using ElementType = T;
 
-  explicit Allocated(Allocator* allocator) : m_allocator(allocator), m_ptr(nullptr), m_size(0), m_alignment(0) {}
+  COPY_DELETE(Allocated);
 
-  Allocated(const Allocated& other) = delete;
+  // Construct an empty `Allocated`, but with a valid `Allocator`.  Use `construct` to create a new object into this
+  // `Allocated`.
+  explicit Allocated(Allocator* allocator) : m_allocator(allocator), m_ptr(nullptr) {}
 
-  Allocated(Allocated&& other)
-    : m_allocator(other.m_allocator), m_ptr(other.m_ptr), m_size(other.m_size), m_alignment(other.m_alignment) {
+  // Move another `Allocated`'s internals into this one.  Leave the other other one's allocator in tact, because an
+  // `Allocated` object is invalid without one.
+  Allocated(Allocated&& other) : m_allocator(other.m_allocator), m_ptr(other.m_ptr) {
     other.m_ptr = nullptr;
-    other.m_size = 0;
-    other.m_alignment = 0;
   }
 
+  // Destruct the `Allocated` freeing any memory we might have allocated.
   ~Allocated() {
-    if (m_ptr && m_size) {
-      m_allocator->free(m_ptr, m_size, m_alignment);
-    }
+    free();
   }
 
-  Allocated& operator=(const Allocated& other) = delete;
-
+  // Move another `Allocated`'s internals into this one.  Leave the other other one's allocator in tact, because an
+  // `Allocated` object is invalid without one.
   Allocated& operator=(Allocated&& other) {
     m_allocator = other.m_allocator;
     m_ptr = other.m_ptr;
-    m_size = other.m_size;
-    m_alignment = other.m_alignment;
 
     other.m_ptr = nullptr;
-    other.m_size = 0;
-    other.m_alignment = 0;
 
     return *this;
+  }
+
+  bool isEmpty() const {
+    return !m_ptr;
+  }
+
+  // Allocate a new object of type `ElementType` and store it in this `Allocated`.
+  template <typename... Args>
+  void allocate(Args&&... args) {
+    void* data = m_allocator->allocate(sizeof(T), alignof(T));
+    m_ptr = new (data) T(forward<Args>(args)...);
+  }
+
+  // Free the memory we might have allocated.
+  void free() {
+    if (m_ptr) {
+      m_allocator->free(m_ptr, sizeof(T), alignof(T));
+    }
   }
 
   ElementType* operator->() const {
@@ -64,27 +79,20 @@ public:
   }
 
 private:
-  template <typename S, typename... Args>
-  friend Allocated<S> allocate(Allocator* allocator, Args... args);
+  template <typename U, typename... Args>
+  friend Allocated<U> allocate(Allocator* allocator, Args... args);
 
-  Allocated(Allocator* allocator, T* ptr, USize size, USize alignment)
-    : m_allocator(allocator), m_ptr(ptr), m_size(size), m_alignment(alignment) {}
+  Allocated(Allocator* allocator, T* ptr) : m_allocator(allocator), m_ptr(ptr) {}
 
   Allocator* m_allocator;
   ElementType* m_ptr;
-  USize m_size;
-  USize m_alignment;
 };
 
 template <typename T, typename... Args>
 inline Allocated<T> allocate(Allocator* allocator, Args... args) {
-  USize sizeToAllocate = sizeof(T);
-  USize alignment = alignof(T);
-
-  void* data = allocator->allocate(sizeToAllocate, alignment);
-
-  // Construct the new object onto the allocated data and return the the Allocated wrapper.
-  return Allocated<T>{allocator, new (data) T(forward<Args>(args)...), sizeToAllocate, alignment};
+  Allocated<T> obj{allocator};
+  obj.allocate(forward<Args>(args)...);
+  return obj;
 };
 
 }  // namespace nu
