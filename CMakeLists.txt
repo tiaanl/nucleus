@@ -18,25 +18,26 @@ add_subdirectory("third_party")
 # nucleus
 
 set(nucleus_INCLUDE_FILES
+    "include/nucleus/Allocators/Allocated.h"
     "include/nucleus/Allocators/Allocator.h"
     "include/nucleus/Allocators/DebugAllocator.h"
     "include/nucleus/Allocators/DefaultAllocator.h"
     "include/nucleus/Allocators/GlobalAllocator.h"
     "include/nucleus/Allocators/LinearAllocator.h"
     "include/nucleus/Allocators/TestAllocator.h"
-    "include/nucleus/Atomics/AtomicRefCount.h"
-    "include/nucleus/Atomics/Atomics.h"
     "include/nucleus/Config.h"
     "include/nucleus/Containers/Array.h"
     "include/nucleus/Containers/BitSet.h"
     "include/nucleus/Containers/DynamicArray.h"
-    "include/nucleus/Files/FilePath.h"
+    "include/nucleus/FilePath.h"
+    "include/nucleus/Files.h"
     "include/nucleus/Logging.h"
     "include/nucleus/Macros.h"
-    "include/nucleus/Memory/Allocated.h"
-    "include/nucleus/Memory/ScopedPtr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/Optional.h"
+    "include/nucleus/Ref.h"
+    "include/nucleus/RefCounted.h"
+    "include/nucleus/Signals.h"
     "include/nucleus/Streams/FileInputStream.h"
     "include/nucleus/Streams/FileOutputStream.h"
     "include/nucleus/Streams/InputStream.h"
@@ -48,15 +49,7 @@ set(nucleus_INCLUDE_FILES
     "include/nucleus/Text/String.h"
     "include/nucleus/Types.h"
     "include/nucleus/Utils/ByteOrder.h"
-    "include/nucleus/Utils/Copy.h"
-    "include/nucleus/Utils/Files.h"
-    "include/nucleus/Utils/Functional.h"
-    "include/nucleus/Utils/Move.h"
-    "include/nucleus/Utils/Signals.h"
-    "include/nucleus/Utils/TypeTraits.h"
     "include/nucleus/Win/WindowsMixin.h"
-    "include/nucleus/RefCounted.h"
-    "include/nucleus/Ref.h"
     )
 
 set(nucleus_SOURCE_FILES
@@ -64,7 +57,8 @@ set(nucleus_SOURCE_FILES
     "src/Allocators/DefaultAllocator.cpp"
     "src/Allocators/GlobalAllocator.cpp"
     "src/Allocators/LinearAllocator.cpp"
-    "src/Files/FilePath.cpp"
+    "src/FilePath.cpp"
+    "src/Files.cpp"
     "src/Logging.cpp"
     "src/MemoryDebug.cpp"
     "src/Streams/FileInputStream.cpp"
@@ -74,8 +68,6 @@ set(nucleus_SOURCE_FILES
     "src/Streams/OutputStream.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
-    "src/Utils/Files.cpp"
-    "src/RefCounted.cpp"
     )
 
 if(WIN32)

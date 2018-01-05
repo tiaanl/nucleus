@@ -2,7 +2,8 @@
 #ifndef NUCLEUS_MEMORY_REF_COUNTED_H_
 #define NUCLEUS_MEMORY_REF_COUNTED_H_
 
-#include "nucleus/Atomics/AtomicRefCount.h"
+#include <atomic>
+
 #include "nucleus/Macros.h"
 
 namespace nu {
@@ -11,20 +12,27 @@ namespace detail {
 
 class RefCountedBase {
 public:
-  bool hasOneRef() const;
+  bool hasOneRef() const {
+    return m_refCount.load(std::memory_order_release) == 1;
+  }
 
-  void addRef() const;
-  bool release() const;
+  void addRef() const {
+    m_refCount.fetch_add(1, std::memory_order_relaxed);
+  }
+
+  bool release() const {
+    return m_refCount.fetch_sub(1, std::memory_order_release);
+  }
 
 protected:
-  RefCountedBase();
-  ~RefCountedBase();
+  RefCountedBase() = default;
+  ~RefCountedBase() = default;
 
   COPY_DELETE(RefCountedBase);
   MOVE_DELETE(RefCountedBase);
 
 private:
-  mutable AtomicRefCount m_refCount;
+  mutable std::atomic<USize> m_refCount{};
 };
 
 template <typename T>

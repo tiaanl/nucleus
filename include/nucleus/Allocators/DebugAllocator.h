@@ -21,15 +21,19 @@ public:
   USize getBytesAllocated() const {
     return m_bytesAllocated;
   }
-  USize getBytesDeallocated() const {
+
+  USize getBytesFreed() const {
     return m_bytesAllocated - m_bytesOutstanding;
   }
+
   USize getBytesOutstanding() const {
     return m_bytesOutstanding;
   }
+
   USize getMaxAllocated() const {
     return m_maxAllocated;
   }
+
   USize getBlocksOutstanding() const {
     return m_blocks.getSize();
   }
@@ -37,9 +41,11 @@ public:
   static USize getLeakedBytes() {
     return s_leakedBytes;
   }
+
   static USize getLeakedBlocks() {
     return s_leakedBlocks;
   }
+
   static void clearLeaked();
 
 protected:

@@ -1,8 +1,9 @@
 
 #include "nucleus/Streams/MemoryInputStream.h"
 
+#include <algorithm>
+
 #include "nucleus/Logging.h"
-#include "nucleus/Utils/MinMax.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -25,7 +26,7 @@ MemoryInputStream::SizeType MemoryInputStream::getLength() {
 MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytesToRead) {
   DCHECK(bytesToRead >= 0);
 
-  SizeType num = min(bytesToRead, m_buffer.getSize() - m_currentPosition);
+  SizeType num = std::min(bytesToRead, m_buffer.getSize() - m_currentPosition);
   if (num <= 0)
     return 0;
 
@@ -40,8 +41,8 @@ bool MemoryInputStream::isExhausted() {
 }
 
 bool MemoryInputStream::setPosition(SizeType newPosition) {
-  m_currentPosition = max(newPosition, static_cast<SizeType>(0));
-  m_currentPosition = min(newPosition, m_buffer.getSize());
+  m_currentPosition = std::max(newPosition, static_cast<SizeType>(0));
+  m_currentPosition = std::min(newPosition, m_buffer.getSize());
   return true;
 }
 

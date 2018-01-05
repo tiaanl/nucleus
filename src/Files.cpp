@@ -1,6 +1,6 @@
 
 #include "nucleus/Config.h"
-#include "nucleus/Files/FilePath.h"
+#include "nucleus/FilePath.h"
 
 #if OS(POSIX)
 #include <unistd.h>

@@ -1,13 +1,14 @@
 
 #include "gtest/gtest.h"
-#include "nucleus/Files/FilePath.h"
+#include "nucleus/Allocators/DebugAllocator.h"
+#include "nucleus/FilePath.h"
 #include "nucleus/Macros.h"
 
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
-TEST(FilePathTest, DirName) {
+TEST(FilePathTests, DirName) {
   const struct {
     const char* input;
     const char* expected;
@@ -100,7 +101,7 @@ TEST(FilePathTest, DirName) {
   }
 }
 
-TEST(FilePathTest, BaseName) {
+TEST(FilePathTests, BaseName) {
   const struct {
     const char* input;
     const char* expected;
@@ -185,12 +186,11 @@ TEST(FilePathTest, BaseName) {
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
     FilePath input{String{cases[i].input}};
     FilePath observed = input.baseName();
-    EXPECT_EQ(String(cases[i].expected), observed.getPath())
-        << "i: " << i << ", input: " << input.getPath();
+    EXPECT_EQ(String(cases[i].expected), observed.getPath()) << "i: " << i << ", input: " << input.getPath();
   }
 }
 
-TEST(FilePathTest, Append) {
+TEST(FilePathTests, Append) {
   const struct {
     const char* inputs[2];
     const char* expected;

@@ -1,7 +1,7 @@
 
 #include "gtest/gtest.h"
+#include "nucleus/Allocators/Allocated.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
-#include "nucleus/Memory/Allocated.h"
 #include "nucleus/Ref.h"
 #include "nucleus/RefCounted.h"
 

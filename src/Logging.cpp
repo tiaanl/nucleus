@@ -81,7 +81,7 @@ LogEntry::~LogEntry() {
   // If this is a DCheck message, then we break into the debugger.
   if (m_logLevel == DCheck) {
 #if OS(WIN)
-//        __debugbreak();
+    __debugbreak();
 #elif OS(MACOSX)
     asm("int3");
 #endif

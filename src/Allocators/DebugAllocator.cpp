@@ -23,7 +23,7 @@ DebugAllocator::~DebugAllocator() {
   // Reclaim blocks that would have been leaked.
   for (auto& record : m_blocks) {
     s_leakedBytes += record.bytes;
-    // m_parent->free(record.ptr, record.bytes, record.alignment);
+    m_parent->free(record.ptr, record.bytes, record.alignment);
   }
 }
 
@@ -50,19 +50,11 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   auto it = std::find_if(std::begin(m_blocks), std::end(m_blocks), [p](Record& r) { return r.ptr = p; });
 
   if (it == std::end(m_blocks)) {
-    // LOG(Fatal) << "Invalid pointer passed to free().";
-#if OS(WIN)
-    ::OutputDebugStringA("Invalid pointer passed to free().\n");
-#endif  // OS(WIN)
-  }     /*else if (it->bytes != bytes) {
-        // LOG(Fatal) << "Block size mismatch on free().";
-        ::OutputDebugStringA("Block size mismatch on free().\n");
-      }*/
-  else if (it->alignment != alignment) {
-    // LOG(Fatal) << "Alignment mismatch on free().";
-#if OS(WIN)
-    ::OutputDebugStringA("Alignment mismatch on free().\n");
-#endif  // OS(WIN)
+    LOG(Error) << "Invalid pointer passed to free().";
+  } else if (it->bytes != bytes) {
+    LOG(Error) << "Block size mismatch on free().";
+  } else if (it->alignment != alignment) {
+    LOG(Error) << "Alignment mismatch on free().";
   }
 
   m_parent->free(p, bytes, alignment);

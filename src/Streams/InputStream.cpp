@@ -1,17 +1,18 @@
 
 #include "nucleus/Streams/InputStream.h"
 
+#include <algorithm>
+
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Logging.h"
 #include "nucleus/Utils/ByteOrder.h"
-#include "nucleus/Utils/MinMax.h"
 
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
 InputStream::SizeType InputStream::getBytesRemaining() {
-  DCHECK(getPosition() < getLength()) << "The position should never go over the length of the stream";
+  DCHECK(getPosition() <= getLength()) << "The position should never go over the length of the stream";
 
   return getLength() - getPosition();
 }
@@ -129,13 +130,13 @@ std::string InputStream::ReadString() {
 void InputStream::skipNextBytes(SizeType numBytesToSkip) {
   enum { BUFFERED_SIZE_TO_SKIP = 16384 };
 
-  const SizeType skipBufferSize = min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
+  const SizeType skipBufferSize = std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
 
   nu::DynamicArray<I8> temp;
   temp.resize(skipBufferSize);
 
   while (numBytesToSkip != 0 && !isExhausted()) {
-    numBytesToSkip -= read(temp.getData(), min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
+    numBytesToSkip -= read(temp.getData(), std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
   }
 }
 

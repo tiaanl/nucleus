@@ -1,8 +1,8 @@
 
 #include "gtest/gtest.h"
+#include "nucleus/Allocators/Allocated.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Allocators/TestAllocator.h"
-#include "nucleus/Memory/Allocated.h"
 
 TEST(AllocatedTests, Basic) {
   nu::TestAllocator alloc;
@@ -42,7 +42,7 @@ TEST(AllocatedTests, Move) {
     auto i1 = nu::allocate<int>(&alloc, 10);
 
     nu::Allocated<int> i2{&alloc};
-    i2 = nu::move(i1);
+    i2 = std::move(i1);
 
     ASSERT_EQ(nullptr, i1.get());
     ASSERT_FALSE(!i2);
@@ -50,7 +50,7 @@ TEST(AllocatedTests, Move) {
 
   {
     auto i1 = nu::allocate<int>(&alloc, 10);
-    auto i2{nu::move(i1)};
+    auto i2{std::move(i1)};
 
     ASSERT_EQ(nullptr, i1.get());
     ASSERT_FALSE(!i2);

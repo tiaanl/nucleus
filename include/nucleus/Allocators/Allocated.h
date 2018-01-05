@@ -5,7 +5,6 @@
 #include "nucleus/Allocators/Allocator.h"
 #include "nucleus/Macros.h"
 #include "nucleus/Types.h"
-#include "nucleus/Utils/Move.h"
 
 #undef free
 
@@ -52,7 +51,7 @@ public:
   template <typename... Args>
   void allocate(Args&&... args) {
     void* data = m_allocator->allocate(sizeof(T), alignof(T));
-    m_ptr = new (data) T(forward<Args>(args)...);
+    m_ptr = new (data) T(std::forward<Args>(args)...);
   }
 
   // Free the memory we might have allocated.
@@ -91,7 +90,7 @@ private:
 template <typename T, typename... Args>
 inline Allocated<T> allocate(Allocator* allocator, Args... args) {
   Allocated<T> obj{allocator};
-  obj.allocate(forward<Args>(args)...);
+  obj.allocate(std::forward<Args>(args)...);
   return obj;
 };
 

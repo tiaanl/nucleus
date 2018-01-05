@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <string>
 
-#include "nucleus/Utils/Signals.h"
+#include "nucleus/Signals.h"
 
 #include "gtest/gtest.h"
 

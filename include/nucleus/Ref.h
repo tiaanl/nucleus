@@ -34,6 +34,10 @@ public:
     }
   }
 
+  bool isEmpty() const {
+    return !m_ptr;
+  }
+
   T* get() const {
     return m_ptr;
   }

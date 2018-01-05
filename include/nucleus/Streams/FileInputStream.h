@@ -3,7 +3,7 @@
 #define NUCLEUS_STREAMS_FILE_INPUT_STREAM_H_
 
 #include "nucleus/Config.h"
-#include "nucleus/Files/FilePath.h"
+#include "nucleus/FilePath.h"
 #include "nucleus/Streams/InputStream.h"
 
 #if OS(WIN)

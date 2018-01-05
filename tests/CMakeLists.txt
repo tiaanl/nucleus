@@ -5,18 +5,18 @@ set(nucleus_TEST_INCLUDE_FILES
 )
 
 set(nucleus_TEST_SOURCE_FILES
+    "Allocators/AllocatedTests.cpp"
     "Allocators/AllocatorTests.cpp"
+    "Allocators/DebugAllocatorTests.cpp"
     "Containers/ArrayTests.cpp"
     "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
-    "Files/FilePathTests.cpp"
+    "FilePathTests.cpp"
     "LoggingTests.cpp"
-    "Memory/AllocatedTests.cpp"
-    "RefCountedTests.cpp"
-    "Memory/ScopedPtrTests.cpp"
     "OptionalTests.cpp"
+    "RefCountedTests.cpp"
+    "SignalsTests.cpp"
     "Text/StringTests.cpp"
-    "Utils/SignalsTests.cpp"
 )
 
 add_executable(nucleus_tests ${nucleus_TEST_INCLUDE_FILES} ${nucleus_TEST_SOURCE_FILES})

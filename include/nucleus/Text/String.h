@@ -2,12 +2,12 @@
 #ifndef NUCLEUS_TEXT_STRING_H_
 #define NUCLEUS_TEXT_STRING_H_
 
+#include <algorithm>
 #include <ostream>
 
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Utils/CString.h"
 #include "nucleus/Utils/Copy.h"
-#include "nucleus/Utils/Numbers.h"
 
 namespace nu {
 
@@ -29,19 +29,23 @@ public:
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
     SizeType textLength = (length == npos) ? lengthOf(text) : length;
     ensureAllocated(textLength, false);
-    copy(text, text + textLength, m_data);
+    std::copy(text, text + textLength, m_data);
     m_length = textLength;
     m_data[m_length] = 0;
   }
 
-  // Destruct the string, including the dynamic array holding our data.
-  ~String() = default;
+  // Destruct the string, freeing any memory we might have allocated.
+  ~String() {
+    if (m_data && m_allocated) {
+      m_allocator->free(m_data, m_allocated);
+    }
+  }
 
   // Copy
 
   String& operator=(const String& other) {
     ensureAllocated(other.getLength(), false);
-    copy(other.m_data, other.m_data + other.m_length, m_data);
+    std::copy(other.m_data, other.m_data + other.m_length, m_data);
     m_length = other.m_length;
     m_data[m_length] = 0;
 
@@ -109,15 +113,15 @@ public:
   // Append another string to the string.
   void append(const String& other) {
     ensureAllocated(m_length + other.m_length, true);
-    copy(other.m_data, other.m_data + other.m_length, m_data + m_length);
+    std::copy(other.m_data, other.m_data + other.m_length, m_data + m_length);
     m_length += other.m_length;
     m_data[m_length] = 0;
   }
 
   // Erase `count` characters starting from `pos`.
   void erase(SizeType pos, SizeType count) {
-    for (SizeType i = 0; i < count; ++i) {
-      m_data[pos + i] = m_data[pos + count + pos];
+    for (SizeType i = 0; i < m_length - count; ++i) {
+      m_data[pos + i] = m_data[pos + count + i];
     }
     m_length -= count;
     m_data[m_length] = 0;
@@ -192,7 +196,7 @@ private:
     if (m_data) {
       // Copy the old data if needed.
       if (keepOld) {
-        copy(m_data, m_data + min<USize>(bytesToAllocate, m_length), newBuffer);
+        std::copy(m_data, m_data + std::min<USize>(bytesToAllocate, m_length), newBuffer);
         newBuffer[m_length] = 0;
       }
 

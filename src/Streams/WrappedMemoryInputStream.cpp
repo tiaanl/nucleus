@@ -1,8 +1,9 @@
 
 #include "nucleus/Streams/WrappedMemoryInputStream.h"
 
+#include <algorithm>
+
 #include "nucleus/Logging.h"
-#include "nucleus/Utils/MinMax.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -20,7 +21,7 @@ WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getLength() {
 WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(void* buffer, SizeType bytesToRead) {
   DCHECK(bytesToRead >= 0);
 
-  SizeType num = min(bytesToRead, getBytesRemaining());
+  SizeType num = std::min(bytesToRead, getBytesRemaining());
 
   std::memcpy(buffer, static_cast<const U8*>(m_data) + m_currentPosition, static_cast<USize>(num));
   m_currentPosition += num;
@@ -33,8 +34,8 @@ bool WrappedMemoryInputStream::isExhausted() {
 }
 
 bool WrappedMemoryInputStream::setPosition(SizeType newPosition) {
-  m_currentPosition = max(newPosition, static_cast<SizeType>(0));
-  m_currentPosition = min(newPosition, m_size);
+  m_currentPosition = std::max(newPosition, static_cast<SizeType>(0));
+  m_currentPosition = std::min(newPosition, m_size);
   return true;
 }
 

@@ -2,15 +2,14 @@
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
-#include <cstring>  // memcpy
-#include <new>      // new
-#include <utility>  // std::forward
+#include <algorithm>  // max
+#include <cstring>    // memcpy
+#include <new>        // new
+#include <utility>    // std::forward
 
 #undef free
 
 #include "nucleus/Allocators/DefaultAllocator.h"
-#include "nucleus/Utils/MinMax.h"
-#include "nucleus/Utils/Move.h"
 
 namespace nu {
 
@@ -132,7 +131,7 @@ public:
 
     // If we didn't remove the last item, then move all the items one to the left.
     if (pos + 1 < m_data + m_size) {
-      move(pos + 1, m_data + m_size, pos);
+      std::move(pos + 1, m_data + m_size, pos);
     }
 
     // We have 1 item less now.
@@ -199,7 +198,7 @@ public:
 private:
   void ensureAllocated(SizeType newSize, bool keepOld) {
     if (newSize > m_allocated) {
-      allocateData(max<SizeType>(newSize << 1, 1 << 4), keepOld);
+      allocateData(std::max<SizeType>(newSize << 1, 1 << 4), keepOld);
     }
   }
 

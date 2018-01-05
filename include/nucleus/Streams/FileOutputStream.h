@@ -3,7 +3,7 @@
 #define NUCLEUS_STREAMS_FILE_OUTPUT_STREAM_H_
 
 #include "nucleus/Config.h"
-#include "nucleus/Files/FilePath.h"
+#include "nucleus/FilePath.h"
 #include "nucleus/Streams/OutputStream.h"
 #include "nucleus/Win/WindowsMixin.h"
 
