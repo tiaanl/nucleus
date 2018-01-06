@@ -3,7 +3,7 @@
 #define NUCLEUS_UTILS_FILES_H_
 
 #include "nucleus/Allocators/Allocator.h"
-#include "nucleus/Files/FilePath.h"
+#include "nucleus/FilePath.h"
 
 namespace nu {
 
