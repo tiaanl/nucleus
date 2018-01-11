@@ -49,6 +49,7 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   // Check that deallocation arguments match some allocation arguments.
   auto it = std::find_if(std::begin(m_blocks), std::end(m_blocks), [p](Record& r) { return r.ptr = p; });
 
+#if 0
   if (it == std::end(m_blocks)) {
     LOG(Error) << "Invalid pointer passed to free().";
   } else if (it->bytes != bytes) {
@@ -56,6 +57,7 @@ void DebugAllocator::doFree(void* p, USize bytes, USize alignment) {
   } else if (it->alignment != alignment) {
     LOG(Error) << "Alignment mismatch on free().";
   }
+#endif  // 0
 
   m_parent->free(p, bytes, alignment);
   m_blocks.remove(it);
