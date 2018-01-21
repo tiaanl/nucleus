@@ -12,7 +12,7 @@ T* copyConstruct(InputIterator first, InputIterator last, T* dst) {
     new (*dst++) T(*first++);
   }
   return dst;
-};
+}
 
 }  // namespace nu
 

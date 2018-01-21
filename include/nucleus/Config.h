@@ -4,7 +4,7 @@
 
 // BUILD()
 
-#define BUILD(Feature) (defined BUILD_##Feature && BUILD_##Feature)
+#define BUILD(Feature) (defined(BUILD_##Feature) && BUILD_##Feature)
 
 #if defined(NDEBUG)
 #define BUILD_RELEASE 1
@@ -14,7 +14,7 @@
 
 // OS()
 
-#define OS(Feature) (defined OS_##Feature && OS_##Feature)
+#define OS(Feature) (OS_##Feature)
 
 #if defined(__APPLE__)
 #define OS_MACOSX 1
@@ -55,7 +55,7 @@
 
 // COMPILER()
 
-#define COMPILER(Feature) (defined COMPILER_##Feature && COMPILER_##Feature)
+#define COMPILER(Feature) (COMPILER_##Feature)
 
 #if defined(__GNUC__)
 #define COMPILER_GCC 1
@@ -71,7 +71,7 @@
 
 // ARCH()
 
-#define ARCH(Feature) (defined ARCH_##Feature && ARCH_##Feature)
+#define ARCH(Feature) (ARCH_##Feature)
 
 #if defined(_M_X64) || defined(__x86_64__)
 #define ARCH_CPU_X86_FAMILY 1
