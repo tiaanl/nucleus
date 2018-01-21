@@ -10,7 +10,9 @@
 namespace nu {
 
 void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
-#if COMPILER(GCC)
+#if COMPILER(MINGW)
+  return ::malloc(bytes);
+#elif COMPILER(GCC)
   void* result;
   ::posix_memalign(&result, alignment, bytes);
   return result;
