@@ -9,7 +9,7 @@ namespace nu {
 template <typename T, USize Size>
 class Array {
 public:
-  using SizeType = U32;
+  using SizeType = USize;
 
   Array() {}
 
