@@ -8,7 +8,7 @@ namespace nu {
 namespace detail {
 
 I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
-  LARGE_INTEGER li = {0};
+  LARGE_INTEGER li = {};
   li.QuadPart = pos;
   li.LowPart = ::SetFilePointer(static_cast<HANDLE>(handle), static_cast<LONG>(li.LowPart), &li.HighPart, FILE_BEGIN);
   return li.QuadPart;

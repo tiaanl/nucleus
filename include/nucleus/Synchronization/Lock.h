@@ -33,4 +33,4 @@ private:
 
 }  // namespace nu
 
-#endif  // NUCLEUS_SYNCHRONIZATION_H_
+#endif  // NUCLEUS_SYNCHRONIZATION_LOCK_H_

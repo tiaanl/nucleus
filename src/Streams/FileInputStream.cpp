@@ -32,7 +32,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer, SizeType maxBy
     LOG(Fatal) << "Trying to read from an invalid stream.";
     return 0;
   }
-  DCHECK(destBuffer != NULL && maxBytesToRead >= 0);
+  DCHECK(destBuffer != nullptr);
 
   if (m_needToSeek) {
     if (detail::setFileInputStreamPosition(m_handle, m_currentPosition) < 0)

@@ -3,20 +3,20 @@
 #define NUCLEUS_TEXT_STRING_H_
 
 #include <algorithm>
+#include <limits>
 #include <ostream>
+#include <string>  // std::memcpy
 
 #include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Utils/CString.h"
-#include "nucleus/Utils/Copy.h"
 
 namespace nu {
 
 class String {
 public:
   using CharType = I8;
-  using SizeType = I32;
+  using SizeType = USize;
 
-  static constexpr SizeType npos = -1;
+  static constexpr SizeType npos = std::numeric_limits<SizeType>::max();
 
   explicit String(Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {}
@@ -27,9 +27,9 @@ public:
   // Construct a `String` from a c-string.
   String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
     : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
-    SizeType textLength = (length == npos) ? lengthOf(text) : length;
+    SizeType textLength = (length == npos) ? std::strlen(text) : length;
     ensureAllocated(textLength, false);
-    std::copy(text, text + textLength, m_data);
+    std::memcpy(m_data, text, textLength * sizeof(CharType));
     m_length = textLength;
     m_data[m_length] = 0;
   }
@@ -45,7 +45,7 @@ public:
 
   String& operator=(const String& other) {
     ensureAllocated(other.getLength(), false);
-    std::copy(other.m_data, other.m_data + other.m_length, m_data);
+    std::memcpy(m_data, other.m_data, other.m_length * sizeof(CharType));
     m_length = other.m_length;
     m_data[m_length] = 0;
 
@@ -113,7 +113,7 @@ public:
   // Append another string to the string.
   void append(const String& other) {
     ensureAllocated(m_length + other.m_length, true);
-    std::copy(other.m_data, other.m_data + other.m_length, m_data + m_length);
+    std::memcpy(m_data + m_length, other.m_data, other.m_length * sizeof(CharType));
     m_length += other.m_length;
     m_data[m_length] = 0;
   }
@@ -159,20 +159,26 @@ public:
 
   // Returns the position of the last occurrence of `ch` in the string.  Returns `npos` if the character is not found.
   SizeType findLastOfChar(CharType ch) const {
-    for (SizeType i = m_length - 1; i >= 0; --i) {
+    for (SizeType i = m_length - 1;; --i) {
       if (m_data[i] == ch) {
         return i;
+      }
+      if (i == 0) {
+        break;
       }
     }
     return npos;
   }
 
-  // Find the last occurance of any of the characters in `chars` starting from `start` position.
+  // Find the last occurrence of any of the characters in `chars` starting from `start` position.
   SizeType findLastOfAnyChar(const String& chars) const {
-    for (SizeType i = m_length - 1; i >= 0; --i) {
+    for (SizeType i = m_length - 1;; --i) {
       SizeType pos = chars.findLastOfChar(m_data[i]);
       if (pos != npos) {
         return i;
+      }
+      if (i == 0) {
+        break;
       }
     }
     return npos;
@@ -181,8 +187,8 @@ public:
 private:
   // Ensure that the buffer can hold a string of the specified length.  If `keepOld` is true, then any data currently in
   // the buffer will be there after any allocations.
-  void ensureAllocated(I32 lengthOfString, bool keepOld) {
-    if (static_cast<SizeType>(m_allocated) < lengthOfString + 1) {
+  void ensureAllocated(SizeType lengthOfString, bool keepOld) {
+    if (m_allocated < (lengthOfString + 1)) {
       allocate(lengthOfString + 1, keepOld);
     }
   }
@@ -196,7 +202,7 @@ private:
     if (m_data) {
       // Copy the old data if needed.
       if (keepOld) {
-        std::copy(m_data, m_data + std::min<USize>(bytesToAllocate, m_length), newBuffer);
+        std::memcpy(newBuffer, m_data, std::min<USize>(bytesToAllocate, m_length));
         newBuffer[m_length] = 0;
       }
 

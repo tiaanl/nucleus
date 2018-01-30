@@ -24,8 +24,6 @@ MemoryInputStream::SizeType MemoryInputStream::getLength() {
 }
 
 MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytesToRead) {
-  DCHECK(bytesToRead >= 0);
-
   SizeType num = std::min(bytesToRead, m_buffer.getSize() - m_currentPosition);
   if (num <= 0)
     return 0;

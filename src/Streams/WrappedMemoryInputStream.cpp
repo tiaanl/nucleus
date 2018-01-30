@@ -19,8 +19,6 @@ WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getLength() {
 }
 
 WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(void* buffer, SizeType bytesToRead) {
-  DCHECK(bytesToRead >= 0);
-
   SizeType num = std::min(bytesToRead, getBytesRemaining());
 
   std::memcpy(buffer, static_cast<const U8*>(m_data) + m_currentPosition, static_cast<USize>(num));

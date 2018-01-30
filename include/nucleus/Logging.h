@@ -18,11 +18,11 @@ public:
     Error,
     Fatal,
     DCheck,
+
     LogLevel_COUNT,
   };
 
-  // Construct the log entry with a log level, file name and line number for
-  // where the log entry was created.
+  // Construct the log entry with a log level, file name and line number.
   LogEntry(LogLevel logLevel, const char* file, int line);
 
   // This does the output part of the logging.
@@ -47,8 +47,7 @@ private:
 
 class LogEntryVoidify {
 public:
-  // This has to to an operator with a precedence lower than << but higher than
-  // ?.
+  // This has to be an operator with a precedence lower than << but higher than ?.
   void operator&(std::ostream&) {}
 };
 
@@ -56,27 +55,28 @@ public:
 
 }  // namespace nu
 
-#define LAZY_STREAM(Stream, Condition) !(Condition) ? static_cast<void>(0) : ::nu::detail::LogEntryVoidify() & (Stream)
+#define LAZY_STREAM(Stream, Condition)                                                                                 \
+  !(Condition) ? static_cast<void>(0) : ::nu::detail::LogEntryVoidify() & (Stream)
 
 #define LOG_STREAM(LogLevel) ::nu::detail::LogEntry(::nu::detail::LogEntry::LogLevel, __FILE__, __LINE__).getStream()
 
 // LOG/DLOG
 
 //#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), LOG_IS_ON(LogLevel))
-#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 1)
+#define LOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), true)
 
 #if BUILD(DEBUG)
-#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 1)
+#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), true)
 #else
-#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), 0)
+#define DLOG(LogLevel) LAZY_STREAM(LOG_STREAM(LogLevel), false)
 #endif
 
 // DCHECK
 
 #if BUILD(DEBUG)
-#define DCHECK_IS_ON() 1
+#define DCHECK_IS_ON() true
 #else
-#define DCHECK_IS_ON() 0
+#define DCHECK_IS_ON() false
 #endif
 
 #define DCHECK(condition)                                                                                              \

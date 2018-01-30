@@ -18,7 +18,7 @@ FilePath getCurrentWorkingDirectory(Allocator* allocator) {
 #elif OS(WIN)
   char buf[MAX_PATH] = {0};
   DWORD result = ::GetCurrentDirectoryA(MAX_PATH, buf);
-  return FilePath{String{buf, static_cast<I32>(result), allocator}, allocator};
+  return FilePath{String{buf, result, allocator}, allocator};
 #endif
 }
 

@@ -1,12 +1,8 @@
 
 #include "nucleus/Logging.h"
 
-#include <cassert>
 #include <iostream>
-#include <mutex>
-#include <thread>
 
-#include "nucleus/Config.h"
 #include "nucleus/Synchronization/AutoLock.h"
 #include "nucleus/Synchronization/Lock.h"
 
@@ -27,7 +23,10 @@ const char* kLogEntryNames[] = {
 };
 
 const char* logLevelToString(LogEntry::LogLevel logLevel) {
-  assert(logLevel >= 0 && logLevel < LogEntry::LogLevel_COUNT);
+  // This is a hard fail, because it means there is a internal error.
+  if (logLevel < 0 || logLevel >= LogEntry::LogLevel_COUNT) {
+    exit(1);
+  }
   return kLogEntryNames[static_cast<int>(logLevel)];
 }
 
@@ -63,8 +62,9 @@ LogEntry::~LogEntry() {
   }
 
   // Output the file name and line number.
-  if (s_showFileNameInLog)
+  if (s_showFileNameInLog) {
     outStr << '[' << m_file << ':' << m_line << "] ";
+  }
 
   outStr << m_stream.str();
 
