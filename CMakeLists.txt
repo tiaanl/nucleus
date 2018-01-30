@@ -88,7 +88,7 @@ if(MSVC)
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 endif()
 set_target_properties(nucleus PROPERTIES
-    CMAKE_CXX_STANDARD 14
+    CXX_STANDARD 14
     FOLDER nucleus
     )
 
