@@ -4,7 +4,7 @@
 
 // BUILD()
 
-#define BUILD(Feature) (defined(BUILD_##Feature) && BUILD_##Feature)
+#define BUILD(Feature) (BUILD_##Feature)
 
 #if defined(NDEBUG)
 #define BUILD_RELEASE 1

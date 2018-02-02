@@ -1,75 +1,75 @@
 
-#include "nucleus/Containers/DynamicArray.h"
-
 #include "nucleus/Allocators/DebugAllocator.h"
+#include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/Testing.h"
 #include "nucleus/Types.h"
-
-#include "gtest/gtest.h"
 
 #include "nucleus/MemoryDebug.h"
 
-TEST(DynamicArrayTests, Basic) {
+namespace nu {
+
+TEST_CASE("basic") {
   nu::DynamicArray<U8> buffer;
   buffer.pushBack(10);
 
-  ASSERT_EQ(static_cast<USize>(1), buffer.getSize());
-  ASSERT_EQ(10, buffer[0]);
+  REQUIRE(buffer.getSize() == static_cast<USize>(1));
+  REQUIRE(buffer[0] == 10);
 }
 
-TEST(DynamicArrayTests, CopyConstruct) {
-  nu::DynamicArray<U32> buffer;
-  buffer.pushBack(10);
-  buffer.pushBack(20);
+TEST_CASE("copy construct") {
+  nu::DynamicArray<U32> buffer1;
+  buffer1.pushBack(10);
+  buffer1.pushBack(20);
 
-  nu::DynamicArray<U32> buffer2{buffer};
+  nu::DynamicArray<U32> buffer2{buffer1};
 
-  ASSERT_EQ(buffer.getSize(), buffer2.getSize());
-  ASSERT_EQ(buffer[0], buffer2[0]);
-  ASSERT_EQ(buffer[1], buffer2[1]);
+  REQUIRE(buffer1.getSize() == buffer2.getSize());
+  REQUIRE(buffer1[0] == buffer2[0]);
+  REQUIRE(buffer1[1] == buffer2[1]);
 }
 
-TEST(DynamicArrayTests, CopyAssignment) {
-  nu::DynamicArray<U32> buffer;
-  buffer.pushBack(10);
-  buffer.pushBack(20);
+TEST_CASE("copy assignment") {
+  nu::DynamicArray<U32> buffer1;
+  buffer1.pushBack(10);
+  buffer1.pushBack(20);
 
   nu::DynamicArray<U32> buffer2;
-  ASSERT_EQ(static_cast<USize>(0), buffer2.getSize());
+  REQUIRE(buffer2.getSize() == 0);
 
-  buffer2 = buffer;
+  buffer2 = buffer1;
 
-  ASSERT_EQ(buffer.getSize(), buffer2.getSize());
-  ASSERT_EQ(buffer[0], buffer2[0]);
-  ASSERT_EQ(buffer[1], buffer2[1]);
+  REQUIRE(buffer1.getSize() == buffer2.getSize());
+  REQUIRE(buffer1[0] == buffer2[0]);
+  REQUIRE(buffer1[1] == buffer2[1]);
 }
 
-TEST(DynamicArrayTests, MoveConstruct) {
+TEST_CASE("move construct") {
   nu::DynamicArray<U32> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
 
   nu::DynamicArray<U32> buffer2{std::move(buffer)};
 
-  ASSERT_EQ(static_cast<USize>(0), buffer.getSize());
-  ASSERT_EQ(static_cast<USize>(2), buffer2.getSize());
-  ASSERT_EQ(static_cast<USize>(10), buffer2[0]);
-  ASSERT_EQ(static_cast<USize>(20), buffer2[1]);
+  REQUIRE(buffer.getSize() == 0);
+  REQUIRE(buffer2.getSize() == 2);
+  REQUIRE(buffer2[0] == 10);
+  REQUIRE(buffer2[1] == 20);
 }
 
-TEST(DynamicArrayTests, MoveAssignment) {
+TEST_CASE("move assignment") {
   nu::DynamicArray<I32> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
 
   nu::DynamicArray<I32> buffer2;
-  ASSERT_EQ(static_cast<USize>(0), buffer2.getSize());
+  REQUIRE(buffer2.getSize() == 0);
 
   buffer2 = std::move(buffer);
 
-  ASSERT_EQ(static_cast<USize>(0), buffer.getSize());
-  ASSERT_EQ(static_cast<USize>(2), buffer2.getSize());
-  ASSERT_EQ(10, buffer2[0]);
-  ASSERT_EQ(20, buffer2[1]);
+  REQUIRE(buffer.getSize() == 0);
+  REQUIRE(buffer2.getSize() == 2);
+  REQUIRE(buffer2[0] == 10);
+  REQUIRE(buffer2[1] == 20);
 }
 
 class LifetimeType {
@@ -144,19 +144,19 @@ I32 LifetimeType::destroys = 0;
 I32 LifetimeType::copies = 0;
 I32 LifetimeType::moves = 0;
 
-TEST(DynamicArrayTests, EmplaceBack) {
+TEST_CASE("emplace back") {
   nu::DynamicArray<LifetimeType> buffer;
   buffer.pushBack(LifetimeType{1, 2});
   buffer.emplaceBack(3, 4);
 
-  ASSERT_EQ(static_cast<USize>(2), buffer.getSize());
-  ASSERT_EQ(1, buffer[0].getA());
-  ASSERT_EQ(2, buffer[0].getB());
-  ASSERT_EQ(3, buffer[1].getA());
-  ASSERT_EQ(4, buffer[1].getB());
+  REQUIRE(buffer.getSize() == 2);
+  REQUIRE(buffer[0].getA() == 1);
+  REQUIRE(buffer[0].getB() == 2);
+  REQUIRE(buffer[1].getA() == 3);
+  REQUIRE(buffer[1].getB() == 4);
 }
 
-TEST(DynamicArrayTests, CreateAndDestroyElements) {
+TEST_CASE("create and destroy elements") {
   LifetimeType::reset();
 
   {
@@ -167,29 +167,29 @@ TEST(DynamicArrayTests, CreateAndDestroyElements) {
 
   // The temporary is created before pushing it back.
   // Inside emplace back it is created inplace.
-  ASSERT_EQ(2, LifetimeType::creates);
+  REQUIRE(LifetimeType::creates == 2);
 
   // The temporary which was pushed back.
   // The 2 elements in the array when it is destroyed.
-  ASSERT_EQ(3, LifetimeType::destroys);
+  REQUIRE(LifetimeType::destroys == 3);
 
   // Once when the temporary in copied into the array when pushed back.
-  ASSERT_EQ(1, LifetimeType::copies);
+  REQUIRE(LifetimeType::copies == 1);
 }
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U32>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
-    ASSERT_EQ((i + 1) * 10, buffer[i]);
+    REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
 void dynamicArrayWithConst(const nu::DynamicArray<U32>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
-    ASSERT_EQ((i + 1) * 10, buffer[i]);
+    REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
-TEST(DynamicArrayTests, RangedBasedForLoops) {
+TEST_CASE("RangedBasedForLoops") {
   nu::DynamicArray<U32> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
@@ -199,22 +199,45 @@ TEST(DynamicArrayTests, RangedBasedForLoops) {
   dynamicArrayWithConst(buffer);
 }
 
-TEST(DynamicArrayTests, Remove) {
+TEST_CASE("remove single element") {
   nu::DynamicArray<I32> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
   buffer.pushBack(30);
   buffer.pushBack(40);
 
-  buffer.remove(buffer.begin() + 1);
+  SECTION("from beginning of array") {
+    buffer.remove(buffer.begin());
 
-  ASSERT_EQ(static_cast<USize>(3), buffer.getSize());
-  ASSERT_EQ(10, buffer[0]);
-  ASSERT_EQ(30, buffer[1]);
-  ASSERT_EQ(buffer.end(), &buffer[3]);
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 20);
+    REQUIRE(buffer[1] == 30);
+    REQUIRE(buffer[2] == 40);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
+
+  SECTION("from middle of array") {
+    buffer.remove(buffer.begin() + 1);
+
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 30);
+    REQUIRE(buffer[2] == 40);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
+
+  SECTION("from end of array") {
+    buffer.remove(buffer.begin() + 1);
+
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 30);
+    REQUIRE(buffer[2] == 40);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
 }
 
-TEST(DynamicArrayTests, RemoveCallsDestructor) {
+TEST_CASE("RemoveCallsDestructor") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
@@ -225,27 +248,88 @@ TEST(DynamicArrayTests, RemoveCallsDestructor) {
 
   buffer.remove(buffer.begin() + 1);
 
-  ASSERT_EQ(4, LifetimeType::creates);
-  ASSERT_EQ(1, LifetimeType::destroys);
-  ASSERT_EQ(0, LifetimeType::copies);
+  REQUIRE(LifetimeType::creates == 4);
+  REQUIRE(LifetimeType::destroys == 1);
+  REQUIRE(LifetimeType::copies == 0);
 }
 
-TEST(DynamicArrayTests, RemoveRange) {
+TEST_CASE("remove range of elements") {
   nu::DynamicArray<I32> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
   buffer.pushBack(30);
   buffer.pushBack(40);
+  buffer.pushBack(50);
+  buffer.pushBack(60);
 
-  buffer.remove(buffer.begin() + 1, buffer.begin() + 3);
+  SECTION("remove 1 element from the beginning of the array") {
+    buffer.remove(buffer.begin(), buffer.begin() + 1);
 
-  ASSERT_EQ(static_cast<USize>(2), buffer.getSize());
-  ASSERT_EQ(10, buffer[0]);
-  ASSERT_EQ(40, buffer[1]);
-  ASSERT_EQ(buffer.end(), &buffer[2]);
+    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer[0] == 20);
+    REQUIRE(buffer[1] == 30);
+    REQUIRE(buffer[2] == 40);
+    REQUIRE(buffer[3] == 50);
+    REQUIRE(buffer[4] == 60);
+    REQUIRE(&buffer[5] == buffer.end());
+  }
+
+  SECTION("remove 3 elements from the beginning of the array") {
+    buffer.remove(buffer.begin(), buffer.begin() + 3);
+
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 40);
+    REQUIRE(buffer[1] == 50);
+    REQUIRE(buffer[2] == 60);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
+
+  SECTION("remove 1 element from the middle of the array") {
+    buffer.remove(buffer.begin() + 2, buffer.begin() + 3);
+
+    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 20);
+    REQUIRE(buffer[2] == 40);
+    REQUIRE(buffer[3] == 50);
+    REQUIRE(buffer[4] == 60);
+    REQUIRE(&buffer[5] == buffer.end());
+  }
+
+  SECTION("remove 3 elements from the middle of the array") {
+    buffer.remove(buffer.begin() + 2, buffer.begin() + 5);
+
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 20);
+    REQUIRE(buffer[2] == 60);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
+
+  SECTION("remove 1 element from the end of the array") {
+    buffer.remove(buffer.begin() + 5, buffer.end());
+
+    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 20);
+    REQUIRE(buffer[2] == 30);
+    REQUIRE(buffer[3] == 40);
+    REQUIRE(buffer[4] == 50);
+    REQUIRE(&buffer[5] == buffer.end());
+  }
+
+  SECTION("remove 3 elements from the middle of the array") {
+    buffer.remove(buffer.begin() + 3, buffer.end());
+
+    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer[0] == 10);
+    REQUIRE(buffer[1] == 20);
+    REQUIRE(buffer[2] == 30);
+    REQUIRE(&buffer[3] == buffer.end());
+  }
 }
 
-TEST(DynamicArrayTests, RemoveRangeCallsDestructors) {
+TEST_CASE("RemoveRangeCallsDestructors") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
@@ -256,12 +340,12 @@ TEST(DynamicArrayTests, RemoveRangeCallsDestructors) {
 
   buffer.remove(buffer.begin() + 1, buffer.begin() + 3);
 
-  ASSERT_EQ(4, LifetimeType::creates);
-  ASSERT_EQ(2, LifetimeType::destroys);
-  ASSERT_EQ(0, LifetimeType::copies);
+  REQUIRE(LifetimeType::creates == 4);
+  REQUIRE(LifetimeType::destroys == 2);
+  REQUIRE(LifetimeType::copies == 0);
 }
 
-TEST(DynamicArrayTests, Clear) {
+TEST_CASE("Clear") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
@@ -270,13 +354,15 @@ TEST(DynamicArrayTests, Clear) {
   buffer.emplaceBack(5, 6);
   buffer.emplaceBack(6, 7);
 
-  ASSERT_EQ(static_cast<USize>(4), buffer.getSize());
+  REQUIRE(buffer.getSize() == 4);
 
   buffer.clear();
 
-  ASSERT_EQ(static_cast<USize>(0), buffer.getSize());
+  REQUIRE(buffer.getSize() == 0);
 
-  ASSERT_EQ(4, LifetimeType::creates);
-  ASSERT_EQ(4, LifetimeType::destroys);
-  ASSERT_EQ(0, LifetimeType::copies);
+  REQUIRE(LifetimeType::creates == 4);
+  REQUIRE(LifetimeType::destroys == 4);
+  REQUIRE(LifetimeType::copies == 0);
 }
+
+}  // namespace nu

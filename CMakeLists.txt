@@ -1,9 +1,8 @@
-cmake_minimum_required(VERSION 3.7.2)
-
 if(TARGET nucleus)
     return()
 endif()
 
+cmake_minimum_required(VERSION 3.7.2)
 project(nucleus)
 
 # Options
@@ -16,7 +15,7 @@ add_subdirectory("external")
 
 # nucleus
 
-set(nucleus_INCLUDE_FILES
+set(nucleus_HEADER_FILES
     "include/nucleus/Allocators/Allocated.h"
     "include/nucleus/Allocators/Allocator.h"
     "include/nucleus/Allocators/DebugAllocator.h"
@@ -81,14 +80,25 @@ if(APPLE)
         )
 endif()
 
-add_library(nucleus STATIC ${nucleus_INCLUDE_FILES} ${nucleus_SOURCE_FILES})
+add_library(nucleus STATIC ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
+
 target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
-if(MSVC)
-    target_compile_options(nucleus PUBLIC "/MP")
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    # Enable warnings and multi-process compilation.
+    target_compile_options(nucleus PRIVATE /W4 /WX /MP)
+
+    # Enable memory debugging.
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+    # Enable warnings.
+    target_compile_options(nucleus PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
+
 set_target_properties(nucleus PROPERTIES
     CXX_STANDARD 14
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
     FOLDER nucleus
     )
 

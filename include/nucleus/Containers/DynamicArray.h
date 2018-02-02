@@ -131,7 +131,9 @@ public:
 
     // If we didn't remove the last item, then move all the items one to the left.
     if (pos + 1 < m_data + m_size) {
-      std::move(pos + 1, m_data + m_size, pos);
+      for (auto i = pos; i != m_data + (m_size - 1); ++i) {
+        *i = std::move(*(i + 1));
+      }
     }
 
     // We have 1 item less now.
@@ -139,15 +141,19 @@ public:
   }
 
   void remove(Iterator begin, Iterator end) {
+    // Destruct all the elements we are about to remove from the array.
     for (Iterator e = begin; e != end; ++e) {
       e->~ElementType();
     }
 
+    const auto numberOfElementsToRemove = end - begin;
     if (end < m_data + m_size) {
-      ::memcpy(begin, end, (end - begin) * sizeof(ElementType));
+      for (auto i = begin; i != m_data + (m_size - numberOfElementsToRemove); ++i) {
+        *i = std::move(*(i + numberOfElementsToRemove));
+      }
     }
 
-    m_size -= end - begin;
+    m_size -= numberOfElementsToRemove;
   }
 
   void reserve(SizeType size) {

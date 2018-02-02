@@ -10,7 +10,6 @@ set(nucleus_TESTS_SOURCE_FILES
     # "Allocators/DebugAllocatorTests.cpp"
     # "Containers/ArrayTests.cpp"
     # "Containers/BitSetTests.cpp"
-    # "Containers/DynamicArrayTests.cpp"
     # "FilePathTests.cpp"
     # "LoggingTests.cpp"
     # "OptionalTests.cpp"
@@ -18,6 +17,7 @@ set(nucleus_TESTS_SOURCE_FILES
     # "SignalsTests.cpp"
     # "Text/StringTests.cpp"
 
+    "Containers/DynamicArrayTests.cpp"
     "LoggingTests.cpp"
 )
 
