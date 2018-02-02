@@ -103,6 +103,11 @@ set_target_properties(nucleus PROPERTIES
     )
 
 add_subdirectory(tests "tests")
-if(NOT MINGW)
-    add_subdirectory(benchmarks "benchmarks")
-endif()
+# if(NOT MINGW)
+#     add_subdirectory(benchmarks "benchmarks")
+# endif()
+
+get_cmake_property(_variableNames VARIABLES)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
