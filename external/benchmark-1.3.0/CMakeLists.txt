@@ -11,23 +11,30 @@ foreach(p
   endif()
 endforeach()
 
-option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." ON)
-option(BENCHMARK_ENABLE_EXCEPTIONS "Enable the use of exceptions in the benchmark library." ON)
-option(BENCHMARK_ENABLE_LTO "Enable link time optimisation of the benchmark library." OFF)
-option(BENCHMARK_USE_LIBCXX "Build and test using libc++ as the standard library." OFF)
-option(BENCHMARK_BUILD_32_BITS "Build a 32 bit version of the library." OFF)
-option(BENCHMARK_ENABLE_INSTALL "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)" ON)
+#option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
+#option(BENCHMARK_ENABLE_EXCEPTIONS "Enable the use of exceptions in the benchmark library." ON)
+#option(BENCHMARK_ENABLE_LTO "Enable link time optimisation of the benchmark library." OFF)
+#option(BENCHMARK_USE_LIBCXX "Build and test using libc++ as the standard library." OFF)
+#option(BENCHMARK_BUILD_32_BITS "Build a 32 bit version of the library." OFF)
+#option(BENCHMARK_ENABLE_INSTALL "Enable installation of benchmark. (Projects embedding benchmark may want to turn this OFF.)" OFF)
+set(BENCHMARK_ENABLE_TESTING OFF)
+set(BENCHMARK_ENABLE_EXCEPTIONS ON)
+set(BENCHMARK_ENABLE_LTO OFF)
+set(BENCHMARK_USE_LIBCXX OFF)
+set(BENCHMARK_BUILD_32_BITS OFF)
+set(BENCHMARK_ENABLE_INSTALL OFF)
 
 # Make sure we can import out CMake functions
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Read the git tags to determine the project version
-include(GetGitVersion)
-get_git_version(GIT_VERSION)
+#include(GetGitVersion)
+#get_git_version(GIT_VERSION)
+set(GIT_VERSION "v1.3.0")
 
 # Tell the user what versions we are using
 string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" VERSION ${GIT_VERSION})
-message("-- Version: ${VERSION}")
+#message("-- Version: ${VERSION}")
 
 # The version of the libraries
 set(GENERIC_LIB_VERSION ${VERSION})
@@ -106,7 +113,7 @@ else()
   endif()
   # ICC17u2: overloaded virtual function "benchmark::Fixture::SetUp" is only partially overridden
   # (because of deprecated overload)
-  add_cxx_compiler_flag(-wd654)  
+  add_cxx_compiler_flag(-wd654)
   add_cxx_compiler_flag(-Wthread-safety)
   if (HAVE_CXX_FLAG_WTHREAD_SAFETY)
     cxx_feature_check(THREAD_SAFETY_ATTRIBUTES)
@@ -174,17 +181,21 @@ endif(BENCHMARK_USE_LIBCXX)
 
 # C++ feature checks
 # Determine the correct regular expression engine to use
-cxx_feature_check(STD_REGEX)
-cxx_feature_check(GNU_POSIX_REGEX)
-cxx_feature_check(POSIX_REGEX)
-if(NOT HAVE_STD_REGEX AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
-  message(FATAL_ERROR "Failed to determine the source files for the regular expression backend")
-endif()
-if (NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
-        AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
-  message(WARNING "Using std::regex with exceptions disabled is not fully supported")
-endif()
-cxx_feature_check(STEADY_CLOCK)
+#cxx_feature_check(STD_REGEX)
+#cxx_feature_check(GNU_POSIX_REGEX)
+#cxx_feature_check(POSIX_REGEX)
+#if(NOT HAVE_STD_REGEX AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
+#  message(FATAL_ERROR "Failed to determine the source files for the regular expression backend")
+#endif()
+#if (NOT BENCHMARK_ENABLE_EXCEPTIONS AND HAVE_STD_REGEX
+#        AND NOT HAVE_GNU_POSIX_REGEX AND NOT HAVE_POSIX_REGEX)
+#  message(WARNING "Using std::regex with exceptions disabled is not fully supported")
+#endif()
+set(HAVE_STD_REGEX ON)
+
+#cxx_feature_check(STEADY_CLOCK)
+set(HAVE_STEADY_CLOCK ON)
+
 # Ensure we have pthreads
 find_package(Threads REQUIRED)
 
@@ -198,3 +209,5 @@ if (BENCHMARK_ENABLE_TESTING)
   enable_testing()
   add_subdirectory(test)
 endif()
+
+set_target_properties(benchmark PROPERTIES FOLDER "external")

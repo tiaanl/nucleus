@@ -21,6 +21,8 @@ set_target_properties(benchmark PROPERTIES
 target_include_directories(benchmark PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     )
+target_compile_definitions(benchmark PRIVATE "-DHAVE_STD_REGEX=1")
+target_compile_definitions(benchmark PRIVATE "-DHAVE_STEADY_CLOCK=1")
 
 # Link threads.
 target_link_libraries(benchmark  ${BENCHMARK_CXX_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
@@ -63,16 +65,16 @@ if (BENCHMARK_ENABLE_INSTALL)
     LIBRARY DESTINATION ${lib_install_dir}
     RUNTIME DESTINATION ${bin_install_dir}
     INCLUDES DESTINATION ${include_install_dir})
-  
+
   install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/include/benchmark"
     DESTINATION ${include_install_dir}
     FILES_MATCHING PATTERN "*.*h")
-  
+
   install(
       FILES "${project_config}" "${version_config}"
       DESTINATION "${config_install_dir}")
-  
+
   install(
       EXPORT "${targets_export_name}"
       NAMESPACE "${namespace}"
