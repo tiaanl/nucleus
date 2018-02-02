@@ -6,4 +6,4 @@ endif()
 
 # Testing
 add_subdirectory("catch2-2.1.1")
-add_subdirectory("Testing")
+add_subdirectory("testing")
