@@ -12,15 +12,18 @@ namespace {
 // If this FilePath contains a drive letter specification, returns the position of the last character of the drive
 // letter specification, otherwise returns npos.  This can only be true on Windows, when a pathname begins with a letter
 // followed by a colon.  On other platforms, this always returns npos.
-String::SizeType findDriveLetter(const String& path) {
 #if OS(WIN)
+String::SizeType findDriveLetter(const String& path) {
   if (path.getLength() >= 2 && path[1] == ':' &&
       ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))) {
     return 1;
   }
-#endif  // OS(WIN)
+}
+#else
+String::SizeType findDriveLetter(const String&) {
   return String::npos;
 }
+#endif
 
 #if OS(WIN)
 bool equalDriveLetterCaseInsensitive(const String& left, const String& right) {
