@@ -31,9 +31,11 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Files.h"
     "include/nucleus/Logging.h"
     "include/nucleus/Macros.h"
+    "include/nucleus/Memory/Ptr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/Optional.h"
     "include/nucleus/Ref.h"
+    "include/nucleus/RefCounted.h"
     "include/nucleus/RefCounted.h"
     "include/nucleus/Signals.h"
     "include/nucleus/Streams/FileInputStream.h"
@@ -92,7 +94,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
     # Enable warnings.
-    target_compile_options(nucleus PRIVATE -Wall -Wextra -pedantic -Werror)
+    target_compile_options(nucleus PRIVATE -Wall -Wextra -pedantic)
 endif()
 
 set_target_properties(nucleus PROPERTIES

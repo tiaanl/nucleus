@@ -19,6 +19,7 @@ set(nucleus_TESTS_SOURCE_FILES
 
     "Containers/DynamicArrayTests.cpp"
     "LoggingTests.cpp"
+    "Memory/PtrTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})
