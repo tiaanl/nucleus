@@ -2,6 +2,8 @@
 #ifndef NUCLEUS_MEMORY_ALLOCATED_H_
 #define NUCLEUS_MEMORY_ALLOCATED_H_
 
+#include <utility>
+
 #include "nucleus/Allocators/Allocator.h"
 #include "nucleus/Macros.h"
 #include "nucleus/Types.h"
@@ -92,7 +94,7 @@ inline Allocated<T> allocate(Allocator* allocator, Args... args) {
   Allocated<T> obj{allocator};
   obj.allocate(std::forward<Args>(args)...);
   return obj;
-};
+}
 
 }  // namespace nu
 

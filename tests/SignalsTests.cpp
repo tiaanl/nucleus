@@ -1,4 +1,5 @@
 
+#include <cstring>  // std::strcmp
 #include <cstdarg>
 #include <cstdio>
 #include <string>
@@ -13,7 +14,7 @@ namespace {
 
 static std::string accu;
 
-static char floatCallback(float f, int, std::string) {
+char floatCallback(float f, int, std::string) {
   std::stringstream ss;
   ss.setf(std::ios::fixed, std::ios::floatfield);
   ss.precision(2);

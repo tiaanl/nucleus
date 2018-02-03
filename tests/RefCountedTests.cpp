@@ -48,7 +48,9 @@ TEST_CASE("MemberAccess") {
 }
 
 TEST_CASE("BooleanOperations") {
-  SelfAssign* p1 = &(SelfAssign{});
+  SelfAssign s1;
+
+  SelfAssign* p1 = &s1;
   nu::Ref<SelfAssign> p2;
 
   CHECK(p1);
@@ -59,7 +61,8 @@ TEST_CASE("BooleanOperations") {
 
   CHECK(p1 != p2);
 
-  SelfAssign* raw = &(SelfAssign{});
+  SelfAssign s2;
+  SelfAssign* raw = &s2;
 
   p2 = raw;
   CHECK(p1 != p2);
@@ -86,6 +89,8 @@ bool TestTraits::s_destructred = false;
 struct RefCountedWithTraits : nu::RefCounted<RefCountedWithTraits, TestTraits> {};
 
 TEST_CASE("CallsDestruct") {
-  { nu::Ref<RefCountedWithTraits> p{&(RefCountedWithTraits{})}; }
+  {
+    RefCountedWithTraits r;
+    nu::Ref<RefCountedWithTraits> p{&r}; }
   CHECK(TestTraits::s_destructred);
 }
