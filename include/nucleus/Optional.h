@@ -82,7 +82,7 @@ private:
   // The value we're holding.
   union {
     T m_value;
-    detail::EmptyType m_empty{detail::emptyValue};
+    detail::EmptyType m_empty = detail::emptyValue;
   };
 
   // Set to true if the value we are holding is valid.

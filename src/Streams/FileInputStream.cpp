@@ -68,4 +68,5 @@ bool FileInputStream::setPosition(SizeType newPosition) {
 
   return true;
 }
+
 }  // namespace nu

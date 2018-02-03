@@ -9,8 +9,8 @@ Lock::Lock() = default;
 
 Lock::~Lock() = default;
 
-void Lock::Acquire() {}
+void Lock::acquire() {}
 
-void Lock::Release() {}
+void Lock::release() {}
 
 }  // namespace nu

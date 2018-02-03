@@ -27,6 +27,9 @@ static_assert(sizeof(U64) == 8, "Invalid size for U64");
 using F32 = float;
 using F64 = double;
 
+static_assert(sizeof(F32) == 4, "Invalid size for F32");
+static_assert(sizeof(F64) == 8, "Invalid size for F64");
+
 #if ARCH(CPU_64_BITS)
 using USize = U64;
 using PtrDiff = I64;

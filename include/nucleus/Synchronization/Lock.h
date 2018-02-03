@@ -24,8 +24,8 @@ public:
   Lock();
   ~Lock();
 
-  void Acquire();
-  void Release();
+  void acquire();
+  void release();
 
 private:
   DISALLOW_COPY_AND_ASSIGN(Lock);

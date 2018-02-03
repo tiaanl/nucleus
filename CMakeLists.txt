@@ -23,6 +23,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Allocators/GlobalAllocator.h"
     "include/nucleus/Allocators/LinearAllocator.h"
     "include/nucleus/Allocators/TestAllocator.h"
+    "include/nucleus/ByteOrder.h"
     "include/nucleus/Config.h"
     "include/nucleus/Containers/Array.h"
     "include/nucleus/Containers/BitSet.h"
@@ -48,7 +49,6 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Synchronization/Lock.h"
     "include/nucleus/Text/String.h"
     "include/nucleus/Types.h"
-    "include/nucleus/Utils/ByteOrder.h"
     "include/nucleus/Win/WindowsMixin.h"
     )
 
@@ -60,7 +60,6 @@ set(nucleus_SOURCE_FILES
     "src/FilePath.cpp"
     "src/Files.cpp"
     "src/Logging.cpp"
-    "src/MemoryDebug.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
     "src/Streams/InputStream.cpp"

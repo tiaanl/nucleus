@@ -6,11 +6,11 @@ template <typename T>
 class AutoLock {
 public:
   AutoLock(T& lock) : m_lock(lock) {
-    m_lock.Acquire();
+    m_lock.acquire();
   }
 
   ~AutoLock() {
-    m_lock.Release();
+    m_lock.release();
   }
 
 private:

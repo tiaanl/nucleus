@@ -3,9 +3,9 @@
 
 #include <algorithm>
 
+#include "nucleus/ByteOrder.h"
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Logging.h"
-#include "nucleus/Utils/ByteOrder.h"
 
 #include "nucleus/MemoryDebug.h"
 

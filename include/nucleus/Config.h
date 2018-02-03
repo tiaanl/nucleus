@@ -107,20 +107,4 @@
 #error Please add support for your architecture in nucleus/config.h
 #endif
 
-#ifndef ALIGN_OF
-#if COMPILER(MSVC) && (_MSC_VER < 1700)
-#define ALIGN_OF(...) ((sizeof(__VA_ARGS__) * 0) + (__alignof(__VA_ARGS__)))
-#elif !COMPILER(gcc) || (__GNUC__ >= 3)
-#define ALIGN_OF __alignof
-#else
-#define ALIGN_OF(Type)                                                                                                 \
-  ((size_t)offsetof(                                                                                                   \
-      struct {                                                                                                         \
-        char c;                                                                                                        \
-        Type m;                                                                                                        \
-      },                                                                                                               \
-      m))
-#endif
-#endif  // ALIGN_OF
-
 #endif  // NUCLEUS_CONFIG_H_
