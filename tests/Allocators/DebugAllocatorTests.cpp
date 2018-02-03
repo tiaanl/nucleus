@@ -1,17 +1,17 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Allocators/DebugAllocator.h"
+#include "nucleus/Testing.h"
 
 void expectDebugValues(const nu::DebugAllocator& debug, USize bytesAllocated, USize bytesFreed, USize bytesOutstanding,
                        USize maxAllocated, USize blocksOutstanding) {
-  EXPECT_EQ(bytesAllocated, debug.getBytesAllocated());
-  EXPECT_EQ(bytesFreed, debug.getBytesFreed());
-  EXPECT_EQ(bytesOutstanding, debug.getBytesOutstanding());
-  EXPECT_EQ(maxAllocated, debug.getMaxAllocated());
-  EXPECT_EQ(blocksOutstanding, debug.getBlocksOutstanding());
+  CHECK(debug.getBytesAllocated() == bytesAllocated);
+  CHECK(debug.getBytesFreed() == bytesFreed);
+  CHECK(debug.getBytesOutstanding() == bytesOutstanding);
+  CHECK(debug.getMaxAllocated() == maxAllocated);
+  CHECK(debug.getBlocksOutstanding() == blocksOutstanding);
 }
 
-TEST(DebugAllocatorTests, Basic) {
+TEST_CASE("allocate from debug allocator") {
   nu::GlobalAllocator global;
   nu::DebugAllocator debug{&global};
 

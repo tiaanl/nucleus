@@ -1,11 +1,11 @@
 
-#include "gtest/gtest.h"
+#include "nucleus/Testing.h"
 
 #if 0
 #include "nucleus/Memory/Allocator.h"
 #include "nucleus/config.h"
 
-TEST(AllocatorTests, BasicTest) {
+TEST_CASE("BasicTest") {
     const USize sizeToAllocate = 100;
     const char* kTestString = "This is a test";
 
@@ -23,7 +23,7 @@ TEST(AllocatorTests, BasicTest) {
     allocator.free(memory, 100);
 }
 
-TEST(AllocatorTests, Name) {
+TEST_CASE("Name") {
     const char* kTestAllocatorName = "MyAllocator";
     const char* anotherAllocatorName = "AnotherAllocator";
 

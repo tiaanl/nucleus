@@ -1,14 +1,14 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/FilePath.h"
 #include "nucleus/Macros.h"
+#include "nucleus/Testing.h"
 
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
-TEST(FilePathTests, DirName) {
+TEST_CASE("DirName") {
   const struct {
     const char* input;
     const char* expected;
@@ -97,11 +97,11 @@ TEST(FilePathTests, DirName) {
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
     FilePath input(String{cases[i].input});
     FilePath observed = input.dirName();
-    EXPECT_EQ(String(cases[i].expected), observed.getPath()) << "i: " << i << ", input: " << input.getPath();
+    CHECK(observed.getPath() == String(cases[i].expected));  // << "i: " << i << ", input: " << input.getPath();
   }
 }
 
-TEST(FilePathTests, BaseName) {
+TEST_CASE("BaseName") {
   const struct {
     const char* input;
     const char* expected;
@@ -186,11 +186,11 @@ TEST(FilePathTests, BaseName) {
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
     FilePath input{String{cases[i].input}};
     FilePath observed = input.baseName();
-    EXPECT_EQ(String(cases[i].expected), observed.getPath()) << "i: " << i << ", input: " << input.getPath();
+    CHECK(observed.getPath() == String(cases[i].expected));  // << "i: " << i << ", input: " << input.getPath();
   }
 }
 
-TEST(FilePathTests, Append) {
+TEST_CASE("Append") {
   const struct {
     const char* inputs[2];
     const char* expected;
@@ -270,12 +270,12 @@ TEST(FilePathTests, Append) {
     String leaf(cases[i].inputs[1]);
 
     FilePath observedStr = root.append(leaf);
-    EXPECT_EQ(String(cases[i].expected), observedStr.getPath())
-        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    CHECK(observedStr.getPath() == String(cases[i].expected));
+    // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
     FilePath observedPath = root.append(FilePath(leaf));
-    EXPECT_EQ(String(cases[i].expected), observedPath.getPath())
-        << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    CHECK(observedPath.getPath() == String(cases[i].expected));
+    // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
 #if 0
 #if defined(OS_WIN)

@@ -5,7 +5,7 @@
 
 #include "nucleus/Signals.h"
 
-#include "gtest/gtest.h"
+#include "nucleus/Testing.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -37,7 +37,7 @@ struct Foo {
 
 namespace nu {
 
-TEST(SignalsTest, Basic) {
+TEST_CASE("Basic") {
   accu.clear();
 
   Signal<char(float, int, std::string)> sig1;
@@ -60,12 +60,12 @@ TEST(SignalsTest, Basic) {
 
   sig1.emit(0.3f, 4, "huhu");
 
-  ASSERT_TRUE(sig1.disconnect(id1));
-  ASSERT_FALSE(sig1.disconnect(id1));
-  ASSERT_TRUE(sig1.disconnect(id2));
-  ASSERT_TRUE(sig1.disconnect(id3));
-  ASSERT_FALSE(sig1.disconnect(id3));
-  ASSERT_FALSE(sig1.disconnect(id2));
+  REQUIRE(sig1.disconnect(id1));
+  REQUIRE_FALSE(sig1.disconnect(id1));
+  REQUIRE(sig1.disconnect(id2));
+  REQUIRE(sig1.disconnect(id3));
+  REQUIRE_FALSE(sig1.disconnect(id3));
+  REQUIRE_FALSE(sig1.disconnect(id2));
 
   Foo foo;
   sig1.connect(slot(&Foo::fooBool, foo));
@@ -99,7 +99,7 @@ TEST(SignalsTest, Basic) {
       "msg: in sig2 *17*\n"
       "DONE";
 
-  EXPECT_STREQ(expected, accu.c_str());
+  CHECK(std::strcmp(expected, accu.c_str()) == 0);
 }
 
 }  // namespace nu

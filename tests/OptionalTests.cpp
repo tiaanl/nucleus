@@ -1,7 +1,7 @@
 
 #include "nucleus/Optional.h"
 
-#include "gtest/gtest.h"
+#include "nucleus/Testing.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -46,32 +46,32 @@ nu::Optional<MockObject> getValue(int value) {
   return !value ? nu::Optional<MockObject>() : nu::makeOptional<MockObject>(value);
 }
 
-TEST(OptionalTests, Basic) {
+TEST_CASE("Optional can hold an object or not") {
   constructorCalled = 0;
   destructorCalled = 0;
 
   nu::Optional<int> i1;
-  ASSERT_FALSE(i1.isValid());
+  REQUIRE(!i1.isValid());
 
   nu::Optional<int> i2(10);
-  ASSERT_TRUE(i2.isValid());
-  ASSERT_EQ(10, i2.get());
+  REQUIRE(i2.isValid());
+  REQUIRE(i2.get() == 10);
 
   i2.reset();
-  ASSERT_FALSE(i2.isValid());
+  REQUIRE(!i2.isValid());
 }
 
-TEST(OptionalTests, DefaultInitializationDoesntConstructValue) {
+TEST_CASE("default initialization does not construct the value") {
   constructorCalled = 0;
   destructorCalled = 0;
 
   nu::Optional<MockObject> empty;
-  ASSERT_FALSE(empty.isValid());
-  ASSERT_EQ(0, constructorCalled);
-  ASSERT_EQ(0, destructorCalled);
+  REQUIRE(!empty.isValid());
+  REQUIRE(constructorCalled == 0);
+  REQUIRE(destructorCalled == 0);
 }
 
-TEST(OptionalTests, MakeOptional) {
+TEST_CASE("we can make an optional with a helper") {
   constructorCalled = 0;
   destructorCalled = 0;
 
@@ -79,49 +79,49 @@ TEST(OptionalTests, MakeOptional) {
     auto o1 = nu::makeOptional<MockObject>(10);
 
     // MockObject should only have been constructed once.
-    EXPECT_EQ(1, constructorCalled);
+    CHECK(constructorCalled == 1);
 
     // MockObject should have been destructed once when the temporary is destroyed inside MakeOptional.
-    EXPECT_EQ(1, destructorCalled);
+    CHECK(destructorCalled == 1);
 
     // MockObject is moved once, when it's moved into the Optional.
-    EXPECT_EQ(1, moveCalled);
+    CHECK(moveCalled == 1);
   }
 
   // Value should never be copied.
-  EXPECT_EQ(0, copyCalled);
+  CHECK(copyCalled == 0);
 
   // MockObject is destructed one more time when the Optional is destructed.
-  EXPECT_EQ(2, destructorCalled);
+  CHECK(destructorCalled == 2);
 }
 
-TEST(OptionalTests, DestructWithTrivialDestructor) {
+TEST_CASE("destruct with trivial destructor") {
   // This is an obscure test, but is to make sure we can compile with a type with trivial destructor.
   nu::Optional<int> i = nu::makeOptional<int>(10);
 }
 
-TEST(OptionalTests, OptionalAsReturnValue) {
+TEST_CASE("optional as return value") {
   nu::Optional<MockObject> o1 = getValue(0);
-  EXPECT_FALSE(o1.isValid());
+  CHECK(!o1.isValid());
 
   nu::Optional<MockObject> o2 = getValue(1);
-  EXPECT_TRUE(o2.isValid());
-  EXPECT_EQ(1, o2.get().value);
+  CHECK(o2.isValid());
+  CHECK(o2.get().value == 1);
 
   // TODO: Make sure the copy/move values are correct when returning an Optional.
 }
 
-TEST(OptionalTests, CompareOptionalAndValue) {
+TEST_CASE("compare Optional with a value") {
   nu::Optional<int> empty;
   nu::Optional<int> one;
 
-  EXPECT_FALSE(empty == 1);
-  EXPECT_FALSE(1 == empty);
-  EXPECT_FALSE(one == 1);
-  EXPECT_FALSE(1 == one);
+  CHECK(empty != 1);
+  CHECK(1 != empty);
+  CHECK(one != 1);
+  CHECK(1 != one);
 
-  EXPECT_TRUE(empty != 1);
-  EXPECT_TRUE(1 != empty);
-  EXPECT_TRUE(one != 1);
-  EXPECT_TRUE(1 != one);
+  CHECK(empty != 1);
+  CHECK(1 != empty);
+  CHECK(one != 1);
+  CHECK(1 != one);
 }

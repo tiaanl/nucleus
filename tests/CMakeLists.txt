@@ -5,27 +5,28 @@ set(nucleus_TESTS_INCLUDE_FILES
 )
 
 set(nucleus_TESTS_SOURCE_FILES
-    # "Allocators/AllocatedTests.cpp"
-    # "Allocators/AllocatorTests.cpp"
-    # "Allocators/DebugAllocatorTests.cpp"
-    # "Containers/ArrayTests.cpp"
-    # "Containers/BitSetTests.cpp"
-    # "FilePathTests.cpp"
-    # "LoggingTests.cpp"
-    # "OptionalTests.cpp"
-    # "RefCountedTests.cpp"
-    # "SignalsTests.cpp"
-    # "Text/StringTests.cpp"
-
+    "Allocators/AllocatedTests.cpp"
+    "Allocators/AllocatorTests.cpp"
+    "Allocators/DebugAllocatorTests.cpp"
+    "Containers/ArrayTests.cpp"
+    "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
+    "FilePathTests.cpp"
+    "LoggingTests.cpp"
     "LoggingTests.cpp"
     "Memory/PtrTests.cpp"
+    "OptionalTests.cpp"
+    "RefCountedTests.cpp"
+    "SignalsTests.cpp"
+    "Text/StringTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})
 target_link_libraries(nucleusTests nucleus testing)
 set_target_properties(nucleusTests PROPERTIES
     CXX_STANDARD 14
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
     FOLDER nucleus
     )
 if(MSVC)

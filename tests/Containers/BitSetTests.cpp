@@ -1,60 +1,55 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Containers/BitSet.h"
+#include "nucleus/Testing.h"
 
-#include <bitset>
-
-TEST(BitSetTests, EnoughSpaceForAllBits) {
+TEST_CASE("EnoughSpaceForAllBits") {
 #if ARCH(CPU_64_BITS)
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<8>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<16>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<32>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<49>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<64>{}));
-  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<65>{}));
-  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<128>{}));
-  EXPECT_EQ(static_cast<USize>(32), sizeof(nu::BitSet<256>{}));
-  EXPECT_EQ(static_cast<USize>(64), sizeof(nu::BitSet<512>{}));
-  EXPECT_EQ(static_cast<USize>(128), sizeof(nu::BitSet<1024>{}));
-  EXPECT_EQ(static_cast<USize>(256), sizeof(nu::BitSet<2048>{}));
-  EXPECT_EQ(static_cast<USize>(512), sizeof(nu::BitSet<4096>{}));
+  CHECK(sizeof(nu::BitSet<8>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<16>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<32>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<49>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<64>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<65>{}) == static_cast<USize>(16));
+  CHECK(sizeof(nu::BitSet<128>{}) == static_cast<USize>(16));
+  CHECK(sizeof(nu::BitSet<256>{}) == static_cast<USize>(32));
+  CHECK(sizeof(nu::BitSet<512>{}) == static_cast<USize>(64));
+  CHECK(sizeof(nu::BitSet<1024>{}) == static_cast<USize>(128));
+  CHECK(sizeof(nu::BitSet<2048>{}) == static_cast<USize>(256));
+  CHECK(sizeof(nu::BitSet<4096>{}) == static_cast<USize>(512));
 #elif ARCH(CPU_32_BITS)
-  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<8>{}));
-  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<16>{}));
-  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<32>{}));
-  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<49>{}));
-  EXPECT_EQ(static_cast<USize>(4), sizeof(nu::BitSet<64>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<65>{}));
-  EXPECT_EQ(static_cast<USize>(8), sizeof(nu::BitSet<128>{}));
-  EXPECT_EQ(static_cast<USize>(16), sizeof(nu::BitSet<256>{}));
-  EXPECT_EQ(static_cast<USize>(32), sizeof(nu::BitSet<512>{}));
-  EXPECT_EQ(static_cast<USize>(64), sizeof(nu::BitSet<1024>{}));
-  EXPECT_EQ(static_cast<USize>(128), sizeof(nu::BitSet<2048>{}));
-  EXPECT_EQ(static_cast<USize>(256), sizeof(nu::BitSet<4096>{}));
+  CHECK(sizeof(nu::BitSet<8>{}) == static_cast<USize>(4));
+  CHECK(sizeof(nu::BitSet<16>{}) == static_cast<USize>(4));
+  CHECK(sizeof(nu::BitSet<32>{}) == static_cast<USize>(4));
+  CHECK(sizeof(nu::BitSet<49>{}) == static_cast<USize>(4));
+  CHECK(sizeof(nu::BitSet<64>{}) == static_cast<USize>(4));
+  CHECK(sizeof(nu::BitSet<65>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<128>{}) == static_cast<USize>(8));
+  CHECK(sizeof(nu::BitSet<256>{}) == static_cast<USize>(16));
+  CHECK(sizeof(nu::BitSet<512>{}) == static_cast<USize>(32));
+  CHECK(sizeof(nu::BitSet<1024>{}) == static_cast<USize>(64));
+  CHECK(sizeof(nu::BitSet<2048>{}) == static_cast<USize>(128));
+  CHECK(sizeof(nu::BitSet<4096>{}) == static_cast<USize>(256));
 #endif
 }
 
-TEST(BitSetTests, IsAllZeroAfterConstruction) {
+TEST_CASE("IsAllZeroAfterConstruction") {
   nu::BitSet<32> bits;
 
   for (nu::BitSet<32>::IndexType i = 0; i < bits.getBitCount(); ++i) {
-    ASSERT_FALSE(bits.test(i));
+    REQUIRE_FALSE(bits.test(i));
   }
 }
 
-TEST(BitSetTests, SetAndTest) {
-  std::bitset<10> b;
-  b.reset();
-
+TEST_CASE("SetAndTest") {
   nu::BitSet<8> bits;
 
   bits.set(1);
-  ASSERT_FALSE(bits.test(0));
-  ASSERT_TRUE(bits.test(1));
-  ASSERT_FALSE(bits.test(2));
+  CHECK(!bits.test(0));
+  CHECK(bits.test(1));
+  CHECK(!bits.test(2));
 
   bits.set(1, false);
-  ASSERT_FALSE(bits.test(0));
-  ASSERT_FALSE(bits.test(1));
-  ASSERT_FALSE(bits.test(2));
+  CHECK(!bits.test(0));
+  CHECK(!bits.test(1));
+  CHECK(!bits.test(2));
 }

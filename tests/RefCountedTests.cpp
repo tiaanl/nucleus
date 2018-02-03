@@ -1,9 +1,9 @@
 
-#include "gtest/gtest.h"
 #include "nucleus/Allocators/Allocated.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Ref.h"
 #include "nucleus/RefCounted.h"
+#include "nucleus/Testing.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -19,7 +19,7 @@ public:
   CheckDerivedMemberAccess() {
     // This shouldn't compile if we don't have access to the member variable.
     SelfAssign** pptr = &m_ptr;
-    EXPECT_EQ(*pptr, m_ptr);
+    CHECK(m_ptr == *pptr);
   }
 };
 
@@ -34,40 +34,40 @@ private:
 
 }  // namespace
 
-TEST(RefCountedTests, TestSelfAssignment) {
+TEST_CASE("TestSelfAssignment") {
   SelfAssign sa;
   SelfAssign* p = &sa;
 
   nu::Ref<SelfAssign> var(p);
   var = var;
-  EXPECT_EQ(var.get(), p);
+  CHECK(p == var.get());
 }
 
-TEST(RefCountedTests, MemberAccess) {
+TEST_CASE("MemberAccess") {
   CheckDerivedMemberAccess check;
 }
 
-TEST(RefCountedTests, BooleanOperations) {
+TEST_CASE("BooleanOperations") {
   SelfAssign* p1 = &(SelfAssign{});
   nu::Ref<SelfAssign> p2;
 
-  EXPECT_TRUE(p1);
-  EXPECT_FALSE(!p1);
+  CHECK(p1);
+  CHECK_FALSE(!p1);
 
-  EXPECT_TRUE(!p2);
-  EXPECT_FALSE(p2);
+  CHECK(!p2);
+  CHECK_FALSE(p2);
 
-  EXPECT_NE(p1, p2);
+  CHECK(p1 != p2);
 
   SelfAssign* raw = &(SelfAssign{});
 
   p2 = raw;
-  EXPECT_NE(p1, p2);
-  EXPECT_EQ(raw, p2);
+  CHECK(p1 != p2);
+  CHECK(p2 == raw);
 
   p2 = p1;
-  EXPECT_NE(raw, p2);
-  EXPECT_EQ(p1, p2);
+  CHECK(raw != p2);
+  CHECK(p2 == p1);
 }
 
 struct RefCountedWithTraits;
@@ -85,7 +85,7 @@ bool TestTraits::s_destructred = false;
 
 struct RefCountedWithTraits : nu::RefCounted<RefCountedWithTraits, TestTraits> {};
 
-TEST(RefCountedTests, CallsDestruct) {
+TEST_CASE("CallsDestruct") {
   { nu::Ref<RefCountedWithTraits> p{&(RefCountedWithTraits{})}; }
-  EXPECT_TRUE(TestTraits::s_destructred);
+  CHECK(TestTraits::s_destructred);
 }

@@ -1,4 +1,4 @@
 
-#include "gtest/gtest.h"
+#include "nucleus/Testing.h"
 
-TEST(ArrayTests, Basic) {}
+TEST_CASE("test an array") {}

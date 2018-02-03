@@ -172,6 +172,10 @@ public:
 
   // Find the last occurrence of any of the characters in `chars` starting from `start` position.
   SizeType findLastOfAnyChar(const String& chars) const {
+    if (m_length < 1) {
+      return npos;
+    }
+
     for (SizeType i = m_length - 1;; --i) {
       SizeType pos = chars.findLastOfChar(m_data[i]);
       if (pos != npos) {
