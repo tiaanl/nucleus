@@ -47,4 +47,4 @@ void benchmarkDebugAllocatorWithGlobalAllocator(benchmark::State& state) {
 BENCHMARK(benchmarkDebugAllocatorWithGlobalAllocator)->RangeMultiplier(2)->Range(8, 8 << iterations);
 #endif  // 0
 
-BENCHMARK_MAIN();
+BENCHMARK_MAIN()

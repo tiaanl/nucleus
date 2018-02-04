@@ -92,7 +92,7 @@ private:
 template <typename T, typename... Args>
 Optional<T> makeOptional(Args&&... args) {
   return Optional<T>(T(std::forward<Args>(args)...));
-};
+}
 
 template <typename T>
 bool operator==(const Optional<T>& left, const T& right) {

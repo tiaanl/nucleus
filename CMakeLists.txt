@@ -75,7 +75,7 @@ if(WIN32)
         )
 endif()
 
-if(APPLE)
+if(UNIX)
     list(APPEND nucleus_SOURCE_FILES
         "src/Streams/FileInputStream_posix.cpp"
         )

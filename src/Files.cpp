@@ -4,6 +4,9 @@
 
 #if OS(POSIX)
 #include <unistd.h>
+#if OS(LINUX)
+#include <linux/limits.h>
+#endif
 #elif OS(WIN)
 #include "nucleus/Win/WindowsMixin.h"
 #endif

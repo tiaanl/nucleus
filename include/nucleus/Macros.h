@@ -16,7 +16,7 @@ public:                                                                         
 
 #define COPY_DELETE(ClassName)                                                                                         \
   ClassName(const ClassName&) = delete;                                                                                \
-  ClassName& operator=(const ClassName&)
+  ClassName& operator=(const ClassName&) = delete;
 
 #define MOVE_DELETE(ClassName)                                                                                         \
   ClassName(ClassName&&) = delete;                                                                                     \
