@@ -50,7 +50,7 @@ TEST_CASE("move the object into another Allocated") {
 
   {
     auto i1 = nu::allocate<int>(&alloc, 10);
-    auto i2{std::move(i1)};
+    nu::Allocated<int> i2{std::move(i1)};
 
     REQUIRE(i1.get() == nullptr);
     REQUIRE_FALSE(!i2);
