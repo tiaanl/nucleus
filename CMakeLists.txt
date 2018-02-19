@@ -34,6 +34,10 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Macros.h"
     "include/nucleus/Memory/Ptr.h"
     "include/nucleus/MemoryDebug.h"
+    "include/nucleus/MessageLoop/MessageLoop.h"
+    "include/nucleus/MessageLoop/MessagePump.h"
+    "include/nucleus/MessageLoop/MessagePumpDefault.h"
+    "include/nucleus/MessageLoop/Task.h"
     "include/nucleus/Optional.h"
     "include/nucleus/Ref.h"
     "include/nucleus/RefCounted.h"
@@ -60,6 +64,9 @@ set(nucleus_SOURCE_FILES
     "src/FilePath.cpp"
     "src/Files.cpp"
     "src/Logging.cpp"
+    "src/MessageLoop/MessageLoop.cpp"
+    "src/MessageLoop/MessagePump.cpp"
+    "src/MessageLoop/MessagePumpDefault.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
     "src/Streams/InputStream.cpp"
@@ -87,13 +94,13 @@ target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Enable warnings and multi-process compilation.
-    target_compile_options(nucleus PRIVATE /W4 /WX /MP)
+    target_compile_options(nucleus PUBLIC /W4 /MP)
 
     # Enable memory debugging.
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
     # Enable warnings.
-    target_compile_options(nucleus PRIVATE -Wall -Wextra -pedantic)
+    target_compile_options(nucleus PUBLIC -Wall -Wextra -pedantic)
 endif()
 
 set_target_properties(nucleus PROPERTIES

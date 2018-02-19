@@ -15,6 +15,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "LoggingTests.cpp"
     "LoggingTests.cpp"
     "Memory/PtrTests.cpp"
+    "MessageLoop/MessageLoopTests.cpp"
     "OptionalTests.cpp"
     "RefCountedTests.cpp"
     "SignalsTests.cpp"

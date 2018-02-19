@@ -21,6 +21,9 @@ public:
     other.m_ptr = nullptr;
   }
 
+  template <typename U>
+  Ptr(Ptr<U>&& other) : m_ptr(other.release()) {}
+
   ~Ptr() {
     if (m_ptr) {
       delete m_ptr;
@@ -32,6 +35,14 @@ public:
     other.m_ptr = nullptr;
 
     return *this;
+  }
+
+  const T* operator->() const {
+    return m_ptr;
+  }
+
+  T* operator->() {
+    return m_ptr;
   }
 
   const T* get() const {
@@ -48,6 +59,12 @@ public:
     }
 
     m_ptr = p;
+  }
+
+  T* release() {
+    T* ptr = m_ptr;
+    m_ptr = nullptr;
+    return ptr;
   }
 
 private:
