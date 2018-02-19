@@ -12,35 +12,17 @@ namespace nu {
 
 class MessageLoop : public MessagePump::Delegate {
 public:
-  // A `MessageLoop` has a specific type which indicates the set of asynchronous events it may process in addition to
-  // tasks.
-  //
-  //   Default - only supports tasks.
-  //   UI      - supports native UI events (e.g. windows messages).
-  //   IO      - supports asynchronous IO.
-  //   Custom  - when a `MessagePump` was passed to us.
-  //
-  enum class Type { Default, UI, IO, Custom };
-
   // Returns the `MessageLoop` object for the current thread, or `nullptr` if none exists.
   static MessageLoop* current();
 
-  // Creates the default `MessagePump` based on the given `type`.  The called owns the returned `MessagePump`.
-  static Ptr<MessagePump> createMessagePumpForType(Type type);
+  // Constructs a `MessageLoop` with a default `MessagePump`.
+  MessageLoop();
 
-  // Constructs a `MessageLoop` of the specified `type`.
-  explicit MessageLoop(Type type = Type::Default);
-
-  // Constructs a `MessageLoop` using the given `MessagePump`.
+  // Constructs a `MessageLoop` with the given `MessagePump`.
   explicit MessageLoop(Ptr<MessagePump>&& messagePump);
 
   // Destroy the `MessageLoop` and delete all the tasks still enqueued.
   virtual ~MessageLoop();
-
-  // Returns the type passed to the constructor.
-  Type getType() const {
-    return m_type;
-  }
 
   // Returns `true` if the `MessageLoop` is currently running.
   // NOTE: May only be called from the thread that invoked the `run` function.
@@ -74,8 +56,6 @@ private:
 
   void init();
   void reloadTaskQueue();
-
-  const Type m_type;
 
   // This will be set to true while the `MessageLoop` is running.
   bool m_isRunning = false;

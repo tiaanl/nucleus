@@ -16,23 +16,15 @@ MessageLoop* MessageLoop::current() {
   return g_messageLoopOnThisThread;
 }
 
-// static
-Ptr<MessagePump> MessageLoop::createMessagePumpForType(Type /*type*/) {
-  Ptr<MessagePump> result;
-
-  result.reset(new MessagePumpDefault);
-
-  return result;
-}
-
-MessageLoop::MessageLoop(Type type) : m_type{type} {
+MessageLoop::MessageLoop() {
   init();
 
-  m_messagePump = createMessagePumpForType(type);
+  m_messagePump.reset(new MessagePumpDefault);
 }
 
-MessageLoop::MessageLoop(Ptr<MessagePump>&& messagePump) : m_messagePump{std::move(messagePump)}, m_type{Type::Custom} {
+MessageLoop::MessageLoop(Ptr<MessagePump>&& messagePump) : m_messagePump{std::move(messagePump)} {
   DCHECK(m_messagePump.get());
+
   init();
 }
 
