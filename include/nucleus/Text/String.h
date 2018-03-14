@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <limits>
 #include <ostream>
-#include <string>  // std::memcpy
+#include <cstring>  // std::strlen, std::memcpy
 
 #include "nucleus/Allocators/DefaultAllocator.h"
 
