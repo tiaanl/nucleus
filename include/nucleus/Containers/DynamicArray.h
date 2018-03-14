@@ -23,18 +23,15 @@ public:
 
   // Construct/destruct
 
-  DynamicArray(Allocator* allocator = getDefaultAllocator())
-    : m_allocator(allocator), m_data(nullptr), m_size(0), m_allocated(0) {}
+  DynamicArray() : m_data(nullptr), m_size(0), m_allocated(0) {}
 
-  DynamicArray(const DynamicArray& other)
-    : m_allocator(other.m_allocator), m_data(nullptr), m_size(other.m_size), m_allocated(0) {
+  DynamicArray(const DynamicArray& other) : m_data(nullptr), m_size(other.m_size), m_allocated(0) {
     ensureAllocated(m_size, false);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
   }
 
-  DynamicArray(DynamicArray&& other)
-    : m_allocator(other.m_allocator), m_data(other.m_data), m_size(other.m_size), m_allocated(other.m_allocated) {
-    other.m_allocator = nullptr;
+  DynamicArray(DynamicArray&& other) noexcept
+    : m_data(other.m_data), m_size(other.m_size), m_allocated(other.m_allocated) {
     other.m_data = nullptr;
     other.m_size = 0;
     other.m_allocated = 0;
@@ -47,7 +44,6 @@ public:
   // Operators
 
   DynamicArray& operator=(const DynamicArray& other) {
-    m_allocator = other.m_allocator;
     m_data = nullptr;
     m_size = other.m_size;
     m_allocated = 0;
@@ -58,13 +54,11 @@ public:
     return *this;
   }
 
-  DynamicArray& operator=(DynamicArray&& other) {
-    m_allocator = other.m_allocator;
+  DynamicArray& operator=(DynamicArray&& other) noexcept {
     m_data = other.m_data;
     m_size = other.m_size;
     m_allocated = other.m_allocated;
 
-    other.m_allocator = nullptr;
     other.m_data = nullptr;
     other.m_size = 0;
     other.m_allocated = 0;
@@ -211,14 +205,14 @@ private:
   void allocateData(SizeType size, bool keepOld) {
     const USize oldSizeInBytes = m_size * sizeof(ElementType);
 
-    ElementType* newData = static_cast<ElementType*>(m_allocator->allocate(size * sizeof(ElementType)));
+    auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(size * sizeof(ElementType)));
 
     if (m_data) {
       if (keepOld) {
         ::memcpy(newData, m_data, oldSizeInBytes);
       }
 
-      m_allocator->free(m_data, oldSizeInBytes);
+      getDefaultAllocator()->free(m_data, oldSizeInBytes);
     }
 
     m_allocated = size;
@@ -232,7 +226,7 @@ private:
         el->~ElementType();
       }
 
-      m_allocator->free(m_data, m_allocated * sizeof(ElementType));
+      getDefaultAllocator()->free(m_data, m_allocated * sizeof(ElementType));
     }
 
     m_data = nullptr;
@@ -240,7 +234,6 @@ private:
     m_allocated = 0;
   }
 
-  Allocator* m_allocator;
   ElementType* m_data;
   SizeType m_size;
   SizeType m_allocated;

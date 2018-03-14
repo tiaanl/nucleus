@@ -13,15 +13,15 @@
 
 namespace nu {
 
-FilePath getCurrentWorkingDirectory(Allocator* allocator) {
+FilePath getCurrentWorkingDirectory() {
 #if OS(POSIX)
   char buf[PATH_MAX] = {0};
   const char* result = ::getcwd(buf, PATH_MAX);
-  return FilePath{String{result, String::npos, allocator}, allocator};
+  return FilePath{String{result, String::npos}};
 #elif OS(WIN)
   char buf[MAX_PATH] = {0};
   DWORD result = ::GetCurrentDirectoryA(MAX_PATH, buf);
-  return FilePath{String{buf, result, allocator}, allocator};
+  return FilePath{String{buf, result}};
 #endif
 }
 

@@ -66,9 +66,9 @@ private:
 
   Allocator* m_parent;
 
-  USize m_bytesAllocated;
-  USize m_bytesOutstanding;
-  USize m_maxAllocated;
+  USize m_bytesAllocated = 0;
+  USize m_bytesOutstanding = 0;
+  USize m_maxAllocated = 0;
 
   nu::DynamicArray<Record> m_blocks;
 

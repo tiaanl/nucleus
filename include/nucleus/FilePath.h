@@ -23,13 +23,11 @@ public:
   static bool isSeparator(String::CharType ch);
 
   // Normalize separators to all be the default separator for the platform.
-  static FilePath normalizeSeparators(const nu::String& path, Allocator* allocator = getDefaultAllocator());
+  static FilePath normalizeSeparators(const nu::String& path);
 
-  explicit FilePath(Allocator* allocator = getDefaultAllocator());
-  explicit FilePath(const String& path, Allocator* allocator = getDefaultAllocator());
-
-  FilePath(const FilePath& other, Allocator* allocator = getDefaultAllocator());
-
+  FilePath();
+  explicit FilePath(const String& path);
+  FilePath(const FilePath& other);
   ~FilePath();
 
   FilePath& operator=(const FilePath& other);
@@ -61,8 +59,6 @@ public:
 private:
   // Remove trailing separators from this object.
   void stripTrailingSeparators();
-
-  Allocator* m_allocator;
 
   // A string representation of the path in this object.
   String m_path;

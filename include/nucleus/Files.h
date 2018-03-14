@@ -7,7 +7,7 @@
 
 namespace nu {
 
-FilePath getCurrentWorkingDirectory(Allocator* allocator = getDefaultAllocator());
+FilePath getCurrentWorkingDirectory();
 
 }  // namespace nu
 

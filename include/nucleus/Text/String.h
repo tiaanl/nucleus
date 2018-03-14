@@ -7,7 +7,7 @@
 #include <ostream>
 #include <string>  // std::memcpy
 
-#include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/Allocators/DefaultAllocator.h"
 
 namespace nu {
 
@@ -18,15 +18,12 @@ public:
 
   static constexpr SizeType npos = std::numeric_limits<SizeType>::max();
 
-  explicit String(Allocator* allocator = getDefaultAllocator())
-    : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {}
+  explicit String() : m_data(nullptr), m_length(0), m_allocated(0) {}
 
-  String(const String& other, Allocator* allocator = getDefaultAllocator())
-    : String(other.m_data, other.getLength(), allocator) {}
+  String(const String& other) : String(other.m_data, other.getLength()) {}
 
   // Construct a `String` from a c-string.
-  String(const char* text, SizeType length = npos, Allocator* allocator = getDefaultAllocator())
-    : m_allocator(allocator), m_data(nullptr), m_length(0), m_allocated(0) {
+  String(const char* text, SizeType length = npos) : m_data(nullptr), m_length(0), m_allocated(0) {
     SizeType textLength = (length == npos) ? std::strlen(text) : length;
     ensureAllocated(textLength, false);
     std::memcpy(m_data, text, textLength * sizeof(CharType));
@@ -37,7 +34,7 @@ public:
   // Destruct the string, freeing any memory we might have allocated.
   ~String() {
     if (m_data && m_allocated) {
-      m_allocator->free(m_data, m_allocated);
+      getDefaultAllocator()->free(m_data, m_allocated);
     }
   }
 
@@ -50,10 +47,6 @@ public:
     m_data[m_length] = 0;
 
     return *this;
-  }
-
-  Allocator* getAllocator() const {
-    return m_allocator;
   }
 
   // Returns the length of the string.
@@ -88,7 +81,7 @@ public:
   }
 
   String sub(SizeType pos, SizeType count = npos) const {
-    return String(m_data + pos, count, m_allocator);
+    return String(m_data + pos, count);
   }
 
   // Mutations
@@ -200,8 +193,10 @@ private:
   // Allocate memory to hold a string of the specified length.  If `keepOld` is true, then any data currently in the
   // buffer will be there after any allocations.
   void allocate(USize bytesToAllocate, bool keepOld) {
+    Allocator* allocator = getDefaultAllocator();
+
     // Allocate a new buffer to hold data.
-    CharType* newBuffer = static_cast<CharType*>(m_allocator->allocate(bytesToAllocate));
+    CharType* newBuffer = static_cast<CharType*>(allocator->allocate(bytesToAllocate));
 
     if (m_data) {
       // Copy the old data if needed.
@@ -211,14 +206,13 @@ private:
       }
 
       // Destroy the old buffer.
-      m_allocator->free(m_data, m_allocated);
+      allocator->free(m_data, m_allocated);
     }
 
     m_data = newBuffer;
     m_allocated = bytesToAllocate;
   }
 
-  nu::Allocator* m_allocator;
   CharType* m_data;
   SizeType m_length;
   USize m_allocated;

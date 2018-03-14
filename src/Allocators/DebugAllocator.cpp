@@ -13,8 +13,7 @@ namespace nu {
 USize DebugAllocator::s_leakedBytes = 0;
 USize DebugAllocator::s_leakedBlocks = 0;
 
-DebugAllocator::DebugAllocator(Allocator* parent)
-  : m_parent(parent), m_bytesAllocated(0), m_bytesOutstanding(0), m_maxAllocated(0), m_blocks(parent) {}
+DebugAllocator::DebugAllocator(Allocator* parent) : m_parent(parent) {}
 
 DebugAllocator::~DebugAllocator() {
   // If any blocks have not been released, report them as leaked.

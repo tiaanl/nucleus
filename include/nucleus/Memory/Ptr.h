@@ -22,7 +22,7 @@ public:
   }
 
   template <typename U>
-  explicit Ptr(Ptr<U>&& other) noexcept : m_ptr(other.release()) {}
+  Ptr(Ptr<U>&& other) noexcept : m_ptr(other.release()) {}
 
   ~Ptr() {
     if (m_ptr) {
