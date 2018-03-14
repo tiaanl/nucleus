@@ -4,6 +4,8 @@
 #include "nucleus/Allocators/TestAllocator.h"
 #include "nucleus/Testing.h"
 
+
+#if 0
 TEST_CASE("allocate an object") {
   nu::TestAllocator alloc;
 
@@ -72,3 +74,4 @@ TEST_CASE("construct an Allocated with an existing pointer") {
   CHECK(alloc.getAllocations() == 1);
   CHECK(alloc.getFrees() == 1);
 }
+#endif  // 0

@@ -9,4 +9,6 @@ before_script:
   - cd build
   - cmake ..
 
-script: make nucleusTests && tests/nucleusTests
+script:
+  - make nucleusTests
+  - tests/nucleusTests
