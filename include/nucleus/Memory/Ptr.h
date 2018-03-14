@@ -17,12 +17,12 @@ public:
 
   explicit Ptr(T* other) : m_ptr(other) {}
 
-  Ptr(Ptr&& other) : m_ptr(other.m_ptr) {
+  Ptr(Ptr&& other) noexcept : m_ptr(other.m_ptr) {
     other.m_ptr = nullptr;
   }
 
   template <typename U>
-  Ptr(Ptr<U>&& other) : m_ptr(other.release()) {}
+  explicit Ptr(Ptr<U>&& other) noexcept : m_ptr(other.release()) {}
 
   ~Ptr() {
     if (m_ptr) {
