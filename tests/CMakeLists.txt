@@ -12,6 +12,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
     "FilePathTests.cpp"
+    "HighPerformanceTimerTests.cpp"
     "LoggingTests.cpp"
     "LoggingTests.cpp"
     "Memory/PtrTests.cpp"
