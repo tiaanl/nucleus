@@ -78,7 +78,7 @@ struct RefCountedWithTraits;
 struct TestTraits {
   static bool s_destructred;
 
-  static void destruct(const RefCountedWithTraits* o) {
+  static void destruct(const RefCountedWithTraits*) {
     s_destructred = true;
   }
 };
@@ -91,6 +91,7 @@ struct RefCountedWithTraits : nu::RefCounted<RefCountedWithTraits, TestTraits> {
 TEST_CASE("CallsDestruct") {
   {
     RefCountedWithTraits r;
-    nu::Ref<RefCountedWithTraits> p{&r}; }
+    nu::Ref<RefCountedWithTraits> p{&r};
+  }
   CHECK(TestTraits::s_destructred);
 }

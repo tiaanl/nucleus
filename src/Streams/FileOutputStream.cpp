@@ -46,20 +46,22 @@ void FileOutputStream::closeHandle() {
 #endif  // OS(*)
 }
 
+#if OS(WIN)
 FileOutputStream::SizeType FileOutputStream::write(void* buffer, SizeType size) {
   // static_assert(sizeof(DWORD) == sizeof(SizeType), "Sizes must match");
 
-#if OS(WIN)
   DWORD bytesWritten = 0;
   if (m_handle) {
     ::WriteFile(m_handle, buffer, static_cast<DWORD>(size), &bytesWritten, nullptr);
   }
 
   return static_cast<SizeType>(bytesWritten);
+}
 #elif OS(POSIX)
+FileOutputStream::SizeType FileOutputStream::write(void*, SizeType) {
   //#error "Not implemented!"
   return 0;
-#endif  // OS(*)
 }
+#endif
 
 }  // namespace nu
