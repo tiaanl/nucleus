@@ -4,14 +4,13 @@
 
 #include "nucleus/Allocators/Allocator.h"
 
-#include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Containers/DynamicArray.h"
 
 namespace nu {
 
 class DebugAllocator : public Allocator {
 public:
-  explicit DebugAllocator(Allocator* parent = getDefaultAllocator());
+  explicit DebugAllocator(Allocator* parent);
   ~DebugAllocator() override;
 
   Allocator* getParent() const {
@@ -23,30 +22,12 @@ public:
   }
 
   USize getBytesFreed() const {
-    return m_bytesAllocated - m_bytesOutstanding;
+    return m_bytesFreed;
   }
 
   USize getBytesOutstanding() const {
-    return m_bytesOutstanding;
+    return m_bytesAllocated - m_bytesFreed;
   }
-
-  USize getMaxAllocated() const {
-    return m_maxAllocated;
-  }
-
-  USize getBlocksOutstanding() const {
-    return m_blocks.getSize();
-  }
-
-  static USize getLeakedBytes() {
-    return s_leakedBytes;
-  }
-
-  static USize getLeakedBlocks() {
-    return s_leakedBlocks;
-  }
-
-  static void clearLeaked();
 
 protected:
   void* doAllocate(USize bytes, USize alignment) override;
@@ -56,24 +37,10 @@ protected:
   }
 
 private:
-  struct Record {
-    void* ptr;
-    USize bytes;
-    USize alignment;
-
-    Record(void* ptr, USize bytes, USize alignment) : ptr(ptr), bytes(bytes), alignment(alignment) {}
-  };
-
   Allocator* m_parent;
 
   USize m_bytesAllocated = 0;
-  USize m_bytesOutstanding = 0;
-  USize m_maxAllocated = 0;
-
-  nu::DynamicArray<Record> m_blocks;
-
-  static USize s_leakedBytes;
-  static USize s_leakedBlocks;
+  USize m_bytesFreed = 0;
 };
 
 }  // namespace nu
