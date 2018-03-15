@@ -27,7 +27,7 @@ F64 getHighPerformanceTimerFrequency() {
 #if OS(POSIX)
   struct timespec specRate;
   clock_getres(CLOCKID, &specRate);
-  rate = 1000.0 * specRate.tv_nsec;
+  rate = 1000000.0 * specRate.tv_nsec;
 #elif OS(MACOSX)
   mach_timebase_info_data_t rate_nsec;
   mach_timebase_info(&rate_nsec);
