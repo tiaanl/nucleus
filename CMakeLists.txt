@@ -123,7 +123,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
 endif()
 
 set_target_properties(nucleus PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
     FOLDER nucleus
