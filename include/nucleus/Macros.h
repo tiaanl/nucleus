@@ -5,21 +5,21 @@
 #include "nucleus/Config.h"
 #include "nucleus/Types.h"
 
-#define DISALLOW_COPY_AND_ASSIGN(ClassName)                                                                            \
-public:                                                                                                                \
-  ClassName(const ClassName&) = delete;                                                                                \
+#define DISALLOW_COPY_AND_ASSIGN(ClassName)                                                        \
+public:                                                                                            \
+  ClassName(const ClassName&) = delete;                                                            \
   ClassName& operator=(const ClassName&) = delete
 
-#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName)                                                                      \
-  DISALLOW_COPY_AND_ASSIGN(ClassName);                                                                                 \
+#define DISALLOW_IMPLICIT_CONSTRUCTORS(ClassName)                                                  \
+  DISALLOW_COPY_AND_ASSIGN(ClassName);                                                             \
   ClassName() = delete
 
-#define COPY_DELETE(ClassName)                                                                                         \
-  ClassName(const ClassName&) = delete;                                                                                \
-  ClassName& operator=(const ClassName&) = delete;
+#define COPY_DELETE(ClassName)                                                                     \
+  ClassName(const ClassName&) = delete;                                                            \
+  ClassName& operator=(const ClassName&) = delete
 
-#define MOVE_DELETE(ClassName)                                                                                         \
-  ClassName(ClassName&&) = delete;                                                                                     \
+#define MOVE_DELETE(ClassName)                                                                     \
+  ClassName(ClassName&&) = delete;                                                                 \
   ClassName& operator=(ClassName&&) = delete
 
 // ARRAY_SIZE
