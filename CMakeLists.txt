@@ -55,6 +55,19 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Text/String.h"
     "include/nucleus/Types.h"
     "include/nucleus/Win/WindowsMixin.h"
+
+    "include/nucleus/Callbacks/Bind.h"
+    "include/nucleus/Callbacks/BindDetail.h"
+    "include/nucleus/Callbacks/BindState.h"
+    "include/nucleus/Callbacks/Callback.h"
+    "include/nucleus/Callbacks/CallbackDetail.h"
+    "include/nucleus/Callbacks/CallbackForward.h"
+    "include/nucleus/Callbacks/ExtractReturnType.h"
+    "include/nucleus/Callbacks/FunctorTraits.h"
+    "include/nucleus/Callbacks/MakeBindStateType.h"
+    "include/nucleus/Callbacks/MakeFunctionType.h"
+    "include/nucleus/Callbacks/PassingTraits.h"
+    "include/nucleus/Callbacks/TypeList.h"
     )
 
 set(nucleus_SOURCE_FILES
@@ -76,6 +89,8 @@ set(nucleus_SOURCE_FILES
     "src/Streams/OutputStream.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
+
+    "src/Callbacks/CallbackDetail.cpp"
     )
 
 if(WIN32)

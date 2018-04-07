@@ -21,6 +21,8 @@ set(nucleus_TESTS_SOURCE_FILES
     "RefCountedTests.cpp"
     "SignalsTests.cpp"
     "Text/StringTests.cpp"
+
+    "Callbacks/CallbackTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})
