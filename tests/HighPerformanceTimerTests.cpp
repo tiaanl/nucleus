@@ -26,8 +26,8 @@ TEST_CASE("make sure frequency is in milliseconds") {
 
   total /= 100.0;
 
-  CHECK(total >= 1.0);
-  CHECK(total <= 2.0);
+  CHECK(total >= 1000.0);
+  CHECK(total <= 2000.0);
 }
 
 }  // namespace nu

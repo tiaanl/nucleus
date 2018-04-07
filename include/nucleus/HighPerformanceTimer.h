@@ -6,6 +6,7 @@
 
 namespace nu {
 
+// Return the current CPU tick in microseconds.
 F64 getCurrentHighPerformanceTick();
 
 }  // namespace nu
