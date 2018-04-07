@@ -1,8 +1,20 @@
 language: cpp
 
-compiler:
-  - gcc
-  - clang
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      env: VERBOSE=1
+    - os: linux
+      compiler: clang
+      env: VERBOSE=1
+
+    - os: osx
+      compiler: gcc
+      env: VERBOSE=1
+    - os: osx
+      compiler: clang
+      env: VERBOSE=1
 
 before_script:
   - mkdir build
