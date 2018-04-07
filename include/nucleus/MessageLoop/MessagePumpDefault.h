@@ -3,6 +3,7 @@
 #define NUCLEUS_MESSAGE_LOOP_MESSAGE_PUMP_DEFAULT_H_
 
 #include <condition_variable>
+#include <mutex>
 
 #include "nucleus/Macros.h"
 #include "nucleus/MessageLoop/MessagePump.h"

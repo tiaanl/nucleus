@@ -2,6 +2,8 @@
 #ifndef NUCLEUS_CALLBACKS_FUNCTOR_TRAITS_H_
 #define NUCLEUS_CALLBACKS_FUNCTOR_TRAITS_H_
 
+#include <type_traits>
+
 #include "nucleus/Config.h"
 
 namespace nu {
@@ -62,8 +64,8 @@ struct FunctorTraits<R (Receiver::*)(Args...)> {
   static constexpr bool isNullable = true;
 
   template <typename ReceiverPtr, typename... RunArgs>
-  static R invoke(R (Receiver::*method)(Args...), ReceiverPtr&& receiver_ptr, RunArgs&&... args) {
-    return ((*receiver_ptr).*method)(std::forward<RunArgs>(args)...);
+  static R invoke(R (Receiver::*method)(Args...), ReceiverPtr&& receiverPtr, RunArgs&&... args) {
+    return ((*receiverPtr).*method)(std::forward<RunArgs>(args)...);
   }
 };
 
@@ -75,8 +77,9 @@ struct FunctorTraits<R (Receiver::*)(Args...) const> {
   static constexpr bool isNullable = true;
 
   template <typename ReceiverPtr, typename... RunArgs>
-  static R invoke(R (Receiver::*method)(Args...) const, ReceiverPtr&& receiver_ptr, RunArgs&&... args) {
-    return ((*receiver_ptr).*method)(std::forward<RunArgs>(args)...);
+  static R invoke(R (Receiver::*method)(Args...) const, ReceiverPtr&& receiverPtr,
+                  RunArgs&&... args) {
+    return ((*receiverPtr).*method)(std::forward<RunArgs>(args)...);
   }
 };
 
