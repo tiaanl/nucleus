@@ -8,6 +8,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "Allocators/AllocatedTests.cpp"
     "Allocators/AllocatorTests.cpp"
     "Allocators/DebugAllocatorTests.cpp"
+    "AtExitTests.cpp"
     "Containers/ArrayTests.cpp"
     "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
