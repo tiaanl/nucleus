@@ -74,7 +74,7 @@ private:
 template <typename T, typename... Args>
 inline Ptr<T> makePtr(Args&&... args) {
   return Ptr<T>{new T{std::forward<Args>(args)...}};
-};
+}
 
 }  // namespace nu
 
