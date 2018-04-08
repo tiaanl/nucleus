@@ -11,7 +11,7 @@ template <typename R, typename... Args>
 class Callback<R(Args...)> : public detail::CallbackBase {
 public:
   using RunType = R(Args...);
-  using PolymorphicInvoke = R (*)(detail::BindStateBase*, Args&&...);
+  using PolymorphicInvoke = R (*)(detail::BindStateBase*, detail::PassingTraitsType<Args>...);
 
   constexpr Callback() = default;
 

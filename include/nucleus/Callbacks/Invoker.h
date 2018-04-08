@@ -88,8 +88,6 @@ private:
                           std::index_sequence<Indices...>, UnboundArgs&&... unboundArgs) {
     static constexpr bool isMethod = MakeFunctorTraits<Functor>::isMethod;
 
-    using DecayedArgsTuple = std::decay_t<BoundArgsTuple>;
-
     return InvokeHelper<R>::makeItSo(
         std::forward<Functor>(functor),
         unwrap(std::get<Indices>(std::forward<BoundArgsTuple>(bound)))...,
