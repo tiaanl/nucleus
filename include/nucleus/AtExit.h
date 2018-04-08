@@ -4,6 +4,8 @@
 
 #include <stack>
 
+#include "nucleus/Callbacks/Callback.h"
+
 namespace nu {
 
 class AtExit {
@@ -19,6 +21,9 @@ public:
   // Register the specified callback to be called at exit.
   static void registerCallback(AtExitCallbackType callback, void* param);
 
+  // Register the specified `Closure` to be called at exit.
+  static void registerClosure(Closure callback);
+
   // Call the callbacks registered with `registerCallback` in LIFO order.  If is possible to
   // register new callbacks after calling this function.
   static void processCallbacksNow();
@@ -30,14 +35,7 @@ protected:
   explicit AtExit(bool shadow);
 
 private:
-  struct CallbackAndParam {
-    AtExitCallbackType callback;
-    void* param;
-
-    void invoke();
-  };
-
-  using StackType = std::stack<CallbackAndParam>;
+  using StackType = std::stack<Closure>;
 
   StackType m_callbacks;
 

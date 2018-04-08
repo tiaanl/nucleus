@@ -4,6 +4,7 @@
 
 #include "nucleus/Callbacks/CallbackDetail.h"
 #include "nucleus/Callbacks/CallbackForward.h"
+#include "nucleus/Callbacks/PassingTraits.h"
 
 namespace nu {
 

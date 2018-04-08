@@ -1,6 +1,7 @@
 
 #include "nucleus/AtExit.h"
 
+#include "nucleus/Callbacks/Bind.h"
 #include "nucleus/Logging.h"
 
 namespace nu {
@@ -34,7 +35,12 @@ AtExit::~AtExit() {
 // static
 void AtExit::registerCallback(AtExitCallbackType callback, void* param) {
   DCHECK(callback);
-  g_topAtExit->m_callbacks.push({callback, param});
+  registerClosure(bind(callback, param));
+}
+
+// static
+void AtExit::registerClosure(Closure callback) {
+  g_topAtExit->m_callbacks.push(std::move(callback));
 }
 
 // static
@@ -47,8 +53,8 @@ void AtExit::processCallbacksNow() {
   StackType callbacks = std::move(g_topAtExit->m_callbacks);
 
   while (!callbacks.empty()) {
-    CallbackAndParam callback = callbacks.top();
-    callback.invoke();
+    Closure callback = callbacks.top();
+    callback.run();
     callbacks.pop();
   }
 
@@ -58,10 +64,6 @@ void AtExit::processCallbacksNow() {
 AtExit::AtExit(bool shadow) : m_nextAtExit(g_topAtExit) {
   DCHECK(shadow || !g_topAtExit);
   g_topAtExit = this;
-}
-
-void AtExit::CallbackAndParam::invoke() {
-  callback(param);
 }
 
 }  // namespace nu
