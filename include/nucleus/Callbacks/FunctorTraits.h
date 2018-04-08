@@ -100,6 +100,16 @@ struct FunctorTraits<Callback<R(Args...)>> {
 template <typename Functor>
 using MakeFunctorTraits = FunctorTraits<std::decay_t<Functor>>;
 
+template <typename Functor>
+std::enable_if_t<FunctorTraits<Functor>::isNullable, bool> isNull(const Functor& functor) {
+  return !functor;
+}
+
+template <typename Functor>
+std::enable_if_t<!FunctorTraits<Functor>::isNullable, bool> isNull(const Functor&) {
+  return false;
+}
+
 }  // namespace detail
 
 }  // namespace nu

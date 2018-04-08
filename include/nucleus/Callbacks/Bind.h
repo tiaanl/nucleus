@@ -14,14 +14,14 @@ inline Callback<MakeUnboundRunType<Functor, Args...>> bind(Functor&& functor, Ar
   using Invoker = detail::Invoker<BindState, UnboundRunType>;
   using CallbackType = Callback<UnboundRunType>;
 
-  // Store the invoke func into PolymorphicInvoke before casting it to InvokeFuncStorage, so that we can ensure its type
-  // matches to PolymorphicInvoke, to which CallbackType will cast back.
+  // Store the invoke func into PolymorphicInvoke before casting it to InvokeFuncStorage, so that we
+  // can ensure its type matches to PolymorphicInvoke, to which CallbackType will cast back.
   using PolymorphicInvoke = typename CallbackType::PolymorphicInvoke;
   PolymorphicInvoke invokeFunc = &Invoker::run;
 
   using InvokeFuncStorage = detail::BindStateBase::InvokeFuncStorage;
-  return CallbackType(new BindState(reinterpret_cast<InvokeFuncStorage>(invokeFunc), std::forward<Functor>(functor),
-                                    std::forward<Args>(args)...));
+  return CallbackType(new BindState(reinterpret_cast<InvokeFuncStorage>(invokeFunc),
+                                    std::forward<Functor>(functor), std::forward<Args>(args)...));
 }
 
 }  // namespace nu

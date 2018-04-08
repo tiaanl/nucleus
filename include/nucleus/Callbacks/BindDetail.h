@@ -18,15 +18,16 @@ namespace detail {
 
 // BindTypeHelper<>
 
-// Extracts necessary type info from `Functor` and `BoundArgs`.  Used to implement `MakeUnboundRunType` and `bind`.
+// Extracts necessary type info from `Functor` and `BoundArgs`.  Used to implement
+// `MakeUnboundRunType` and `bind`.
 template <typename Functor, typename... BoundArgs>
 struct BindTypeHelper {
   static constexpr size_t numBound = sizeof...(BoundArgs);
   using FunctorTraits = MakeFunctorTraits<Functor>;
 
   // Example:
-  //   When `Functor` is `double (Foo::*)(int, const std::string&)`, and `BoundArgs` is a template pack of
-  //   `Foo*` and `int16_t`:
+  //   When `Functor` is `double (Foo::*)(int, const std::string&)`, and `BoundArgs` is a template
+  //   pack of `Foo*` and `int16_t`:
   //    - RunType is `double(Foo*, int, const std::string&)`
   //    - ReturnType is `double`
   //    - RunParamsList is `TypeList<Foo*, int, const std::string&>`

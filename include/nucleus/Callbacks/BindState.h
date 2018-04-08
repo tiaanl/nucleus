@@ -5,6 +5,7 @@
 #include <tuple>
 
 #include "nucleus/Callbacks/CallbackDetail.h"
+#include "nucleus/Logging.h"
 
 namespace nu {
 
@@ -26,12 +27,6 @@ struct BindState : BindStateBase {
 
 private:
   ~BindState() = default;
-
-#if 0
-  static void destroy(const BindStateBase* self) {
-    delete static_cast<const BindState*>(self);
-  }
-#endif  // 0
 };
 
 }  // namespace detail

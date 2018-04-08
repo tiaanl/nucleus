@@ -20,6 +20,9 @@ public:
 private:
   friend class CallbackBase;
 
+  template <typename Functor, typename... BoundArgs>
+  friend struct BindState;
+
   BindStateBase(InvokeFuncStorage polymorphicInvoke);
 
   ~BindStateBase();
@@ -50,7 +53,7 @@ protected:
 
   explicit CallbackBase(BindStateBase* bindState);
 
-  InvokeFuncStorage getPolymorphicInvoke() {
+  InvokeFuncStorage getPolymorphicInvoke() const {
     return m_bindState->m_polymorphicInvoke;
   }
 

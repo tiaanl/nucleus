@@ -45,6 +45,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/RefCounted.h"
     "include/nucleus/RefCounted.h"
     "include/nucleus/Signals.h"
+    "include/nucleus/Singleton.h"
     "include/nucleus/Streams/FileInputStream.h"
     "include/nucleus/Streams/FileOutputStream.h"
     "include/nucleus/Streams/InputStream.h"

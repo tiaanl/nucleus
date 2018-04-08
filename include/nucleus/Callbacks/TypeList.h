@@ -13,7 +13,8 @@ template <size_t N, typename List>
 struct DropTypeListItemImpl;
 
 template <size_t N, typename T, typename... List>
-struct DropTypeListItemImpl<N, TypeList<T, List...>> : DropTypeListItemImpl<N - 1, TypeList<List...>> {};
+struct DropTypeListItemImpl<N, TypeList<T, List...>>
+  : DropTypeListItemImpl<N - 1, TypeList<List...>> {};
 
 template <typename T, typename... List>
 struct DropTypeListItemImpl<0, TypeList<T, List...>> {
@@ -27,6 +28,8 @@ struct DropTypeListItemImpl<0, TypeList<>> {
 
 template <size_t N, typename List>
 using DropTypeListItem = typename DropTypeListItemImpl<N, List>::Type;
+
+// TakeTypeListItem<>
 
 template <size_t N, typename List, typename... Accum>
 struct TakeTypeListItemImpl;
@@ -45,9 +48,13 @@ struct TakeTypeListItemImpl<0, TypeList<>, Accum...> {
   using Type = TypeList<Accum...>;
 };
 
-// `TakeTypeListItem<3, TypeList<A, B, C, D>>` is evaluated to `TypeList<A, B, C>`.
-template <size_t N, typename List>
-using TakeTypeListItem = typename TakeTypeListItemImpl<N, List>::Type;
+// A type-level function that takes first `N` list items from given `TypeList`.
+//
+// E.g. `TakeTypeListItem<3, TypeList<A, B, C, D>>::Type` is evaluated to `TypeList<A, B, C>`.
+template <size_t n, typename List>
+using TakeTypeListItem = typename TakeTypeListItemImpl<n, List>::Type;
+
+// ConcatTypeList<>
 
 template <typename List1, typename List2>
 struct ConcatTypeListsImpl;

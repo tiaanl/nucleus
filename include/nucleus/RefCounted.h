@@ -16,7 +16,7 @@ public:
   MOVE_DELETE(RefCountedBase);
 
   bool hasOneRef() const {
-    return m_refCount.load(std::memory_order_release) == 1;
+    return m_refCount.load(std::memory_order_relaxed) == 1;
   }
 
   void addRef() const {

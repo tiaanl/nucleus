@@ -21,6 +21,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "OptionalTests.cpp"
     "RefCountedTests.cpp"
     "SignalsTests.cpp"
+    "SingletonTests.cpp"
     "Text/StringTests.cpp"
 
     "Callbacks/CallbackTests.cpp"

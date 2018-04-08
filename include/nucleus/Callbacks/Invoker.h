@@ -9,6 +9,19 @@ namespace nu {
 
 namespace detail {
 
+// InvokeHelper<>
+
+template <typename R>
+struct InvokeHelper {
+  template <typename Functor, typename... RunArgs>
+  static inline R makeItSo(Functor&& functor, RunArgs&&... args) {
+    using Traits = MakeFunctorTraits<Functor>;
+    return Traits::invoke(std::forward<Functor>(functor), std::forward<RunArgs>(args)...);
+  }
+};
+
+// Invoker<>
+
 template <typename StorageType, typename UnboundRunType>
 struct Invoker;
 
@@ -17,22 +30,23 @@ struct Invoker<StorageType, R(UnboundArgs...)> {
   static R run(BindStateBase* base, PassingTraitsType<UnboundArgs>... unboundArgs) {
     const StorageType* storage = static_cast<StorageType*>(base);
     static constexpr size_t numBoundArgs = std::tuple_size<decltype(storage->m_boundArgs)>::value;
-    return runImpl(storage->m_functor, storage->m_boundArgs, std::make_index_sequence<numBoundArgs>(),
+    return runImpl(storage->m_functor, storage->m_boundArgs,
+                   std::make_index_sequence<numBoundArgs>(),
                    std::forward<UnboundArgs>(unboundArgs)...);
   }
 
 private:
   template <typename Functor, typename BoundArgsTuple, size_t... Indices>
-  static inline R runImpl(Functor&& functor, BoundArgsTuple&& bound, std::index_sequence<Indices...>,
-                          UnboundArgs&&... unboundArgs) {
+  static inline R runImpl(Functor&& functor, BoundArgsTuple&& bound,
+                          std::index_sequence<Indices...>, UnboundArgs&&... unboundArgs) {
     static constexpr bool isMethod = MakeFunctorTraits<Functor>::isMethod;
 
     using DecayedArgsTuple = std::decay_t<BoundArgsTuple>;
-    static constexpr bool isWeakCall = IsWeakMethod<isMethod, std::tuple_element_t<Indices, DecayedArgsTuple>...>();
 
-    return InvokeHelper<isWeakCall, R>::makeItSo(std::forward<Functor>(functor),
-                                                 unwrap(std::get<Indices>(std::forward<BoundArgsTuple>(bound)))...,
-                                                 std::forward<UnboundArgs>(unboundArgs)...);
+    return InvokeHelper<R>::makeItSo(
+        std::forward<Functor>(functor),
+        unwrap(std::get<Indices>(std::forward<BoundArgsTuple>(bound)))...,
+        std::forward<UnboundArgs>(unboundArgs)...);
   }
 };
 
