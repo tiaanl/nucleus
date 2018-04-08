@@ -37,7 +37,7 @@ F64 getHighPerformanceTimerFrequency() {
 #elif OS(POSIX)
   struct timespec specRate;
   clock_getres(CLOCKID, &specRate);
-  rate = 1000000.0 * specRate.tv_nsec;
+  rate = 1000.0 * specRate.tv_nsec;
 #else
 #error Operating system not supported
 #endif
@@ -64,7 +64,7 @@ F64 getCurrentHighPerformanceTick() {
 #elif OS(POSIX)
   struct timespec specTime;
   clock_gettime(CLOCKID, &specTime);
-  now = static_cast<F64>(specTime.tv_sec) * 1000000000.0 + static_cast<F64>(specTime.tv_nsec);
+  now = static_cast<F64>(specTime.tv_sec) * 1000000.0 + static_cast<F64>(specTime.tv_nsec);
 #else
 #error Operating system not supported
 #endif
