@@ -1,33 +1,8 @@
 language: cpp
 
-sudo: true
-
-matrix:
-  include:
-
-    # Linux C++14 GCC builds
-    - os: linux
-      compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-6']
-      env: CXX='g++-6' CC='gcc-6' BUILD_TYPE='Release' VERBOSE=1
-
-    # Linux C++14 Clang builds
-    - os: linux
-      compiler: clang
-      addons:
-        apt:
-          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8']
-      env: CXX='g++-6' CC='gcc-6' COMPILER='clang++-3.8' BUILD_TYPE='Release' VERBOSE=1
-
-    # OSX C++14 Clang Builds
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: BUILD_TYPE='Release' VERBOSE=1
+compiler:
+  - gcc
+  - clang
 
 before_script:
   - mkdir build
