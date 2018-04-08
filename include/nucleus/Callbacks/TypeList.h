@@ -6,6 +6,8 @@ namespace nu {
 
 namespace detail {
 
+// DropTypeListItem<>
+
 template <typename... Types>
 struct TypeList {};
 
@@ -51,8 +53,8 @@ struct TakeTypeListItemImpl<0, TypeList<>, Accum...> {
 // A type-level function that takes first `N` list items from given `TypeList`.
 //
 // E.g. `TakeTypeListItem<3, TypeList<A, B, C, D>>::Type` is evaluated to `TypeList<A, B, C>`.
-template <size_t n, typename List>
-using TakeTypeListItem = typename TakeTypeListItemImpl<n, List>::Type;
+template <size_t N, typename List>
+using TakeTypeListItem = typename TakeTypeListItemImpl<N, List>::Type;
 
 // ConcatTypeList<>
 

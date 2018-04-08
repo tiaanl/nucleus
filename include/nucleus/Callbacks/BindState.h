@@ -18,7 +18,7 @@ struct BindState : BindStateBase {
   explicit BindState(BindStateBase::InvokeFuncStorage invokeFunc, ForwardFunctor&& functor,
                      ForwardBoundArgs&&... boundArgs)
     : BindStateBase(invokeFunc), m_functor(std::forward<ForwardFunctor>(functor)),
-      m_boundArgs(std::forward<ForwardBoundArgs>(bound_args)...) {
+      m_boundArgs(std::forward<ForwardBoundArgs>(boundArgs)...) {
     DCHECK(!isNull(m_functor));
   }
 

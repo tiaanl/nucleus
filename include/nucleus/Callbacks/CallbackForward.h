@@ -7,7 +7,7 @@ namespace nu {
 template <typename Signature>
 class Callback;
 
-using Closure = Callback<void(void)>;
+using Closure = Callback<void()>;
 
 }  // namespace nu
 

@@ -17,7 +17,8 @@ inline Callback<MakeUnboundRunType<Functor, Args...>> bind(Functor&& functor, Ar
   // Store the invoke func into PolymorphicInvoke before casting it to InvokeFuncStorage, so that we
   // can ensure its type matches to PolymorphicInvoke, to which CallbackType will cast back.
   using PolymorphicInvoke = typename CallbackType::PolymorphicInvoke;
-  PolymorphicInvoke invokeFunc = &Invoker::run;
+  // TODO(tiaan): There shouldn't be a reinterpret_cast here
+  PolymorphicInvoke invokeFunc = reinterpret_cast<PolymorphicInvoke>(&Invoker::run);
 
   using InvokeFuncStorage = detail::BindStateBase::InvokeFuncStorage;
   return CallbackType(new BindState(reinterpret_cast<InvokeFuncStorage>(invokeFunc),

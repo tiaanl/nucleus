@@ -4,6 +4,8 @@
 #include "nucleus/Callbacks/Bind.h"
 #include "nucleus/Callbacks/Callback.h"
 
+#include "nucleus/Win/WindowsMixin.h"
+
 namespace nu {
 
 namespace {
@@ -29,8 +31,11 @@ TEST_CASE("Callbacks: closure") {
 }
 
 TEST_CASE("Callbacks: with arguments") {
-  Callback<void()> cb1 = bind(&doNothing, 10);
+  Callback<void()> cb1 = bind(&doSomethingWith, 10);
   cb1.run();
+
+  Callback<void(int)> cb2 = bind(&doSomethingWith);
+  cb2.run(20);
 }
 
 }  // namespace nu

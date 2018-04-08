@@ -20,6 +20,53 @@ struct InvokeHelper {
   }
 };
 
+// unwrap()
+
+template <typename>
+struct BindUnwrapTraits {
+  template <typename T>
+  static T&& unwrap(T&& o) {
+    return std::forward<T>(o);
+  }
+};
+
+#if 0
+template <typename T>
+struct BindUnwrapTraits<internal::UnretainedWrapper<T>> {
+  static T* Unwrap(const internal::UnretainedWrapper<T>& o) { return o.get(); }
+};
+
+template <typename T>
+struct BindUnwrapTraits<internal::ConstRefWrapper<T>> {
+  static const T& Unwrap(const internal::ConstRefWrapper<T>& o) {
+    return o.get();
+  }
+};
+
+template <typename T>
+struct BindUnwrapTraits<internal::RetainedRefWrapper<T>> {
+  static T* Unwrap(const internal::RetainedRefWrapper<T>& o) { return o.get(); }
+};
+
+template <typename T>
+struct BindUnwrapTraits<internal::OwnedWrapper<T>> {
+  static T* Unwrap(const internal::OwnedWrapper<T>& o) { return o.get(); }
+};
+
+template <typename T>
+struct BindUnwrapTraits<internal::PassedWrapper<T>> {
+  static T Unwrap(const internal::PassedWrapper<T>& o) { return o.Take(); }
+};
+#endif  // 0
+
+template <typename T>
+using Unwrapper = BindUnwrapTraits<std::decay_t<T>>;
+
+template <typename T>
+decltype(auto) unwrap(T&& o) {
+  return Unwrapper<T>::unwrap(std::forward<T>(o));
+}
+
 // Invoker<>
 
 template <typename StorageType, typename UnboundRunType>

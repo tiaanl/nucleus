@@ -23,18 +23,19 @@ namespace detail {
 template <typename Functor, typename... BoundArgs>
 struct BindTypeHelper {
   static constexpr size_t numBound = sizeof...(BoundArgs);
+
   using FunctorTraits = MakeFunctorTraits<Functor>;
 
   // Example:
   //   When `Functor` is `double (Foo::*)(int, const std::string&)`, and `BoundArgs` is a template
   //   pack of `Foo*` and `int16_t`:
-  //    - RunType is `double(Foo*, int, const std::string&)`
-  //    - ReturnType is `double`
-  //    - RunParamsList is `TypeList<Foo*, int, const std::string&>`
-  //    - BoundParamsList is `TypeList<Foo*, int>`
-  //    - UnboundParamsList is `TypeList<const std::string&>`
-  //    - BoundArgsList is `TypeList<Foo*, int16_t>`
-  //    - UnboundRunType is `double(const std::string&)`
+  //     - RunType is `double(Foo*, int, const std::string&)`
+  //     - ReturnType is `double`
+  //     - RunParamsList is `TypeList<Foo*, int, const std::string&>`
+  //     - BoundParamsList is `TypeList<Foo*, int>`
+  //     - UnboundParamsList is `TypeList<const std::string&>`
+  //     - BoundArgsList is `TypeList<Foo*, int16_t>`
+  //     - UnboundRunType is `double(const std::string&)`
 
   using RunType = typename FunctorTraits::RunType;
   using ReturnType = ExtractReturnType<RunType>;
