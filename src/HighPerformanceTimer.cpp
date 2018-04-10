@@ -33,7 +33,7 @@ F64 getHighPerformanceTimerFrequency() {
 #elif OS(MACOSX)
   mach_timebase_info_data_t rate_nsec;
   mach_timebase_info(&rate_nsec);
-  rate = 1000000.0 * rate_nsec.numer / rate_nsec.denom;
+  rate = 1000.0 * rate_nsec.numer / rate_nsec.denom;
 #elif OS(POSIX)
   struct timespec specRate;
   clock_getres(CLOCKID, &specRate);
