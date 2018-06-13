@@ -5,30 +5,30 @@
 namespace nu {
 
 template <typename T>
-class Ref {
+class ScopedRefPtr {
 public:
-  Ref() : m_ptr(nullptr) {}
+  ScopedRefPtr() : m_ptr(nullptr) {}
 
-  Ref(T* ptr) : m_ptr(ptr) {
+  ScopedRefPtr(T* ptr) : m_ptr(ptr) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
-  Ref(const Ref<T>& other) : m_ptr(other.m_ptr) {
+  ScopedRefPtr(const ScopedRefPtr<T>& other) : m_ptr(other.m_ptr) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
   template <typename U>
-  Ref(const Ref<U>& other) : m_ptr(other.get()) {
+  ScopedRefPtr(const ScopedRefPtr<U>& other) : m_ptr(other.get()) {
     if (m_ptr) {
       m_ptr->addRef();
     }
   }
 
-  ~Ref() {
+  ~ScopedRefPtr() {
     if (m_ptr) {
       m_ptr->release();
     }
@@ -50,7 +50,7 @@ public:
     return m_ptr;
   }
 
-  Ref<T>& operator=(T* ptr) {
+  ScopedRefPtr<T>& operator=(T* ptr) {
     // addRef() first so that self assignment works.
     if (ptr) {
       ptr->addRef();
@@ -66,12 +66,12 @@ public:
     return *this;
   }
 
-  Ref<T>& operator=(const Ref<T>& other) {
+  ScopedRefPtr<T>& operator=(const ScopedRefPtr<T>& other) {
     return *this = other.m_ptr;
   }
 
   template <typename U>
-  Ref<T>& operator=(const Ref<U>& other) {
+  ScopedRefPtr<T>& operator=(const ScopedRefPtr<U>& other) {
     return *this = other.get();
   }
 

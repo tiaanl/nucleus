@@ -3,14 +3,14 @@
 #define NUCLEUS_CALLBACKS_CALLBACK_DETAIL_H_
 
 #include "nucleus/Macros.h"
-#include "nucleus/Ref.h"
-#include "nucleus/RefCounted.h"
+#include "nucleus/Memory/RefCountedPtr.h"
+#include "nucleus/Memory/ScopedRefPtr.h"
 
 namespace nu {
 
 namespace detail {
 
-class BindStateBase : public RefCounted<BindStateBase> {
+class BindStateBase : public RefCountedPtr<BindStateBase> {
 public:
   COPY_DELETE(BindStateBase);
   MOVE_DELETE(BindStateBase);
@@ -18,6 +18,7 @@ public:
   using InvokeFuncStorage = void (*)();
 
 private:
+  friend struct nu::detail::DeletingRefCountedTraits<BindStateBase>;
   friend class CallbackBase;
 
   template <typename Functor, typename... BoundArgs>
@@ -57,7 +58,7 @@ protected:
     return m_bindState->m_polymorphicInvoke;
   }
 
-  Ref<BindStateBase> m_bindState;
+  ScopedRefPtr<BindStateBase> m_bindState;
 };
 
 }  // namespace detail

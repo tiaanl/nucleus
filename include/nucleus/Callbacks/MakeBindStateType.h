@@ -44,15 +44,16 @@ private:
 #endif  // 0
 
 public:
-  using Type = BindState<std::decay_t<Functor>,
-                         std::conditional_t<std::is_pointer<DecayedReceiver>::value,
-                                            Ref<std::remove_pointer_t<DecayedReceiver>>, DecayedReceiver>,
-                         std::decay_t<BoundArgs>...>;
+  using Type = BindState<
+      std::decay_t<Functor>,
+      std::conditional_t<std::is_pointer<DecayedReceiver>::value,
+                         ScopedRefPtr<std::remove_pointer_t<DecayedReceiver>>, DecayedReceiver>,
+      std::decay_t<BoundArgs>...>;
 };
 
 template <typename Functor, typename... BoundArgs>
-using MakeBindStateType =
-    typename MakeBindStateTypeImpl<MakeFunctorTraits<Functor>::isMethod, Functor, BoundArgs...>::Type;
+using MakeBindStateType = typename MakeBindStateTypeImpl<MakeFunctorTraits<Functor>::isMethod,
+                                                         Functor, BoundArgs...>::Type;
 
 }  // namespace detail
 
