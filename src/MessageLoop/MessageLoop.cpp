@@ -3,6 +3,8 @@
 #include "nucleus/Logging.h"
 #include "nucleus/MessageLoop/MessagePumpDefault.h"
 
+#include <utility>
+
 namespace nu {
 
 namespace {
@@ -22,7 +24,7 @@ MessageLoop::MessageLoop() {
   m_messagePump.reset(new MessagePumpDefault);
 }
 
-MessageLoop::MessageLoop(Ptr<MessagePump>&& messagePump) : m_messagePump{std::move(messagePump)} {
+MessageLoop::MessageLoop(Ptr<MessagePump> messagePump) : m_messagePump{std::move(messagePump)} {
   DCHECK(m_messagePump.get());
 
   init();
@@ -41,8 +43,8 @@ bool MessageLoop::isRunning() const {
   return m_isRunning;
 }
 
-void MessageLoop::postTask(Ptr<Task> task) {
-  m_incomingTaskQueue.push(std::move(task));
+void MessageLoop::postTask(Closure task) {
+  m_taskQueue.push(std::move(task));
 }
 
 void MessageLoop::run() {
@@ -58,18 +60,16 @@ void MessageLoop::quitWhenIdle() {
 bool MessageLoop::doWork() {
   for (;;) {
     // Load incoming work into the task queue.
-    reloadTaskQueue();
     if (m_taskQueue.empty()) {
       break;
     }
 
     // Run all the tasks we currently have in the queue.
     do {
-      Ptr<Task> task = std::move(m_taskQueue.front());
+      Closure task = std::move(m_taskQueue.front());
       m_taskQueue.pop();
 
-      task->run();
-
+      task.run();
     } while (!m_taskQueue.empty());
   }
 
@@ -95,12 +95,6 @@ void MessageLoop::init() {
 
   // This `MessageLoop` is not the owner of this thread.
   g_messageLoopOnThisThread = this;
-}
-
-void MessageLoop::reloadTaskQueue() {
-  if (m_taskQueue.empty()) {
-    std::swap(m_taskQueue, m_incomingTaskQueue);
-  }
 }
 
 }  // namespace nu

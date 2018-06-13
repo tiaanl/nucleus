@@ -4,9 +4,9 @@
 
 #include <queue>
 
+#include "nucleus/Callbacks/Callback.h"
 #include "nucleus/Memory/Ptr.h"
 #include "nucleus/MessageLoop/MessagePump.h"
-#include "nucleus/MessageLoop/Task.h"
 
 namespace nu {
 
@@ -19,31 +19,31 @@ public:
   MessageLoop();
 
   // Constructs a `MessageLoop` with the given `MessagePump`.
-  explicit MessageLoop(Ptr<MessagePump>&& messagePump);
+  explicit MessageLoop(Ptr<MessagePump> messagePump);
 
   // Destroy the `MessageLoop` and delete all the tasks still enqueued.
-  virtual ~MessageLoop();
+  ~MessageLoop() override;
 
   // Returns `true` if the `MessageLoop` is currently running.
   // NOTE: May only be called from the thread that invoked the `run` function.
   bool isRunning() const;
 
-  // Invoke the task asynchronously from within a `MessageLoop` some time in the future.  The `MessageLoop` takes
-  // ownership of the `Task` and destroyes it after it has been invoked.
-  // NOTE: This function may be called from any thread.  The `task` will be invoked on the thread that executes
-  // `MessageLoop::run()`.
-  void postTask(Ptr<Task> task);
+  // Invoke the task asynchronously from within a `MessageLoop` some time in the future.  The
+  // `MessageLoop` takes ownership of the `Task` and destroyes it after it has been invoked. NOTE:
+  // This function may be called from any thread.  The `task` will be invoked on the thread that
+  // executes `MessageLoop::run()`.
+  void postTask(Closure task);
 
   // Run the message loop and only returns when the `MessageLoop` is quit.
   void run();
 
-  // Process all enqueued tasks, window messages, etc., but don't wait/sleep.  Return as soon as all tasks that can be
-  // run are finished.
+  // Process all enqueued tasks, window messages, etc., but don't wait/sleep.  Return as soon as all
+  // tasks that can be run are finished.
   void runUntilIdle();
 
-  // Signals the `run` function to return when it becomes idle.  It will continue to process tasks as long as they are
-  // enqueued.
-  // NOTE: May only be called from the thread that invoked the `run` function.
+  // Signals the `run` function to return when it becomes idle.  It will continue to process tasks
+  // as long as they are enqueued. NOTE: May only be called from the thread that invoked the `run`
+  // function.
   void quitWhenIdle();
 
 protected:
@@ -55,7 +55,6 @@ private:
   bool doIdleWork() override;
 
   void init();
-  void reloadTaskQueue();
 
   // This will be set to true while the `MessageLoop` is running.
   bool m_isRunning = false;
@@ -63,8 +62,8 @@ private:
   // If this is set to true, then the message loop will return on the next idle.
   bool m_quitWhenIdle = false;
 
-  std::queue<Ptr<Task>> m_incomingTaskQueue;
-  std::queue<Ptr<Task>> m_taskQueue;
+  // Queue of tasks that need to be executed.
+  std::queue<Closure> m_taskQueue;
 };
 
 }  // namespace nu

@@ -40,7 +40,6 @@ set(nucleus_HEADER_FILES
     "include/nucleus/MessageLoop/MessageLoop.h"
     "include/nucleus/MessageLoop/MessagePump.h"
     "include/nucleus/MessageLoop/MessagePumpDefault.h"
-    "include/nucleus/MessageLoop/Task.h"
     "include/nucleus/Optional.h"
     "include/nucleus/Ref.h"
     "include/nucleus/RefCounted.h"
@@ -116,7 +115,7 @@ target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Enable warnings and multi-process compilation.
-    target_compile_options(nucleus PUBLIC /W4 /MP)
+    target_compile_options(nucleus PUBLIC /W3 /MP)
 
     # Enable memory debugging.
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")

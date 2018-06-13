@@ -9,7 +9,8 @@
 
 namespace nu {
 
-WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, USize size) : m_data(data), m_size(size) {}
+WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, USize size)
+  : m_data(data), m_size(size) {}
 
 WrappedMemoryInputStream::WrappedMemoryInputStream(const nu::DynamicArray<I8>& data)
   : m_data(data.getData()), m_size(data.getSize()) {}
@@ -18,7 +19,8 @@ WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getLength() {
   return m_size;
 }
 
-WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(void* buffer, SizeType bytesToRead) {
+WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(void* buffer,
+                                                                  SizeType bytesToRead) {
   SizeType num = std::min(bytesToRead, getBytesRemaining());
 
   std::memcpy(buffer, static_cast<const U8*>(m_data) + m_currentPosition, static_cast<USize>(num));

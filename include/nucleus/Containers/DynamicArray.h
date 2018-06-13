@@ -23,10 +23,10 @@ public:
 
   // Construct/destruct
 
-  DynamicArray() : m_data(nullptr), m_size(0), m_allocated(0) {}
+  DynamicArray() = default;
 
-  DynamicArray(const DynamicArray& other) : m_data(nullptr), m_size(other.m_size), m_allocated(0) {
-    ensureAllocated(m_size, false);
+  DynamicArray(const DynamicArray& other) : m_size(other.m_size) {
+    ensureAllocated(m_size, DiscardOldData);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
   }
 
@@ -48,7 +48,7 @@ public:
     m_size = other.m_size;
     m_allocated = 0;
 
-    ensureAllocated(m_size, false);
+    ensureAllocated(m_size, DiscardOldData);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
 
     return *this;
@@ -70,6 +70,10 @@ public:
 
   SizeType getSize() const {
     return m_size;
+  }
+
+  SizeType getAllocated() const {
+    return m_allocated;
   }
 
   bool isEmpty() const {
@@ -104,15 +108,15 @@ public:
 
   // Push
 
-  void pushBack(const ElementType& element) {
-    ensureAllocated(m_size + 1, true);
+  void pushBack(ElementType element) {
+    ensureAllocated(m_size + 1, KeepOldData);
 
     m_data[m_size++] = element;
   }
 
   template <typename... Args>
   void emplaceBack(Args&&... args) {
-    ensureAllocated(m_size + 1, true);
+    ensureAllocated(m_size + 1, KeepOldData);
 
     new (&m_data[m_size++]) ElementType{std::forward<Args>(args)...};
   }
@@ -155,16 +159,16 @@ public:
       return;
     }
 
-    ensureAllocated(size, true);
+    ensureAllocated(size, KeepOldData);
   }
 
   void resize(SizeType newSize) {
-    ensureAllocated(newSize, true);
+    ensureAllocated(newSize, KeepOldData);
     m_size = newSize;
   }
 
   void resize(SizeType newSize, const ElementType& fillValue) {
-    ensureAllocated(newSize, true);
+    ensureAllocated(newSize, KeepOldData);
 
     for (SizeType i = m_size; i < newSize; ++i) {
       m_data[i] = fillValue;
@@ -196,19 +200,26 @@ public:
   }
 
 private:
-  void ensureAllocated(SizeType newSize, bool keepOld) {
-    if (newSize > m_allocated) {
-      allocateData(std::max<SizeType>(newSize << 1, 1 << 4), keepOld);
+  enum KeepOld { KeepOldData = true, DiscardOldData = false };
+
+  // Ensure that we can accommodate `size` elements.
+  void ensureAllocated(SizeType size, KeepOld keepOld) {
+    if (size > m_allocated) {
+      // We take the maximum number between 16 or twice our current size.
+      allocateData(std::max<SizeType>(size << 1, 1 << 4), keepOld);
     }
   }
 
-  void allocateData(SizeType size, bool keepOld) {
+  void allocateData(SizeType size, KeepOld keepOld) {
     const USize oldSizeInBytes = m_size * sizeof(ElementType);
+    const USize newSizeInBytes = size * sizeof(ElementType);
 
-    auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(size * sizeof(ElementType)));
+    auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(newSizeInBytes));
 
+    // If we have a previously alloced buffer, then discard it, after copying it we should keep the
+    // old data.
     if (m_data) {
-      if (keepOld) {
+      if (keepOld == KeepOldData) {
         ::memcpy(newData, m_data, oldSizeInBytes);
       }
 
@@ -227,16 +238,16 @@ private:
       }
 
       getDefaultAllocator()->free(m_data, m_allocated * sizeof(ElementType));
-    }
 
-    m_data = nullptr;
-    m_size = 0;
-    m_allocated = 0;
+      m_data = nullptr;
+      m_size = 0;
+      m_allocated = 0;
+    }
   }
 
-  ElementType* m_data;
-  SizeType m_size;
-  SizeType m_allocated;
+  ElementType* m_data = nullptr;
+  SizeType m_size = 0;
+  SizeType m_allocated = 0;
 };
 
 }  // namespace nu

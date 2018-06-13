@@ -12,7 +12,8 @@
 namespace nu {
 
 InputStream::SizeType InputStream::getBytesRemaining() {
-  DCHECK(getPosition() <= getLength()) << "The position should never go over the length of the stream";
+  DCHECK(getPosition() <= getLength())
+      << "The position should never go over the length of the stream";
 
   return getLength() - getPosition();
 }
@@ -58,7 +59,8 @@ I64 InputStream::readInt64() {
 }
 
 float InputStream::readFloat() {
-  static_assert(sizeof(I32) == sizeof(float), "Size of int32 and float must match for the union to work.");
+  static_assert(sizeof(I32) == sizeof(float),
+                "Size of int32 and float must match for the union to work.");
 
   union {
     I32 asInt;
@@ -70,7 +72,8 @@ float InputStream::readFloat() {
 }
 
 double InputStream::readDouble() {
-  static_assert(sizeof(I64) == sizeof(double), "Size of int64 and float must match for the union to work.");
+  static_assert(sizeof(I64) == sizeof(double),
+                "Size of int64 and float must match for the union to work.");
 
   union {
     I64 asInt;
@@ -130,13 +133,15 @@ std::string InputStream::ReadString() {
 void InputStream::skipNextBytes(SizeType numBytesToSkip) {
   enum { BUFFERED_SIZE_TO_SKIP = 16384 };
 
-  const SizeType skipBufferSize = std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
+  const SizeType skipBufferSize =
+      std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
 
   nu::DynamicArray<I8> temp;
   temp.resize(skipBufferSize);
 
   while (numBytesToSkip != 0 && !isExhausted()) {
-    numBytesToSkip -= read(temp.getData(), std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
+    numBytesToSkip -= read(temp.getData(),
+                           std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
   }
 }
 

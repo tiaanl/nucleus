@@ -44,4 +44,10 @@ void MessagePumpDefault::scheduleWork() {
   m_waitForWork.notify_one();
 }
 
+#if 0
+void MessagePumpDefault::scheduleDelayedWork(const MessagePump::TimePoint& delayedWorkTime) {
+  m_delayedWorkTime = delayedWorkTime;
+}
+#endif  // 0
+
 }  // namespace nu

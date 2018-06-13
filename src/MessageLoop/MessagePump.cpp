@@ -3,8 +3,6 @@
 
 namespace nu {
 
-MessagePump::Delegate::~Delegate() = default;
-
 MessagePump::MessagePump() = default;
 
 MessagePump::~MessagePump() = default;

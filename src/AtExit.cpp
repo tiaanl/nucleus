@@ -9,7 +9,7 @@ namespace nu {
 namespace {
 
 // This is the top-most `AtExit` instance.
-static AtExit* g_topAtExit = nullptr;
+AtExit* g_topAtExit = nullptr;
 
 }  // namespace
 

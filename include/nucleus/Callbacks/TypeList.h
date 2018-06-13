@@ -2,6 +2,8 @@
 #ifndef NUCLEUS_CALLBACKS_TYPE_LIST_H_
 #define NUCLEUS_CALLBACKS_TYPE_LIST_H_
 
+#include <cstddef>
+
 namespace nu {
 
 namespace detail {

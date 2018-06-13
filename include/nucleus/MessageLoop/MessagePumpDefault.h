@@ -22,10 +22,14 @@ public:
   void run(Delegate* delegate) override;
   void quit() override;
   void scheduleWork() override;
+  // void scheduleDelayedWork(const TimePoint& delayedWorkTime) override;
 
 private:
   // This flag is set to `false` when `run` should return.
   bool m_keepRunning = true;
+
+  // The time at which we should call `doDelayedWork`.
+  TimePoint m_delayedWorkTime;
 
   // Used to sleep until there is more work to do.
   std::mutex m_sleep;

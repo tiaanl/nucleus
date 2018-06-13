@@ -9,7 +9,7 @@
 namespace nu {
 
 TEST_CASE("basic") {
-  nu::DynamicArray<U8> buffer;
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
 
   REQUIRE(buffer.getSize() == static_cast<USize>(1));
@@ -17,11 +17,11 @@ TEST_CASE("basic") {
 }
 
 TEST_CASE("copy construct") {
-  nu::DynamicArray<U32> buffer1;
+  nu::DynamicArray<U64> buffer1;
   buffer1.pushBack(10);
   buffer1.pushBack(20);
 
-  nu::DynamicArray<U32> buffer2{buffer1};
+  nu::DynamicArray<U64> buffer2{buffer1};
 
   REQUIRE(buffer1.getSize() == buffer2.getSize());
   REQUIRE(buffer1[0] == buffer2[0]);
@@ -29,11 +29,11 @@ TEST_CASE("copy construct") {
 }
 
 TEST_CASE("copy assignment") {
-  nu::DynamicArray<U32> buffer1;
+  nu::DynamicArray<U64> buffer1;
   buffer1.pushBack(10);
   buffer1.pushBack(20);
 
-  nu::DynamicArray<U32> buffer2;
+  nu::DynamicArray<U64> buffer2;
   REQUIRE(buffer2.getSize() == 0);
 
   buffer2 = buffer1;
@@ -44,11 +44,11 @@ TEST_CASE("copy assignment") {
 }
 
 TEST_CASE("move construct") {
-  nu::DynamicArray<U32> buffer;
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
 
-  nu::DynamicArray<U32> buffer2{std::move(buffer)};
+  nu::DynamicArray<U64> buffer2{std::move(buffer)};
 
   REQUIRE(buffer.getSize() == 0);
   REQUIRE(buffer2.getSize() == 2);
@@ -57,11 +57,11 @@ TEST_CASE("move construct") {
 }
 
 TEST_CASE("move assignment") {
-  nu::DynamicArray<I32> buffer;
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
 
-  nu::DynamicArray<I32> buffer2;
+  nu::DynamicArray<U64> buffer2;
   REQUIRE(buffer2.getSize() == 0);
 
   buffer2 = std::move(buffer);
@@ -177,20 +177,20 @@ TEST_CASE("create and destroy elements") {
   REQUIRE(LifetimeType::copies == 1);
 }
 
-void dynamicArrayWithoutConst(nu::DynamicArray<U32>& buffer) {
+void dynamicArrayWithoutConst(nu::DynamicArray<U64>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
-void dynamicArrayWithConst(const nu::DynamicArray<U32>& buffer) {
+void dynamicArrayWithConst(const nu::DynamicArray<U64>& buffer) {
   for (USize i = 0; i < buffer.getSize(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
-TEST_CASE("RangedBasedForLoops") {
-  nu::DynamicArray<U32> buffer;
+TEST_CASE("can use range-based for loops") {
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
   buffer.pushBack(30);
@@ -200,7 +200,7 @@ TEST_CASE("RangedBasedForLoops") {
 }
 
 TEST_CASE("remove single element") {
-  nu::DynamicArray<I32> buffer;
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
   buffer.pushBack(30);
@@ -237,7 +237,7 @@ TEST_CASE("remove single element") {
   }
 }
 
-TEST_CASE("RemoveCallsDestructor") {
+TEST_CASE("remove calls desctructor") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
@@ -254,7 +254,7 @@ TEST_CASE("RemoveCallsDestructor") {
 }
 
 TEST_CASE("remove range of elements") {
-  nu::DynamicArray<I32> buffer;
+  nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
   buffer.pushBack(20);
   buffer.pushBack(30);
@@ -329,7 +329,7 @@ TEST_CASE("remove range of elements") {
   }
 }
 
-TEST_CASE("RemoveRangeCallsDestructors") {
+TEST_CASE("remove range calls destructors") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
@@ -345,7 +345,7 @@ TEST_CASE("RemoveRangeCallsDestructors") {
   REQUIRE(LifetimeType::copies == 0);
 }
 
-TEST_CASE("Clear") {
+TEST_CASE("clears elements and calls destructors") {
   LifetimeType::reset();
 
   nu::DynamicArray<LifetimeType> buffer;
