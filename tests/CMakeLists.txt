@@ -16,7 +16,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "HighPerformanceTimerTests.cpp"
     "LoggingTests.cpp"
     "LoggingTests.cpp"
-    "Memory/PtrTests.cpp"
+    "Memory/ScopedPtrTests.cpp"
     "MessageLoop/MessageLoopTests.cpp"
     "OptionalTests.cpp"
     "RefCountedTests.cpp"

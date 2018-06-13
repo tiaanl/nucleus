@@ -5,7 +5,7 @@
 #include <queue>
 
 #include "nucleus/Callbacks/Callback.h"
-#include "nucleus/Memory/Ptr.h"
+#include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/MessageLoop/MessagePump.h"
 
 namespace nu {
@@ -19,7 +19,7 @@ public:
   MessageLoop();
 
   // Constructs a `MessageLoop` with the given `MessagePump`.
-  explicit MessageLoop(Ptr<MessagePump> messagePump);
+  explicit MessageLoop(ScopedPtr<MessagePump> messagePump);
 
   // Destroy the `MessageLoop` and delete all the tasks still enqueued.
   ~MessageLoop() override;
@@ -47,7 +47,7 @@ public:
   void quitWhenIdle();
 
 protected:
-  Ptr<MessagePump> m_messagePump;
+  ScopedPtr<MessagePump> m_messagePump;
 
 private:
   // Override: MessagePump::Delegate

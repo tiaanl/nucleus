@@ -35,7 +35,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/HighPerformanceTimer.h"
     "include/nucleus/Logging.h"
     "include/nucleus/Macros.h"
-    "include/nucleus/Memory/Ptr.h"
+    "include/nucleus/Memory/ScopedPtr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/MessageLoop/MessageLoop.h"
     "include/nucleus/MessageLoop/MessagePump.h"

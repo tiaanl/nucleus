@@ -1,5 +1,5 @@
 
-#include "nucleus/Memory/Ptr.h"
+#include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/Testing.h"
 
 namespace nu {
@@ -39,10 +39,10 @@ I32 S::s_destructed = 0;
 TEST_CASE("default initialized pointers is owning a null") {
   S::reset();
 
-  Ptr<S> p1;
+  ScopedPtr<S> p1;
   REQUIRE(p1.get() == nullptr);
 
-  const Ptr<S> p2;
+  const ScopedPtr<S> p2;
   REQUIRE(p2.get() == nullptr);
 }
 
@@ -50,7 +50,7 @@ TEST_CASE("can own a pointer") {
   S::reset();
 
   {
-    Ptr<S> p1{new S{10}};
+    ScopedPtr<S> p1{new S{10}};
     REQUIRE(p1.get()->i == 10);
   }
 
@@ -62,7 +62,7 @@ TEST_CASE("reset") {
   S::reset();
 
   SECTION("can reset from a pointer") {
-    Ptr<S> p1;
+    ScopedPtr<S> p1;
     REQUIRE(p1.get() == nullptr);
 
     p1.reset(new S{20});
@@ -81,8 +81,8 @@ TEST_CASE("move") {
 
   SECTION("can be moved by construction") {
     {
-      Ptr<S> p1{new S{20}};
-      Ptr<S> p2{std::move(p1)};
+      ScopedPtr<S> p1{new S{20}};
+      ScopedPtr<S> p2{std::move(p1)};
       REQUIRE(p2.get()->i == 20);
     }
 

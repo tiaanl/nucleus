@@ -24,7 +24,8 @@ MessageLoop::MessageLoop() {
   m_messagePump.reset(new MessagePumpDefault);
 }
 
-MessageLoop::MessageLoop(Ptr<MessagePump> messagePump) : m_messagePump{std::move(messagePump)} {
+MessageLoop::MessageLoop(ScopedPtr<MessagePump> messagePump)
+  : m_messagePump{std::move(messagePump)} {
   DCHECK(m_messagePump.get());
 
   init();

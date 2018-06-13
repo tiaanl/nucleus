@@ -9,28 +9,28 @@
 namespace nu {
 
 template <typename T>
-class Ptr {
+class ScopedPtr {
 public:
-  COPY_DELETE(Ptr);
+  COPY_DELETE(ScopedPtr);
 
-  Ptr() : m_ptr(nullptr) {}
+  ScopedPtr() : m_ptr(nullptr) {}
 
-  explicit Ptr(T* other) : m_ptr(other) {}
+  explicit ScopedPtr(T* other) : m_ptr(other) {}
 
-  Ptr(Ptr&& other) noexcept : m_ptr(other.m_ptr) {
+  ScopedPtr(ScopedPtr&& other) noexcept : m_ptr(other.m_ptr) {
     other.m_ptr = nullptr;
   }
 
   template <typename U>
-  Ptr(Ptr<U>&& other) noexcept : m_ptr(other.release()) {}
+  ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr(other.release()) {}
 
-  ~Ptr() {
+  ~ScopedPtr() {
     if (m_ptr) {
       delete m_ptr;
     }
   }
 
-  Ptr& operator=(Ptr&& other) {
+  ScopedPtr& operator=(ScopedPtr&& other) {
     m_ptr = other.m_ptr;
     other.m_ptr = nullptr;
 
@@ -72,8 +72,8 @@ private:
 };
 
 template <typename T, typename... Args>
-inline Ptr<T> makePtr(Args&&... args) {
-  return Ptr<T>{new T{std::forward<Args>(args)...}};
+inline ScopedPtr<T> makeScopedPtr(Args&&... args) {
+  return ScopedPtr<T>{new T{std::forward<Args>(args)...}};
 }
 
 }  // namespace nu
