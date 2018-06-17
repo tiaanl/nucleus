@@ -79,6 +79,11 @@ protected:
   T* m_ptr;
 };
 
+template <typename T, typename... Args>
+inline ScopedRefPtr<T> makeScopedRefPtr(Args&&... args) {
+  return ScopedRefPtr<T>{new T(std::forward<Args>(args)...)};
+}
+
 }  // namespace nu
 
 #endif  // NUCLEUS_MEMORY_REF_H_

@@ -32,12 +32,14 @@ protected:
   ~RefCountedBase() = default;
 
 private:
-  mutable std::atomic<USize> m_refCount{};
+  mutable std::atomic<USize> m_refCount;
 };
 
 template <typename T>
 struct DefaultRefCountedTraits {
-  static void destruct(const T*) {}
+  static void destruct(const T* ptr) {
+    delete ptr;
+  }
 };
 
 }  // namespace detail

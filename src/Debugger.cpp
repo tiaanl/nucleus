@@ -10,7 +10,7 @@
 namespace nu {
 
 void breakDebugger() {
-#if OS(WIN32)
+#if OS(WIN)
   ::__debugbreak();
 #elif OS(POSIX)
 #if ARCH(CPU_ARMEL)

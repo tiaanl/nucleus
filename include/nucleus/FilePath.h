@@ -43,15 +43,17 @@ public:
   // Clear the path.
   void clear();
 
-  // Returns a FilePath corresponding to the directory containing the path named by this object, stripping away the file
-  // component.
+  // Returns a FilePath corresponding to the directory containing the path named by this object,
+  // stripping away the file component.
   FilePath dirName() const;
 
-  // Returns a FilePath corresponding to the last path component of this object, either a file or a directory.
+  // Returns a FilePath corresponding to the last path component of this object, either a file or a
+  // directory.
   FilePath baseName() const;
 
-  // Returns a FilePath by appending a separator and the supplied path component to this object's path.  Append takes
-  // care to avoid adding excessive separators if this object's path already ends with a separator.
+  // Returns a FilePath by appending a separator and the supplied path component to this object's
+  // path.  Append takes care to avoid adding excessive separators if this object's path already
+  // ends with a separator.
   FilePath append(const char* component) const;
   FilePath append(const String& component) const;
   FilePath append(const FilePath& component) const;
