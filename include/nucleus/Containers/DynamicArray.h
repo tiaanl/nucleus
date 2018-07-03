@@ -37,6 +37,10 @@ public:
     other.m_allocated = 0;
   }
 
+  explicit DynamicArray(SizeType initialCapacity) {
+    ensureAllocated(initialCapacity);
+  }
+
   ~DynamicArray() {
     free();
   }
@@ -112,6 +116,17 @@ public:
     ensureAllocated(m_size + 1, KeepOldData);
 
     m_data[m_size++] = element;
+  }
+
+  // Push back a range of elements.
+  void pushBack(Iterator begin, Iterator end) {
+    ensureAllocated(m_size + end - begin, KeepOldData);
+
+    m_size += end - begin;
+
+    for (Iterator i = m_data; begin != end;) {
+      *i++ = *begin++;
+    }
   }
 
   template <typename... Args>

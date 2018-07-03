@@ -25,6 +25,18 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Allocators/TestAllocator.h"
     "include/nucleus/AtExit.h"
     "include/nucleus/ByteOrder.h"
+    "include/nucleus/Callbacks/Bind.h"
+    "include/nucleus/Callbacks/BindDetail.h"
+    "include/nucleus/Callbacks/BindState.h"
+    "include/nucleus/Callbacks/Callback.h"
+    "include/nucleus/Callbacks/CallbackDetail.h"
+    "include/nucleus/Callbacks/CallbackForward.h"
+    "include/nucleus/Callbacks/ExtractReturnType.h"
+    "include/nucleus/Callbacks/FunctorTraits.h"
+    "include/nucleus/Callbacks/MakeBindStateType.h"
+    "include/nucleus/Callbacks/MakeFunctionType.h"
+    "include/nucleus/Callbacks/PassingTraits.h"
+    "include/nucleus/Callbacks/TypeList.h"
     "include/nucleus/Config.h"
     "include/nucleus/Containers/Array.h"
     "include/nucleus/Containers/BitSet.h"
@@ -43,6 +55,9 @@ set(nucleus_HEADER_FILES
     "include/nucleus/MessageLoop/MessagePump.h"
     "include/nucleus/MessageLoop/MessagePumpDefault.h"
     "include/nucleus/Optional.h"
+    "include/nucleus/Parser/ParsedSource.h"
+    "include/nucleus/Parser/Parser.h"
+    "include/nucleus/Parser/Token.h"
     "include/nucleus/RefCounted.h"
     "include/nucleus/Signals.h"
     "include/nucleus/Singleton.h"
@@ -57,19 +72,6 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Text/String.h"
     "include/nucleus/Types.h"
     "include/nucleus/Win/WindowsMixin.h"
-
-    "include/nucleus/Callbacks/Bind.h"
-    "include/nucleus/Callbacks/BindDetail.h"
-    "include/nucleus/Callbacks/BindState.h"
-    "include/nucleus/Callbacks/Callback.h"
-    "include/nucleus/Callbacks/CallbackDetail.h"
-    "include/nucleus/Callbacks/CallbackForward.h"
-    "include/nucleus/Callbacks/ExtractReturnType.h"
-    "include/nucleus/Callbacks/FunctorTraits.h"
-    "include/nucleus/Callbacks/MakeBindStateType.h"
-    "include/nucleus/Callbacks/MakeFunctionType.h"
-    "include/nucleus/Callbacks/PassingTraits.h"
-    "include/nucleus/Callbacks/TypeList.h"
     )
 
 set(nucleus_SOURCE_FILES
@@ -78,6 +80,7 @@ set(nucleus_SOURCE_FILES
     "src/Allocators/GlobalAllocator.cpp"
     "src/Allocators/LinearAllocator.cpp"
     "src/AtExit.cpp"
+    "src/Callbacks/CallbackDetail.cpp"
     "src/Debugger.cpp"
     "src/FilePath.cpp"
     "src/Files.cpp"
@@ -86,6 +89,7 @@ set(nucleus_SOURCE_FILES
     "src/MessageLoop/MessageLoop.cpp"
     "src/MessageLoop/MessagePump.cpp"
     "src/MessageLoop/MessagePumpDefault.cpp"
+    "src/Parser/Parser.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
     "src/Streams/InputStream.cpp"
@@ -93,8 +97,6 @@ set(nucleus_SOURCE_FILES
     "src/Streams/OutputStream.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
-
-    "src/Callbacks/CallbackDetail.cpp"
     )
 
 if(WIN32)
