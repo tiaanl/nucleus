@@ -27,6 +27,7 @@ set(nucleus_TESTS_SOURCE_FILES
     #"Text/StringTests.cpp"
     #"FunctionTests.cpp"
     "Text/StringViewTests.cpp"
+    "Parser/TokenizerTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})
