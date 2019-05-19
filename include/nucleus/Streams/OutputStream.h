@@ -7,7 +7,7 @@ namespace nu {
 
 class OutputStream {
 public:
-  using SizeType = USize;
+  using SizeType = MemSize;
 
   virtual ~OutputStream() = default;
 

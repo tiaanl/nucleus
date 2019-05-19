@@ -15,7 +15,7 @@ ParsedSource Parser::parseStream(InputStream* stream) {
 
   constexpr InputStream::SizeType kTempBufferSize = 1024;
 
-  char temp[kTempBufferSize];
+  I8 temp[kTempBufferSize];
   DynamicArray<I8> source;
 
   // Stream in the source in 1K chunks.
@@ -72,8 +72,8 @@ bool Parser::parseToken() {
 }
 
 bool Parser::parseNumber() {
-  USize startIndex = m_currentIndex;
-  USize length = 0;
+  MemSize startIndex = m_currentIndex;
+  MemSize length = 0;
 
   while (isNumber(m_source[m_currentIndex]) || m_source[m_currentIndex] == '.') {
     ++length;
@@ -88,8 +88,8 @@ bool Parser::parseNumber() {
 }
 
 bool Parser::parseIdentifier() {
-  USize startIndex = m_currentIndex;
-  USize length = 0;
+  MemSize startIndex = m_currentIndex;
+  MemSize length = 0;
 
   while (isAlpha(m_source[m_currentIndex]) || isNumber(m_source[m_currentIndex])) {
     ++length;
@@ -105,8 +105,8 @@ bool Parser::parseIdentifier() {
 
 bool Parser::parseString() {
   // Skip the first quote.
-  USize startIndex = ++m_currentIndex;
-  USize length = 0;
+  MemSize startIndex = ++m_currentIndex;
+  MemSize length = 0;
 
   while (m_source[m_currentIndex] != '"') {
     ++length;
@@ -130,7 +130,7 @@ bool Parser::shouldContinue() const {
   return m_currentIndex < m_source.getSize() && m_source[m_currentIndex] != 0;
 }
 
-void Parser::addToken(TokenType tokenType, USize index, USize length) {
+void Parser::addToken(TokenType tokenType, MemSize index, MemSize length) {
   m_tokens.emplaceBack(tokenType, index, length);
 }
 

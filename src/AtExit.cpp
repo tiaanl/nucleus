@@ -35,7 +35,7 @@ AtExit::~AtExit() {
 // static
 void AtExit::registerCallback(AtExitCallbackType callback, void* param) {
   DCHECK(callback);
-  registerClosure(bind(callback, param));
+  // registerClosure(bind(callback, param));
 }
 
 // static

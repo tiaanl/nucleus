@@ -71,7 +71,7 @@ static const char kExtensionSeparator = '.';
 
 // static
 bool FilePath::isSeparator(String::CharType ch) {
-  for (USize i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
+  for (MemSize i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
     if (ch == kSeparators[i]) {
       return true;
     }

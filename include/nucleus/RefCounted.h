@@ -32,7 +32,7 @@ protected:
   ~RefCountedBase() = default;
 
 private:
-  mutable std::atomic<USize> m_refCount;
+  mutable std::atomic<MemSize> m_refCount;
 };
 
 template <typename T>

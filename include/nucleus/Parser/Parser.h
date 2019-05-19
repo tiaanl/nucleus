@@ -38,7 +38,7 @@ private:
   bool shouldContinue() const;
 
   // Adds a `Token` to the `ParsedSource` result.
-  void addToken(TokenType tokenType, USize index, USize length);
+  void addToken(TokenType tokenType, MemSize index, MemSize length);
 
   static bool isWhitespace(CharType ch);
   static bool isNumber(CharType ch);
@@ -46,7 +46,7 @@ private:
   static bool isPunctuation(CharType ch);
 
   DynamicArray<CharType> m_source;
-  USize m_currentIndex = 0;
+  MemSize m_currentIndex = 0;
   DynamicArray<Token> m_tokens;
 };
 

@@ -11,11 +11,11 @@
 namespace nu {
 
 #if COMPILER(MINGW)
-void* GlobalAllocator::doAllocate(USize bytes, USize) {
+void* GlobalAllocator::doAllocate(MemSize bytes, MemSize) {
   return ::malloc(bytes);
 }
 #elif COMPILER(GCC)
-void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
+void* GlobalAllocator::doAllocate(MemSize bytes, MemSize alignment) {
   // LOG(Info) << "allocating: bytes=" << bytes << ", alignment=" << alignment;
 
   alignment = sizeof(void*);
@@ -43,17 +43,17 @@ void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
   return result;
 }
 #else   // COMPILER(GCC)
-void* GlobalAllocator::doAllocate(USize bytes, USize alignment) {
+void* GlobalAllocator::doAllocate(MemSize bytes, MemSize alignment) {
   return ::_aligned_malloc(bytes, alignment);
 }
 #endif  // COMPILER(GCC)
 
 #if COMPILER(MSVC)
-void GlobalAllocator::doFree(void* p, USize, USize) {
+void GlobalAllocator::doFree(void* p, MemSize, MemSize) {
   ::_aligned_free(p);
 }
 #else
-void GlobalAllocator::doFree(void* p, USize, USize) {
+void GlobalAllocator::doFree(void* p, MemSize, MemSize) {
   // LOG(Info) << "deallocating: " << p;
   ::free(p);
 }

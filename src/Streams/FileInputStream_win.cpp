@@ -44,7 +44,7 @@ FileInputStream::SizeType FileInputStream::readInternal(void* buffer, SizeType n
       m_status = false;
     }
 
-    return static_cast<USize>(actualNum);
+    return static_cast<MemSize>(actualNum);
   }
 
   return 0;

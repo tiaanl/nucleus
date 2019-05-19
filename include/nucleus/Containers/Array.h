@@ -6,10 +6,10 @@
 
 namespace nu {
 
-template <typename T, USize Size>
+template <typename T, MemSize Size>
 class Array {
 public:
-  using SizeType = USize;
+  using SizeType = MemSize;
 
   Array() {}
 

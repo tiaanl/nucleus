@@ -7,7 +7,7 @@ static constexpr int iterations = 1;
 
 static void benchmarkAllocator(benchmark::State& s, nu::Allocator* allocator) {
   for (auto _ : s) {
-    const USize bytesToAllocate = sizeof(U64) * s.range(0);
+    const MemSize bytesToAllocate = sizeof(U64) * s.range(0);
 
     U64* p = static_cast<U64*>(allocator->allocate(bytesToAllocate));
     assert(p != nullptr);
@@ -29,7 +29,7 @@ BENCHMARK(benchmarkGlobalAllocator)->RangeMultiplier(2)->Range(8, 8 << iteration
 
 void benchmarkLinearAllocator(benchmark::State& state) {
   nu::GlobalAllocator parentAllocator;
-  USize bufferSize = state.range(0) * sizeof(U64);
+  MemSize bufferSize = state.range(0) * sizeof(U64);
   void* buffer = parentAllocator.allocate(bufferSize);
   nu::LinearAllocator allocator(buffer, bufferSize);
   benchmarkAllocator(state, &allocator);

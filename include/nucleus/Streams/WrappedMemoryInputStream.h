@@ -11,7 +11,7 @@ namespace nu {
 class WrappedMemoryInputStream : public InputStream {
 public:
   // Construct the stream with the specified data and size.
-  WrappedMemoryInputStream(const void* data, USize size);
+  WrappedMemoryInputStream(const void* data, MemSize size);
 
   // Construct the stream with the specified array data.
   explicit WrappedMemoryInputStream(const nu::DynamicArray<I8>& data);
@@ -25,7 +25,7 @@ public:
   }
 
   // Return the size of the source data (in bytes).
-  USize getSize() const {
+  MemSize getSize() const {
     return m_size;
   }
 
@@ -41,10 +41,10 @@ private:
   const void* m_data;
 
   // The size of the data we are streaming.
-  USize m_size;
+  MemSize m_size;
 
   // The current position of the stream in the source data.
-  USize m_currentPosition{0};
+  MemSize m_currentPosition{0};
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(WrappedMemoryInputStream);
 };

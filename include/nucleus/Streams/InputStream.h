@@ -12,7 +12,7 @@ namespace nu {
 // This is the abstract base class for all types of input streams.
 class InputStream {
 public:
-  using SizeType = USize;
+  using SizeType = MemSize;
 
   virtual ~InputStream() {}
 

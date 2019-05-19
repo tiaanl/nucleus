@@ -23,12 +23,12 @@ public:
   }
 
 protected:
-  void* doAllocate(USize bytes, USize alignment) override {
+  void* doAllocate(MemSize bytes, MemSize alignment) override {
     ++m_allocations;
     return m_parentAllocator->allocate(bytes, alignment);
   }
 
-  void doFree(void* p, USize bytes, USize alignment) override {
+  void doFree(void* p, MemSize bytes, MemSize alignment) override {
     ++m_frees;
     m_parentAllocator->free(p, bytes, alignment);
   }

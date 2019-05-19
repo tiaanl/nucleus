@@ -31,10 +31,10 @@ static_assert(sizeof(F32) == 4, "Invalid size for F32");
 static_assert(sizeof(F64) == 8, "Invalid size for F64");
 
 #if ARCH(CPU_64_BITS)
-using USize = U64;
+using MemSize = U64;
 using PtrDiff = I64;
 #elif ARCH(CPU_32_BITS)
-using USize = U32;
+using MemSize = U32;
 using PtrDiff = I32;
 #else
 #error "What kind of crazy CPU do you have?!"

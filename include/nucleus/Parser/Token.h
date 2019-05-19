@@ -16,12 +16,12 @@ struct Token {
   TokenType tokenType;
 
   // The start index inside the source. This ignored line endings.
-  USize index;
+  MemSize index;
 
   // The length of the token in the source.
-  USize length;
+  MemSize length;
 
-  // Token(TokenType tokenType, USize index, USize length)
+  // Token(TokenType tokenType, MemSize index, MemSize length)
   //   : tokenType(tokenType), index(index), length(length) {}
 };
 

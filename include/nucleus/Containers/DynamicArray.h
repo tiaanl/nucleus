@@ -17,7 +17,7 @@ template <typename T>
 class DynamicArray {
 public:
   using ElementType = T;
-  using SizeType = USize;
+  using SizeType = MemSize;
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
 
@@ -226,8 +226,8 @@ private:
   }
 
   void allocateData(SizeType size, KeepOld keepOld) {
-    const USize oldSizeInBytes = m_size * sizeof(ElementType);
-    const USize newSizeInBytes = size * sizeof(ElementType);
+    const MemSize oldSizeInBytes = m_size * sizeof(ElementType);
+    const MemSize newSizeInBytes = size * sizeof(ElementType);
 
     auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(newSizeInBytes));
 

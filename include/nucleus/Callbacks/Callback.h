@@ -28,6 +28,8 @@ public:
   }
 };
 
+using Closure = Callback<void()>;
+
 }  // namespace nu
 
 #endif  // NUCLEUS_CALLBACKS_CALLBACK_H_

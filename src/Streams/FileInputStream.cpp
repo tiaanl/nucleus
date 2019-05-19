@@ -41,7 +41,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer, SizeType maxBy
     m_needToSeek = false;
   }
 
-  USize num = readInternal(destBuffer, static_cast<USize>(maxBytesToRead));
+  MemSize num = readInternal(destBuffer, static_cast<MemSize>(maxBytesToRead));
   m_currentPosition += num;
 
   return static_cast<SizeType>(num);

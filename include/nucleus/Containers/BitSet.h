@@ -10,7 +10,7 @@ namespace nu {
 template <PtrDiff BitCount>
 class BitSet {
 public:
-  using WordType = USize;
+  using WordType = MemSize;
   using IndexType = PtrDiff;
 
   BitSet() {
@@ -27,20 +27,20 @@ public:
 
   void set(IndexType index, bool value = true) {
     if (value) {
-      m_data[index / kBitsPerWord] |= static_cast<USize>(1) << (index % kBitsPerWord);
+      m_data[index / kBitsPerWord] |= static_cast<MemSize>(1) << (index % kBitsPerWord);
     } else {
-      m_data[index / kBitsPerWord] &= ~(static_cast<USize>(1) << (index % kBitsPerWord));
+      m_data[index / kBitsPerWord] &= ~(static_cast<MemSize>(1) << (index % kBitsPerWord));
     }
   }
 
   constexpr bool test(IndexType index) const {
-    return (m_data[index / kBitsPerWord] & (static_cast<USize>(1) << index % kBitsPerWord)) != 0;
+    return (m_data[index / kBitsPerWord] & (static_cast<MemSize>(1) << index % kBitsPerWord)) != 0;
   }
 
   // Set all bits to 0.
   void reset() {
     for (IndexType i = kWords; 0 <= i; --i) {
-      m_data[i] = static_cast<USize>(0);
+      m_data[i] = static_cast<MemSize>(0);
     }
   }
 

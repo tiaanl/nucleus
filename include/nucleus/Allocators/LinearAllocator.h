@@ -9,17 +9,17 @@ namespace nu {
 
 class LinearAllocator : public Allocator {
 public:
-  LinearAllocator(void* data, USize size);
+  LinearAllocator(void* data, MemSize size);
   ~LinearAllocator() override;
 
 private:
-  void* doAllocate(USize bytes, USize alignment) override;
-  void doFree(void* p, USize bytes, USize alignment) override;
+  void* doAllocate(MemSize bytes, MemSize alignment) override;
+  void doFree(void* p, MemSize bytes, MemSize alignment) override;
   bool doIsEqual(const Allocator& other) const noexcept override;
 
   void* m_data;
-  USize m_size;
-  USize m_offset;
+  MemSize m_size;
+  MemSize m_offset;
 };
 
 }  // namespace nu

@@ -12,11 +12,11 @@ class Allocator {
 public:
   virtual ~Allocator() = default;
 
-  void* allocate(USize bytes, USize alignment = kMaxAlign) {
+  void* allocate(MemSize bytes, MemSize alignment = kMaxAlign) {
     return doAllocate(bytes, alignment);
   }
 
-  void free(void* p, USize bytes, USize alignment = kMaxAlign) {
+  void free(void* p, MemSize bytes, MemSize alignment = kMaxAlign) {
     return doFree(p, bytes, alignment);
   }
 
@@ -25,12 +25,12 @@ public:
   }
 
 protected:
-  virtual void* doAllocate(USize bytes, USize alignment) = 0;
-  virtual void doFree(void* p, USize bytes, USize alignment) = 0;
+  virtual void* doAllocate(MemSize bytes, MemSize alignment) = 0;
+  virtual void doFree(void* p, MemSize bytes, MemSize alignment) = 0;
   virtual bool doIsEqual(const Allocator& other) const = 0;
 
 private:
-  static constexpr USize kMaxAlign = alignof(MaxAlign);
+  static constexpr MemSize kMaxAlign = alignof(MaxAlign);
 };
 
 inline bool operator==(const Allocator& left, const Allocator& right) {

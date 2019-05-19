@@ -70,6 +70,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Synchronization/AutoLock.h"
     "include/nucleus/Synchronization/Lock.h"
     "include/nucleus/Text/String.h"
+    "include/nucleus/Text/StringView.h"
     "include/nucleus/Types.h"
     "include/nucleus/Win/WindowsMixin.h"
     )

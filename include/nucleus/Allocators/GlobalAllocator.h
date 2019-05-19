@@ -9,8 +9,8 @@ namespace nu {
 
 class GlobalAllocator : public Allocator {
 protected:
-  void* doAllocate(USize bytes, USize alignment) override;
-  void doFree(void* p, USize bytes, USize alignment) override;
+  void* doAllocate(MemSize bytes, MemSize alignment) override;
+  void doFree(void* p, MemSize bytes, MemSize alignment) override;
   bool doIsEqual(const Allocator& other) const noexcept override;
 };
 

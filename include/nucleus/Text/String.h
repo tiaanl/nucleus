@@ -13,14 +13,14 @@ namespace nu {
 
 class String {
 public:
-  using CharType = I8;
-  using SizeType = USize;
+  using CharType = char;
+  using SizeType = MemSize;
 
   static constexpr SizeType npos = std::numeric_limits<SizeType>::max();
 
   explicit String() : m_data(nullptr), m_length(0), m_allocated(0) {}
 
-  String(const String& other) : String(other.m_data, other.getLength()) {}
+  String(const String& other) : m_data(other.m_data), m_length(other.m_length) {}
 
   // Construct a `String` from a c-string.
   String(const char* text, SizeType length = npos) : m_data(nullptr), m_length(0), m_allocated(0) {
@@ -192,7 +192,7 @@ private:
 
   // Allocate memory to hold a string of the specified length.  If `keepOld` is true, then any data currently in the
   // buffer will be there after any allocations.
-  void allocate(USize bytesToAllocate, bool keepOld) {
+  void allocate(MemSize bytesToAllocate, bool keepOld) {
     Allocator* allocator = getDefaultAllocator();
 
     // Allocate a new buffer to hold data.
@@ -201,7 +201,7 @@ private:
     if (m_data) {
       // Copy the old data if needed.
       if (keepOld) {
-        std::memcpy(newBuffer, m_data, std::min<USize>(bytesToAllocate, m_length));
+        std::memcpy(newBuffer, m_data, std::min<MemSize>(bytesToAllocate, m_length));
         newBuffer[m_length] = 0;
       }
 
@@ -215,7 +215,7 @@ private:
 
   CharType* m_data;
   SizeType m_length;
-  USize m_allocated;
+  MemSize m_allocated;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const String& s) {

@@ -17,21 +17,21 @@ public:
     return m_parent;
   }
 
-  USize getBytesAllocated() const {
+  MemSize getBytesAllocated() const {
     return m_bytesAllocated;
   }
 
-  USize getBytesFreed() const {
+  MemSize getBytesFreed() const {
     return m_bytesFreed;
   }
 
-  USize getBytesOutstanding() const {
+  MemSize getBytesOutstanding() const {
     return m_bytesAllocated - m_bytesFreed;
   }
 
 protected:
-  void* doAllocate(USize bytes, USize alignment) override;
-  void doFree(void* p, USize bytes, USize alignment) override;
+  void* doAllocate(MemSize bytes, MemSize alignment) override;
+  void doFree(void* p, MemSize bytes, MemSize alignment) override;
   bool doIsEqual(const Allocator& other) const noexcept override {
     return this == &other;
   }
@@ -39,8 +39,8 @@ protected:
 private:
   Allocator* m_parent;
 
-  USize m_bytesAllocated = 0;
-  USize m_bytesFreed = 0;
+  MemSize m_bytesAllocated = 0;
+  MemSize m_bytesFreed = 0;
 };
 
 }  // namespace nu

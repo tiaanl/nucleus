@@ -34,7 +34,7 @@
 #elif defined(__sun)
 #define OS_SOLARIS 1
 #else
-#error Please add support for your platform in nucleus/config.h
+#error Please add support for your platform in nucleus/Config.h
 #endif
 
 // For access to standard BSD features, use OS_BSD instead of a
@@ -43,7 +43,7 @@
 #define OS_BSD 1
 #endif
 
-// For access to standard POSIXish features, use OS_POSIX instead of a
+// For access to standard POSIX'ish features, use OS_POSIX instead of a
 // more specific macro.
 #if OS(MACOSX) || OS(LINUX) || OS(FREEBSD) || OS(OPENBSD) || OS(SOLARIS) || OS(ANDROID)
 #define OS_POSIX 1
@@ -66,7 +66,7 @@
 #elif defined(_MSC_VER)
 #define COMPILER_MSVC 1
 #else
-#error Please add support for your compiler in nucleus/config.h
+#error Please add support for your compiler in nucleus/Config.h
 #endif
 
 // ARCH()
@@ -104,7 +104,7 @@
 #define ARCH_CPU_32_BITS 1
 #define ARCH_CPU_BIG_ENDIAN 1
 #else
-#error Please add support for your architecture in nucleus/config.h
+#error Please add support for your architecture in nucleus/Config.h
 #endif
 
 #endif  // NUCLEUS_CONFIG_H_

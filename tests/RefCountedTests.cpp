@@ -1,7 +1,7 @@
 
 #include "nucleus/Allocators/Allocated.h"
 #include "nucleus/Allocators/DefaultAllocator.h"
-#include "nucleus/Ref.h"
+#include "nucleus/Memory/ScopedRefPtr.h"
 #include "nucleus/RefCounted.h"
 #include "nucleus/Testing.h"
 
@@ -14,7 +14,7 @@ public:
   ~SelfAssign() {}
 };
 
-class CheckDerivedMemberAccess : public nu::Ref<SelfAssign> {
+class CheckDerivedMemberAccess : public nu::ScopedRefPtr<SelfAssign> {
 public:
   CheckDerivedMemberAccess() {
     // This shouldn't compile if we don't have access to the member variable.
@@ -29,7 +29,7 @@ public:
   ~RefToSelf() = default;
 
 private:
-  nu::Ref<RefToSelf> m_selfPtr;
+  nu::ScopedRefPtr<RefToSelf> m_selfPtr;
 };
 
 }  // namespace
@@ -38,7 +38,7 @@ TEST_CASE("TestSelfAssignment") {
   SelfAssign sa;
   SelfAssign* p = &sa;
 
-  nu::Ref<SelfAssign> var(p);
+  nu::ScopedRefPtr<SelfAssign> var(p);
   var = var;
   CHECK(p == var.get());
 }
@@ -51,7 +51,7 @@ TEST_CASE("BooleanOperations") {
   SelfAssign s1;
 
   SelfAssign* p1 = &s1;
-  nu::Ref<SelfAssign> p2;
+  nu::ScopedRefPtr<SelfAssign> p2;
 
   CHECK(p1);
   CHECK_FALSE(!p1);
@@ -91,7 +91,7 @@ struct RefCountedWithTraits : nu::RefCounted<RefCountedWithTraits, TestTraits> {
 TEST_CASE("CallsDestruct") {
   {
     RefCountedWithTraits r;
-    nu::Ref<RefCountedWithTraits> p{&r};
+    nu::ScopedRefPtr<RefCountedWithTraits> p{&r};
   }
   CHECK(TestTraits::s_destructred);
 }

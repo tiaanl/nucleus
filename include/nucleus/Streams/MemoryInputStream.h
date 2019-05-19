@@ -9,7 +9,7 @@ namespace nu {
 
 class MemoryInputStream : public InputStream {
 public:
-  MemoryInputStream(const void* src, USize srcDataSize);
+  MemoryInputStream(const void* src, MemSize srcDataSize);
   explicit MemoryInputStream(const nu::DynamicArray<I8>& data);
 
   virtual ~MemoryInputStream();
@@ -22,7 +22,7 @@ public:
 
   // Returns the number of bytes of source data in the block from which this
   // stream is reading.
-  USize GetDataSize() const {
+  MemSize GetDataSize() const {
     return m_buffer.getSize();
   }
 
@@ -34,10 +34,10 @@ public:
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
 private:
-  void createInternalCopy(const I8* data, USize dataSize);
+  void createInternalCopy(const I8* data, MemSize dataSize);
 
   nu::DynamicArray<I8> m_buffer;
-  USize m_currentPosition;
+  MemSize m_currentPosition;
 
   DISALLOW_COPY_AND_ASSIGN(MemoryInputStream);
 };

@@ -25,10 +25,10 @@ public:                                                                         
 // ARRAY_SIZE
 
 // Helper to figure out the item count of a static array of elements, c++ style!
-template <typename T, USize N>
+template <typename T, MemSize N>
 char (&ArraySizeHelper(T (&array)[N]))[N];
 #if COMPILER(MSVC)
-template <typename T, USize N>
+template <typename T, MemSize N>
 char (&ArraySizeHelper(const T (&array)[N]))[N];
 #endif  // COMPILER(MSVC)
 
