@@ -1,10 +1,11 @@
 
 # nucleusTests
 
-set(nucleus_TESTS_INCLUDE_FILES
-)
-
 set(nucleus_TESTS_SOURCE_FILES
+    "Parser/TokenizerTests.cpp"
+    "Parser/XMLParserTests.cpp"
+    "Text/StringPoolTests.cpp"
+    "Text/StringViewTests.cpp"
     #"Allocators/AllocatedTests.cpp"
     #"Allocators/AllocatorTests.cpp"
     #"Allocators/DebugAllocatorTests.cpp"
@@ -14,6 +15,7 @@ set(nucleus_TESTS_SOURCE_FILES
     #"Containers/BitSetTests.cpp"
     #"Containers/DynamicArrayTests.cpp"
     #"FilePathTests.cpp"
+    #"FunctionTests.cpp"
     #"HighPerformanceTimerTests.cpp"
     #"LoggingTests.cpp"
     #"LoggingTests.cpp"
@@ -24,13 +26,9 @@ set(nucleus_TESTS_SOURCE_FILES
     #"SignalsTests.cpp"
     #"SingletonTests.cpp"
     #"Text/StringTests.cpp"
-    #"FunctionTests.cpp"
-    "Text/StringViewTests.cpp"
-    "Parser/TokenizerTests.cpp"
-    "Parser/XMLParserTests.cpp"
 )
 
-add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})
+add_executable(nucleusTests ${nucleus_TESTS_SOURCE_FILES})
 target_link_libraries(nucleusTests nucleus testing)
 set_target_properties(nucleusTests PROPERTIES
     CXX_STANDARD 14
