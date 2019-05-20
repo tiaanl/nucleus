@@ -59,12 +59,20 @@ struct PunctuationInfo {
 
 // Return the type of punctuation or EndOfSource if it is not a punctuation character.
 TokenType getPunctuation(Char ch) {
-  for (auto i = 0; i < sizeof(kPunctuationMap) / sizeof(PunctuationInfo); ++i) {
-    if (kPunctuationMap[i].ch == ch) {
-      return kPunctuationMap[i].type;
+  // TODO: Maybe sort the map and do a binary search?
+  for (auto& pi : kPunctuationMap) {
+    if (pi.ch == ch) {
+      return pi.type;
     }
   }
   return TokenType::EndOfSource;
+}
+
+StringView readWhitespace(const StringView& source) {
+  StringLength length = 0;
+  for (; isWhitespace(source[length]) && source[length] != 0; ++length) {
+  }
+  return source.subString(0, length);
 }
 
 StringView readNumber(const StringView& text) {
@@ -83,27 +91,42 @@ StringView readNumber(const StringView& text) {
   return StringView{text, length};
 }
 
+StringView readText(const StringView& source) {
+  StringLength length = 0;
+  for (;;) {
+    Char ch = source[length];
+    if (isWhitespace(ch) || ch == '\0' || length == source.getLength()) {
+      break;
+    }
+
+    ++length;
+  }
+
+  return source.subString(0, length);
+}
+
 }  // namespace
 
-Tokenizer::Tokenizer(StringView source) : m_source{source}, m_currentIndex(0) {}
+Tokenizer::Tokenizer(const StringView& source) : m_source{source}, m_current(source) {}
 
-Token Tokenizer::peekNextToken(U32 options) {
-  Char nextChar = m_source[m_currentIndex];
+Token Tokenizer::peekNextTokenInternal(const StringView& source) {
+  Char nextChar = source[0];
 
   // EndOfSource
 
-  if (nextChar == '\0' || m_currentIndex == m_source.getLength()) {
+  if (nextChar == '\0' || source.getLength() == 0) {
     return {};
   }
 
   // Whitespace
 
   if (isWhitespace(nextChar)) {
-    return readWhitespace();
+    StringView whitespace = readWhitespace(source);
+    return Token{TokenType::Whitespace, whitespace};
   }
 
   // Number (MUST be read before punctuation, because a number can start with a minus symbol)
-  StringView number = readNumber(m_source.subString(m_currentIndex));
+  StringView number = readNumber(source);
   if (number.getLength() > 0) {
     return {TokenType::Number, number};
   }
@@ -112,50 +135,41 @@ Token Tokenizer::peekNextToken(U32 options) {
 
   TokenType punctuation = getPunctuation(nextChar);
   if (punctuation != TokenType::EndOfSource) {
-    return {punctuation, m_source.subString(m_currentIndex, 1)};
+    return {punctuation, source.subString(0, 1)};
   }
 
   // Text
 
-  return readText();
+  StringView text = readText(m_current);
+  if (text.getLength() > 0) {
+    return Token{TokenType::Text, text};
+  }
+  
+
+  return Token{TokenType::EndOfSource, StringView{}};
 }
 
-Token Tokenizer::consumeNextToken(U32 options) {
-  Token token = peekNextToken(options);
-  m_currentIndex += token.text.getLength();
+Token Tokenizer::peekNextToken(U32 options) {
+  auto token = peekNextTokenInternal(m_current);
+  if (options & SkipWhitespace && token.type == TokenType::Whitespace) {
+    token = peekNextTokenInternal(m_current.subString(token.text.getLength()));
+  }
   return token;
 }
 
-Token Tokenizer::readWhitespace() {
-  DCHECK(isWhitespace(m_source[m_currentIndex]));
-
-  StringLength length = 0;
-  for (;;) {
-    Char ch = m_source[m_currentIndex + length];
-    if (!isWhitespace(ch)) {
-      break;
-    }
-
-    ++length;
+Token Tokenizer::consumeNextToken(U32 options) {
+  auto token = peekNextTokenInternal(m_current);
+  advance(token.text.getLength());
+  if (options & SkipWhitespace && token.type == TokenType::Whitespace) {
+    auto token2 = peekNextTokenInternal(m_current.subString(token.text.getLength()));
+    advance(token.text.getLength() + token2.text.getLength());
+    return token2;
   }
-
-  return {TokenType::Whitespace, m_source.subString(m_currentIndex, length)};
+  return token;
 }
 
-Token Tokenizer::readText() {
-  DCHECK(!isWhitespace(m_source[m_currentIndex]));
-
-  StringLength length = 0;
-  for (;;) {
-    Char ch = m_source[m_currentIndex + length];
-    if (isWhitespace(ch)) {
-      break;
-    }
-
-    ++length;
-  }
-
-  return {TokenType::Text, m_source.subString(m_currentIndex, length)};
+void Tokenizer::advance(StringLength length) {
+  m_current = m_current.subString(length);
 }
 
 }  // namespace nu

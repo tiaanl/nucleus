@@ -24,6 +24,30 @@ TEST_CASE("Token is whitespace") {
   CHECK(token.text.getLength() == 4);
 }
 
+TEST_CASE("Tokenizer can skip whitespace while getting next token") {
+  auto tokenizer = Tokenizer("  test  blah\n\r");
+
+  SECTION("use consume and peek methods to skip whitespace") {
+    auto token1 = tokenizer.consumeNextToken(Tokenizer::SkipWhitespace);
+    CHECK(token1.type == TokenType::Text);
+    CHECK(StringView("test").compare(token1.text) == 0);
+
+    auto token2 = tokenizer.peekNextToken(Tokenizer::SkipWhitespace);
+    CHECK(token2.type == TokenType::Text);
+    CHECK(StringView("blah").compare(token2.text) == 0);
+  }
+
+  SECTION("read whitespace after skipping whitespace") {
+    auto token1 = tokenizer.consumeNextToken(Tokenizer::SkipWhitespace);
+    CHECK(token1.type == TokenType::Text);
+    CHECK(StringView("test").compare(token1.text) == 0);
+
+    tokenizer.consumeNextToken();
+    auto token2 = tokenizer.peekNextToken();
+    CHECK(token2.type == TokenType::Whitespace);
+  }
+}
+
 TEST_CASE("Token is punctuation") {
   auto tokenizer = Tokenizer("`~!@#$%^&*()-_=+[{]};:'\"\\|,<.>/?)");
 

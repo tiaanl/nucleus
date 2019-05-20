@@ -20,7 +20,6 @@ set(nucleus_TESTS_SOURCE_FILES
     #"Memory/ScopedPtrTests.cpp"
     #"MessageLoop/MessageLoopTests.cpp"
     #"OptionalTests.cpp"
-    #"Parser/ParserTests.cpp"
     #"RefCountedTests.cpp"
     #"SignalsTests.cpp"
     #"SingletonTests.cpp"
@@ -28,6 +27,7 @@ set(nucleus_TESTS_SOURCE_FILES
     #"FunctionTests.cpp"
     "Text/StringViewTests.cpp"
     "Parser/TokenizerTests.cpp"
+    "Parser/XMLParserTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_INCLUDE_FILES} ${nucleus_TESTS_SOURCE_FILES})

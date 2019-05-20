@@ -54,21 +54,21 @@ struct Token {
 
 class Tokenizer {
 public:
-  enum  {
-    // SkipWhitespace = 0x01,
+  enum {
+    SkipWhitespace = 0x01,
   };
 
-  Tokenizer(StringView source);
+  Tokenizer(const StringView& source);
 
   Token peekNextToken(U32 options = 0);
   Token consumeNextToken(U32 options = 0);
 
 private:
-  Token readWhitespace();
-  Token readText();
+  void advance(StringLength length);
+  Token peekNextTokenInternal(const StringView& source);
 
   StringView m_source;
-  StringLength m_currentIndex;
+  StringView m_current;
 };
 
 }  // namespace nu

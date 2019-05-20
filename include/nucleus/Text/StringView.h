@@ -4,6 +4,9 @@
 
 #include "nucleus/Types.h"
 
+#include <algorithm>
+#include <cstring>
+
 namespace nu {
 
 using StringLength = MemSize;
@@ -41,13 +44,17 @@ public:
     return m_length;
   }
 
+  I32 compare(StringView other) {
+    return std::strncmp(m_text, other.m_text, std::min(m_length, other.m_length));
+  }
+
   // Return a new StringView, starting from the startIndex and ending where this StringView ended.
-  StringView subString(StringLength startIndex) {
+  StringView subString(StringLength startIndex) const {
     return StringView{m_text + startIndex, m_length - startIndex};
   }
 
   // Get a new StringView for a part of string inside this one.
-  StringView subString(StringLength startIndex, StringLength length) {
+  StringView subString(StringLength startIndex, StringLength length) const {
     return StringView{m_text + startIndex,
                       (startIndex + length > m_length) ? m_length - startIndex : length};
   }
