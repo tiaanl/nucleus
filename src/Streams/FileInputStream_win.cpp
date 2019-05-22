@@ -1,5 +1,5 @@
 
-#include "nucleus/streams/FileInputStream.h"
+#include "nucleus/Streams/FileInputStream.h"
 
 #include "nucleus/MemoryDebug.h"
 
@@ -10,7 +10,8 @@ namespace detail {
 I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
   LARGE_INTEGER li = {};
   li.QuadPart = pos;
-  li.LowPart = ::SetFilePointer(static_cast<HANDLE>(handle), static_cast<LONG>(li.LowPart), &li.HighPart, FILE_BEGIN);
+  li.LowPart = ::SetFilePointer(static_cast<HANDLE>(handle), static_cast<LONG>(li.LowPart),
+                                &li.HighPart, FILE_BEGIN);
   return li.QuadPart;
 }
 
@@ -24,8 +25,9 @@ FileInputStream::SizeType FileInputStream::getLength() {
 }
 
 void FileInputStream::openHandle() {
-  HANDLE h = ::CreateFileA(m_path.getPath().getRawBytes(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
-                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+  HANDLE h = ::CreateFileA(m_path.getPath().getRawBytes(), GENERIC_READ,
+                           FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+                           FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   } else {
@@ -40,7 +42,8 @@ void FileInputStream::closeHandle() {
 FileInputStream::SizeType FileInputStream::readInternal(void* buffer, SizeType numBytes) {
   if (m_handle != nullptr) {
     DWORD actualNum = 0;
-    if (::ReadFile(static_cast<HANDLE>(m_handle), buffer, static_cast<DWORD>(numBytes), &actualNum, nullptr) == FALSE) {
+    if (::ReadFile(static_cast<HANDLE>(m_handle), buffer, static_cast<DWORD>(numBytes), &actualNum,
+                   nullptr) == FALSE) {
       m_status = false;
     }
 

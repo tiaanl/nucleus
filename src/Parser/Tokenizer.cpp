@@ -11,10 +11,6 @@ bool isWhitespace(Char ch) {
   return (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t');
 }
 
-bool isAlpha(Char ch) {
-  return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
-}
-
 bool isNumber(Char ch) {
   return ch >= '0' && ch <= '9';
 }
@@ -144,7 +140,6 @@ Token Tokenizer::peekNextTokenInternal(const StringView& source) {
   if (text.getLength() > 0) {
     return Token{TokenType::Text, text};
   }
-  
 
   return Token{TokenType::EndOfSource, StringView{}};
 }

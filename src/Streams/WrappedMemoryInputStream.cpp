@@ -23,7 +23,8 @@ WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::read(void* buffer,
                                                                   SizeType bytesToRead) {
   SizeType num = std::min(bytesToRead, getBytesRemaining());
 
-  std::memcpy(buffer, static_cast<const U8*>(m_data) + m_currentPosition, static_cast<MemSize>(num));
+  std::memcpy(buffer, static_cast<const U8*>(m_data) + m_currentPosition,
+              static_cast<MemSize>(num));
   m_currentPosition += num;
 
   return num;

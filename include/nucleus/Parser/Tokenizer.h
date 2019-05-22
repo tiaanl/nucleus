@@ -55,7 +55,7 @@ struct Token {
 class Tokenizer {
 public:
   enum {
-    SkipWhitespace = 0x01,
+    SkipWhitespace = 0x01u,
   };
 
   Tokenizer(const StringView& source);

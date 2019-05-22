@@ -9,9 +9,10 @@ namespace nu {
 
 namespace {
 
-// If this FilePath contains a drive letter specification, returns the position of the last character of the drive
-// letter specification, otherwise returns npos.  This can only be true on Windows, when a pathname begins with a letter
-// followed by a colon.  On other platforms, this always returns npos.
+// If this FilePath contains a drive letter specification, returns the position of the last
+// character of the drive letter specification, otherwise returns npos.  This can only be true on
+// Windows, when a pathname begins with a letter followed by a colon.  On other platforms, this
+// always returns npos.
 #if OS(WIN)
 String::SizeType findDriveLetter(const String& path) {
   if (path.getLength() >= 2 && path[1] == ':' &&
@@ -49,9 +50,9 @@ bool equalDriveLetterCaseInsensitive(const String& left, const String& right) {
 }
 #endif  // OS(WIN)
 
-// Null-terminated array of separators used to separate components in hierarchical paths.  Each character in this array
-// is a valid separator, but kSeparators[0] is treated as the canonical separator and will be used when composing path
-// names.
+// Null-terminated array of separators used to separate components in hierarchical paths.  Each
+// character in this array is a valid separator, but kSeparators[0] is treated as the canonical
+// separator and will be used when composing path names.
 #if OS(WIN)
 static const char kSeparators[] = "\\/";
 #else
@@ -131,7 +132,8 @@ FilePath FilePath::dirName() const {
     // m_path is in the root directory.
     newPath.m_path.resize(letter + 2);
   } else if (lastSeparator == letter + 2 && isSeparator(newPath.m_path[letter + 1])) {
-    // m_path is in "//" (possibly with a drive letter), so leave the double separator intact indicating alternate root.
+    // m_path is in "//" (possibly with a drive letter), so leave the double separator intact
+    // indicating alternate root.
     newPath.m_path.resize(letter + 3);
   } else if (lastSeparator != 0) {
     // m_path is somewhere else, trim the base name.
@@ -156,8 +158,8 @@ FilePath FilePath::baseName() const {
     newPath.m_path.erase(0, letter + 1);
   }
 
-  // Keep everything after the final separator, but if the pathname is only one character and it's a separator, leave it
-  // alone.
+  // Keep everything after the final separator, but if the pathname is only one character and it's a
+  // separator, leave it alone.
   String::SizeType lastSeparator =
       newPath.m_path.findLastOfAnyChar(String(kSeparators, ARRAY_SIZE(kSeparators) - 1));
   if (lastSeparator != String::npos && lastSeparator < newPath.m_path.getLength() - 1) {
@@ -178,20 +180,21 @@ FilePath FilePath::append(const String& component) const {
 
   if (m_path.compare(String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1)) == 0 &&
       !component.isEmpty()) {
-    // Append normally doesn't do any normalization, but as a special case, when appending to `kCurrentDirectory`, just
-    // return a new path for the `component` argument.  Appending `component` to `kCurrentDirectory` would serve no
-    // purpose other than needlessly lengthening the path.
+    // Append normally doesn't do any normalization, but as a special case, when appending to
+    // `kCurrentDirectory`, just return a new path for the `component` argument.  Appending
+    // `component` to `kCurrentDirectory` would serve no purpose other than needlessly lengthening
+    // the path.
     return FilePath(component);
   }
 
   FilePath newPath{m_path};
   newPath.stripTrailingSeparators();
 
-  // Don't append a separator if the path is empty (indicating the current directory) or if the path component is empty
-  // (indicating nothing to append).
+  // Don't append a separator if the path is empty (indicating the current directory) or if the path
+  // component is empty (indicating nothing to append).
   if (!component.isEmpty() && !newPath.m_path.isEmpty()) {
-    // Don't append a separator if the path still ends with a trailing separator after stripping (indicating the root
-    // directory).
+    // Don't append a separator if the path still ends with a trailing separator after stripping
+    // (indicating the root directory).
     if (!isSeparator(newPath.m_path[newPath.m_path.getLength() - 1])) {
       // Don't append a separator if the path is just a drive letter.
       if (findDriveLetter(newPath.m_path) + 1 != newPath.m_path.getLength()) {
@@ -210,15 +213,17 @@ FilePath FilePath::append(const FilePath& component) const {
 }
 
 void FilePath::stripTrailingSeparators() {
-  // If there is no drive letter, start will be 1, which will prevent stripping the leading separator if there is only
-  // one separator.  If there is a drive letter, start will be set appropriately to prevent stripping the first
-  // separator following the drive letter, if a separator immediately follows the drive letter.
+  // If there is no drive letter, start will be 1, which will prevent stripping the leading
+  // separator if there is only one separator.  If there is a drive letter, start will be set
+  // appropriately to prevent stripping the first separator following the drive letter, if a
+  // separator immediately follows the drive letter.
   String::SizeType start = findDriveLetter(m_path) + 2;
 
   String::SizeType lastStripped = String::npos;
-  for (String::SizeType pos = m_path.getLength(); pos > start && isSeparator(m_path[pos - 1]); --pos) {
-    // If the string only has two separators and they're at the beginning, don't strip them, unless the string began
-    // with more than two separators.
+  for (String::SizeType pos = m_path.getLength(); pos > start && isSeparator(m_path[pos - 1]);
+       --pos) {
+    // If the string only has two separators and they're at the beginning, don't strip them, unless
+    // the string began with more than two separators.
     if (pos != start + 1 || lastStripped == start + 2 || !isSeparator(m_path[start - 1])) {
       m_path.resize(pos - 1);
       lastStripped = pos;
