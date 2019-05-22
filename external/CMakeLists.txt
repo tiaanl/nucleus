@@ -1,6 +1,6 @@
 
 # Benchmark
-if(NOT MINGW)
+if(WIN32)
     add_subdirectory("benchmark-1.3.0")
 endif()
 

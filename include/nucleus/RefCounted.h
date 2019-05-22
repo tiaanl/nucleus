@@ -25,14 +25,14 @@ public:
   }
 
 protected:
-  RefCountedBase() = default;
+  RefCountedBase() : m_refCount{0} {};
   ~RefCountedBase() = default;
 
 private:
   COPY_DELETE(RefCountedBase);
   MOVE_DELETE(RefCountedBase);
 
-  mutable std::atomic<MemSize> m_refCount = 0;
+  mutable std::atomic<MemSize> m_refCount;
 };
 
 template <typename T>

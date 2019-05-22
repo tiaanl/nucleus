@@ -10,11 +10,10 @@
 namespace nu {
 
 MemoryInputStream::MemoryInputStream(void* sourceData, MemSize sourceDataSize)
-  : m_currentPosition(0), m_buffer{static_cast<U8*>(sourceData), sourceDataSize} {
-}
+  : m_buffer{static_cast<U8*>(sourceData), sourceDataSize}, m_currentPosition{0} {}
 
-MemoryInputStream::MemoryInputStream(const nu::DynamicArray<U8>& data)
-  : m_currentPosition(0), m_buffer{data} {}
+MemoryInputStream::MemoryInputStream(nu::DynamicArray<U8> data)
+  : m_buffer{data}, m_currentPosition{0} {}
 
 MemoryInputStream::~MemoryInputStream() = default;
 

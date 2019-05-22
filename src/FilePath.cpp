@@ -62,11 +62,15 @@ static const char kSeparators[] = "/";
 // A special path component meaning "this directory."
 static const char kCurrentDirectory[] = ".";
 
+#if 0
 // A special path component meaning "the parent directory."
 static const char kParentDirectory[] = "..";
+#endif
 
+#if 0
 // The character used to identify a file extension.
 static const char kExtensionSeparator = '.';
+#endif
 
 }  // namespace
 

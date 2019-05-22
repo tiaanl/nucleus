@@ -2,11 +2,11 @@
 #ifndef NUCLEUS_MESSAGE_LOOP_MESSAGE_LOOP_H_
 #define NUCLEUS_MESSAGE_LOOP_MESSAGE_LOOP_H_
 
-#include <queue>
-
 #include "nucleus/Callbacks/Callback.h"
 #include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/MessageLoop/MessagePump.h"
+
+#include <queue>
 
 namespace nu {
 

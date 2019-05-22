@@ -136,6 +136,6 @@ set_target_properties(nucleus PROPERTIES
     )
 
 add_subdirectory(tests "tests")
-if(NOT MINGW)
+if(WIN32)
     add_subdirectory(benchmarks "benchmarks")
 endif()

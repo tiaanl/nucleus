@@ -10,7 +10,7 @@ namespace nu {
 class MemoryInputStream : public InputStream {
 public:
   MemoryInputStream(void* src, MemSize srcDataSize);
-  explicit MemoryInputStream(const nu::DynamicArray<U8>& data);
+  explicit MemoryInputStream(nu::DynamicArray<U8> data);
 
   ~MemoryInputStream() override;
 
