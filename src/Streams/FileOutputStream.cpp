@@ -10,7 +10,8 @@
 
 namespace nu {
 
-FileOutputStream::FileOutputStream(const FilePath& path) : m_path(path) {
+FileOutputStream::FileOutputStream(const FilePath& path)
+  : OutputStream{OutputStream::Binary}, m_path{path} {
   openHandle();
 }
 
@@ -20,8 +21,9 @@ FileOutputStream::~FileOutputStream() {
 
 void FileOutputStream::openHandle() {
 #if OS(WIN)
-  HANDLE h = ::CreateFileW((LPCWSTR)m_path.getPath().getRawBytes(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr,
-                           CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+  HANDLE h = ::CreateFileW((LPCWSTR)m_path.getPath().getRawBytes(), GENERIC_WRITE, FILE_SHARE_WRITE,
+                           nullptr, CREATE_ALWAYS,
+                           FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   }
