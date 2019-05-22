@@ -22,7 +22,7 @@ namespace detail {
 // `MakeUnboundRunType` and `bind`.
 template <typename Functor, typename... BoundArgs>
 struct BindTypeHelper {
-  static constexpr size_t numBound = sizeof...(BoundArgs);
+  static constexpr MemSize numBound = sizeof...(BoundArgs);
 
   using FunctorTraits = MakeFunctorTraits<Functor>;
 

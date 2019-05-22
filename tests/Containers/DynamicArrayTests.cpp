@@ -12,7 +12,7 @@ TEST_CASE("basic") {
   nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
 
-  REQUIRE(buffer.getSize() == static_cast<USize>(1));
+  REQUIRE(buffer.getSize() == static_cast<MemSize>(1));
   REQUIRE(buffer[0] == 10);
 }
 
@@ -178,13 +178,13 @@ TEST_CASE("create and destroy elements") {
 }
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U64>& buffer) {
-  for (USize i = 0; i < buffer.getSize(); ++i) {
+  for (MemSize i = 0; i < buffer.getSize(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
 void dynamicArrayWithConst(const nu::DynamicArray<U64>& buffer) {
-  for (USize i = 0; i < buffer.getSize(); ++i) {
+  for (MemSize i = 0; i < buffer.getSize(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }

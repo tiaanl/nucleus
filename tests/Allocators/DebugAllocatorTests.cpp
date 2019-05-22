@@ -2,7 +2,8 @@
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Testing.h"
 
-void expectDebugValues(const nu::DebugAllocator& debug, USize bytesAllocated, USize bytesFreed) {
+void expectDebugValues(const nu::DebugAllocator& debug, MemSize bytesAllocated,
+                       MemSize bytesFreed) {
   CHECK(debug.getBytesAllocated() == bytesAllocated);
   CHECK(debug.getBytesFreed() == bytesFreed);
 }

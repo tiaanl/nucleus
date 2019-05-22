@@ -18,13 +18,13 @@ struct FunctionTraits<Ret (*)(Args...)> {
   using ReturnType = Ret;
 };
 
-template <USize...>
+template <MemSize...>
 struct Sequence {};
 
-template <USize N, USize... S>
+template <MemSize N, MemSize... S>
 struct GenerateSequence : GenerateSequence<N - 1, N - 1, S...> {};
 
-template <USize... S>
+template <MemSize... S>
 struct GenerateSequence<0, S...> {
   using Type = GenerateSequence<S...>;
 };
@@ -52,14 +52,14 @@ struct Invoker {
   static ReturnType invoke(BindStateBase* bindState) {
     const BindStateType* typedBindState = static_cast<BindStateType*>(bindState);
 
-    static constexpr USize numBoundArgs = std::tuple_size<decltype(typedBindState->args)>::value;
+    static constexpr MemSize numBoundArgs = std::tuple_size<decltype(typedBindState->args)>::value;
 
     return invokeImpl(typedBindState->function, typedBindState->args,
                       std::make_index_sequence<numBoundArgs>());
   }
 
 private:
-  template <typename Function, typename Args, USize... I>
+  template <typename Function, typename Args, MemSize... I>
   static inline ReturnType invokeImpl(Function&& function, Args&& args, std::index_sequence<I...>) {
     return function(std::get<I>(std::forward<Args>(args))...);
   }

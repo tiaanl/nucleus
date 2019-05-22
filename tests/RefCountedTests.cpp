@@ -35,9 +35,7 @@ private:
 }  // namespace
 
 TEST_CASE("TestSelfAssignment") {
-  SelfAssign sa;
-  SelfAssign* p = &sa;
-
+  SelfAssign* p = new SelfAssign;
   nu::ScopedRefPtr<SelfAssign> var(p);
   var = var;
   CHECK(p == var.get());
@@ -48,9 +46,7 @@ TEST_CASE("MemberAccess") {
 }
 
 TEST_CASE("BooleanOperations") {
-  SelfAssign s1;
-
-  SelfAssign* p1 = &s1;
+  SelfAssign* p1 = new SelfAssign;
   nu::ScopedRefPtr<SelfAssign> p2;
 
   CHECK(p1);
@@ -61,8 +57,8 @@ TEST_CASE("BooleanOperations") {
 
   CHECK(p1 != p2);
 
-  SelfAssign s2;
-  SelfAssign* raw = &s2;
+  SelfAssign* s2 = new SelfAssign;
+  SelfAssign* raw = s2;
 
   p2 = raw;
   CHECK(p1 != p2);

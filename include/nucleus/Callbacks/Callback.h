@@ -8,11 +8,11 @@
 
 namespace nu {
 
-template <typename R, typename... Args>
-class Callback<R(Args...)> : public detail::CallbackBase {
+template <typename Ret, typename... Args>
+class Callback<Ret(Args...)> : public detail::CallbackBase {
 public:
-  using RunType = R(Args...);
-  using PolymorphicInvoke = R (*)(detail::BindStateBase*, detail::PassingTraitsType<Args>...);
+  using RunType = Ret(Args...);
+  using PolymorphicInvoke = Ret (*)(detail::BindStateBase*, detail::PassingTraitsType<Args>...);
 
   constexpr Callback() = default;
 
@@ -22,9 +22,9 @@ public:
     return equalsBase(other);
   }
 
-  R run(Args... args) const {
-    PolymorphicInvoke f = reinterpret_cast<PolymorphicInvoke>(getPolymorphicInvoke());
-    return f(m_bindState.get(), std::forward<Args>(args)...);
+  Ret run(Args... args) const {
+    PolymorphicInvoke invoker = reinterpret_cast<PolymorphicInvoke>(getPolymorphicInvoke());
+    return invoker(m_bindState.get(), std::forward<Args>(args)...);
   }
 };
 
