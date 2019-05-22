@@ -12,9 +12,6 @@ namespace detail {
 
 class RefCountedBase {
 public:
-  COPY_DELETE(RefCountedBase);
-  MOVE_DELETE(RefCountedBase);
-
   bool hasOneRef() const {
     return m_refCount.load(std::memory_order_relaxed) == 1;
   }
@@ -32,7 +29,10 @@ protected:
   ~RefCountedBase() = default;
 
 private:
-  mutable std::atomic<MemSize> m_refCount;
+  COPY_DELETE(RefCountedBase);
+  MOVE_DELETE(RefCountedBase);
+
+  mutable std::atomic<MemSize> m_refCount = 0;
 };
 
 template <typename T>

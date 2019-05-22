@@ -2,6 +2,8 @@
 # nucleusTests
 
 set(nucleus_TESTS_SOURCE_FILES
+    "Callbacks/CallbackTests.cpp"
+    "Memory/ScopedRefPtrTests.cpp"
     "Parser/TokenizerTests.cpp"
     "Parser/XMLParserTests.cpp"
     "Text/StringPoolTests.cpp"
@@ -10,7 +12,6 @@ set(nucleus_TESTS_SOURCE_FILES
     #"Allocators/AllocatorTests.cpp"
     #"Allocators/DebugAllocatorTests.cpp"
     #"AtExitTests.cpp"
-    #"Callbacks/CallbackTests.cpp"
     #"Containers/ArrayTests.cpp"
     #"Containers/BitSetTests.cpp"
     #"Containers/DynamicArrayTests.cpp"

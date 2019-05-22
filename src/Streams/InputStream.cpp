@@ -1,11 +1,11 @@
 
 #include "nucleus/Streams/InputStream.h"
 
-#include <algorithm>
-
 #include "nucleus/ByteOrder.h"
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Logging.h"
+
+#include <algorithm>
 
 #include "nucleus/MemoryDebug.h"
 
@@ -16,6 +16,21 @@ InputStream::SizeType InputStream::getBytesRemaining() {
       << "The position should never go over the length of the stream";
 
   return getLength() - getPosition();
+}
+
+void InputStream::skipNextBytes(SizeType numBytesToSkip) {
+  constexpr SizeType kBufferedSizeToSkip = 16384;
+
+  const SizeType skipBufferSize =
+      std::min(numBytesToSkip, static_cast<SizeType>(kBufferedSizeToSkip));
+
+  nu::DynamicArray<I8> temp;
+  temp.resize(skipBufferSize);
+
+  while (numBytesToSkip != 0 && !isExhausted()) {
+    numBytesToSkip -=
+        read(temp.getData(), std::min(numBytesToSkip, static_cast<SizeType>(kBufferedSizeToSkip)));
+  }
 }
 
 uint8_t InputStream::readByte() {
@@ -58,7 +73,7 @@ I64 InputStream::readInt64() {
   return 0;
 }
 
-float InputStream::readFloat() {
+F32 InputStream::readFloat32() {
   static_assert(sizeof(I32) == sizeof(float),
                 "Size of int32 and float must match for the union to work.");
 
@@ -71,7 +86,7 @@ float InputStream::readFloat() {
   return n.asFloat;
 }
 
-double InputStream::readDouble() {
+F64 InputStream::readFloat64() {
   static_assert(sizeof(I64) == sizeof(double),
                 "Size of int64 and float must match for the union to work.");
 
@@ -82,67 +97,6 @@ double InputStream::readDouble() {
   n.asInt = readInt64();
 
   return n.asDouble;
-}
-
-std::string InputStream::readNextLine() {
-  nu::DynamicArray<char> buffer;
-  buffer.resize(256);
-
-  char* data = buffer.getData();
-  SizeType i = 0;
-
-  while ((data[i] = readByte()) != 0) {
-    if (data[i] == '\n')
-      break;
-
-    if (data[i] == '\r') {
-      const I64 lastPos = getPosition();
-
-      if (readByte() != '\n')
-        setPosition(lastPos);
-
-      break;
-    }
-
-    if (++i >= buffer.getSize()) {
-      buffer.resize(buffer.getSize() + 512);
-      data = buffer.getData();
-    }
-  }
-
-  return std::string(buffer.getData(), i);
-}
-
-std::string InputStream::ReadString() {
-  nu::DynamicArray<char> buffer;
-  buffer.resize(256);
-
-  char* data = buffer.getData();
-  SizeType i = 0;
-
-  while ((data[i] = readByte()) != 0) {
-    if (++i >= buffer.getSize()) {
-      buffer.resize(buffer.getSize() + 512);
-      data = buffer.getData();
-    }
-  }
-
-  return std::string(data, i);
-}
-
-void InputStream::skipNextBytes(SizeType numBytesToSkip) {
-  enum { BUFFERED_SIZE_TO_SKIP = 16384 };
-
-  const SizeType skipBufferSize =
-      std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP));
-
-  nu::DynamicArray<I8> temp;
-  temp.resize(skipBufferSize);
-
-  while (numBytesToSkip != 0 && !isExhausted()) {
-    numBytesToSkip -= read(temp.getData(),
-                           std::min(numBytesToSkip, static_cast<SizeType>(BUFFERED_SIZE_TO_SKIP)));
-  }
 }
 
 InputStream::InputStream() = default;

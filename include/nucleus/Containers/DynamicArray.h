@@ -25,6 +25,16 @@ public:
 
   DynamicArray() = default;
 
+  DynamicArray(ElementType* data, SizeType dataSize) : m_size(dataSize) {
+    ensureAllocated(m_size, DiscardOldData);
+
+    // Do not do a memcpy here, because we need to call the copy constructor of the elements being
+    // copied.
+    for (SizeType i = 0; i < dataSize; ++i) {
+      m_data[i] = data[i];
+    }
+  }
+
   DynamicArray(const DynamicArray& other) : m_size(other.m_size) {
     ensureAllocated(m_size, DiscardOldData);
     ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));

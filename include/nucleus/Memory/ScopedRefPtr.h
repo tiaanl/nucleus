@@ -66,12 +66,12 @@ public:
     return *this;
   }
 
-  ScopedRefPtr<T>& operator=(const ScopedRefPtr<T>& other) {
+  ScopedRefPtr& operator=(const ScopedRefPtr& other) {
     return *this = other.m_ptr;
   }
 
   template <typename U>
-  ScopedRefPtr<T>& operator=(const ScopedRefPtr<U>& other) {
+  ScopedRefPtr& operator=(const ScopedRefPtr<U>& other) {
     return *this = other.get();
   }
 
