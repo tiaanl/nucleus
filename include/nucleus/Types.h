@@ -43,4 +43,9 @@ using PtrDiff = I32;
 // Type used for max alignment size.
 using MaxAlign = long double;
 
+// Text Types
+
+using Char = char;
+using StringLength = MemSize;
+
 #endif  // NUCLEUS_TYPES_H_

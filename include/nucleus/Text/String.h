@@ -3,29 +3,37 @@
 #define NUCLEUS_TEXT_STRING_H_
 
 #include <algorithm>
+#include <cstring>  // std::strlen, std::memcpy
 #include <limits>
 #include <ostream>
-#include <cstring>  // std::strlen, std::memcpy
 
-#include "nucleus/Allocators/DefaultAllocator.h"
+// #include "nucleus/Allocators/DefaultAllocator.h"
+#include "nucleus/Logging.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 
 class String {
 public:
-  using CharType = char;
-  using SizeType = MemSize;
+  using CharType = Char;
+  using SizeType = StringLength;
 
   static constexpr SizeType npos = std::numeric_limits<SizeType>::max();
 
-  explicit String() : m_data(nullptr), m_length(0), m_allocated(0) {}
+  String() : m_data{nullptr}, m_length{0}, m_allocated{0} {}
 
-  String(const String& other) : m_data(other.m_data), m_length(other.m_length) {}
+  String(const String& other) : String{} {
+    ensureAllocated(other.getLength(), false);
+    std::memcpy(m_data, other.m_data, other.m_length * sizeof(CharType));
+    m_length = other.m_length;
+    m_data[m_length] = 0;
+  }
 
   // Construct a `String` from a c-string.
   String(const char* text, SizeType length = npos) : m_data(nullptr), m_length(0), m_allocated(0) {
     SizeType textLength = (length == npos) ? std::strlen(text) : length;
     ensureAllocated(textLength, false);
+    DCHECK(m_data != nullptr);
     std::memcpy(m_data, text, textLength * sizeof(CharType));
     m_length = textLength;
     m_data[m_length] = 0;
@@ -34,7 +42,8 @@ public:
   // Destruct the string, freeing any memory we might have allocated.
   ~String() {
     if (m_data && m_allocated) {
-      getDefaultAllocator()->free(m_data, m_allocated);
+      // getDefaultAllocator()->free(m_data, m_allocated);
+      delete[] m_data;
     }
   }
 
@@ -55,6 +64,10 @@ public:
   }
 
   const char* getRawBytes() const {
+    return m_data;
+  }
+
+  CharType* getRawBytes() {
     return m_data;
   }
 
@@ -111,6 +124,13 @@ public:
     m_data[m_length] = 0;
   }
 
+  void append(const String& other, StringLength length) {
+    ensureAllocated(m_length + length, true);
+    std::memcpy(m_data + m_length, other.m_data, length);
+    m_length += length;
+    m_data[m_length] = 0;
+  }
+
   // Erase `count` characters starting from `pos`.
   void erase(SizeType pos, SizeType count) {
     for (SizeType i = 0; i < m_length - count; ++i) {
@@ -150,7 +170,8 @@ public:
     return 0;
   }
 
-  // Returns the position of the last occurrence of `ch` in the string.  Returns `npos` if the character is not found.
+  // Returns the position of the last occurrence of `ch` in the string.  Returns `npos` if the
+  // character is not found.
   SizeType findLastOfChar(CharType ch) const {
     for (SizeType i = m_length - 1;; --i) {
       if (m_data[i] == ch) {
@@ -182,21 +203,22 @@ public:
   }
 
 private:
-  // Ensure that the buffer can hold a string of the specified length.  If `keepOld` is true, then any data currently in
-  // the buffer will be there after any allocations.
+  // Ensure that the buffer can hold a string of the specified length.  If `keepOld` is true, then
+  // any data currently in the buffer will be there after any allocations.
   void ensureAllocated(SizeType lengthOfString, bool keepOld) {
     if (m_allocated < (lengthOfString + 1)) {
       allocate(lengthOfString + 1, keepOld);
     }
   }
 
-  // Allocate memory to hold a string of the specified length.  If `keepOld` is true, then any data currently in the
-  // buffer will be there after any allocations.
+  // Allocate memory to hold a string of the specified length.  If `keepOld` is true, then any data
+  // currently in the buffer will be there after any allocations.
   void allocate(MemSize bytesToAllocate, bool keepOld) {
-    Allocator* allocator = getDefaultAllocator();
+    // Allocator* allocator = getDefaultAllocator();
 
     // Allocate a new buffer to hold data.
-    CharType* newBuffer = static_cast<CharType*>(allocator->allocate(bytesToAllocate));
+    // CharType* newBuffer = static_cast<CharType*>(allocator->allocate(bytesToAllocate));
+    CharType* newBuffer = new CharType[bytesToAllocate];
 
     if (m_data) {
       // Copy the old data if needed.
@@ -206,7 +228,8 @@ private:
       }
 
       // Destroy the old buffer.
-      allocator->free(m_data, m_allocated);
+      // allocator->free(m_data, m_allocated);
+      delete[] m_data;
     }
 
     m_data = newBuffer;

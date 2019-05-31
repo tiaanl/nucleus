@@ -48,7 +48,7 @@ public:
   }
 
   explicit DynamicArray(SizeType initialCapacity) {
-    ensureAllocated(initialCapacity);
+    ensureAllocated(initialCapacity, DiscardOldData);
   }
 
   ~DynamicArray() {

@@ -9,21 +9,16 @@
 
 namespace nu {
 
-using StringLength = MemSize;
-using Char = I8;
-
 class StringView {
 public:
   // The default constructor is used when you want to return a piece of text, but it is not
   // available.
-  StringView() : m_text(0), m_length(0) {}
+  StringView() : m_text{0}, m_length{0} {}
 
-  StringView(const char* text)
-    : m_text{zeroTerminatedToCharPointer(text)},
-      m_length{calculateLength(zeroTerminatedToCharPointer(text))} {}
+  StringView(const char* text) : StringView{text, std::strlen(text)} {}
 
-  StringView(const char* text, MemSize length)
-    : m_text{zeroTerminatedToCharPointer(text)}, m_length{length} {}
+  StringView(const char* text, StringLength length)
+    : m_text{static_cast<Char*>(const_cast<Char*>(text))}, m_length{length} {}
 
   StringView(const StringView& other, StringLength length)
     : m_text{other.m_text}, m_length{length} {}
@@ -32,7 +27,7 @@ public:
     return m_text[index];
   }
 
-  Char operator[](StringLength index) {
+  Char& operator[](StringLength index) {
     return m_text[index];
   }
 
@@ -40,7 +35,7 @@ public:
     return m_text;
   }
 
-  MemSize getLength() const {
+  StringLength getLength() const {
     return m_length;
   }
 
@@ -60,17 +55,6 @@ public:
   }
 
 private:
-  static Char* zeroTerminatedToCharPointer(const char* zeroTerminated) {
-    return static_cast<Char*>(const_cast<char*>(zeroTerminated));
-  }
-
-  static StringLength calculateLength(Char* text) {
-    StringLength length = 0;
-    for (auto p = text; *p; ++p, ++length) {
-    }
-    return length;
-  }
-
   Char* m_text;
   StringLength m_length;
 };

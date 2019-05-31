@@ -69,6 +69,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Streams/WrappedMemoryInputStream.h"
     "include/nucleus/Synchronization/AutoLock.h"
     "include/nucleus/Synchronization/Lock.h"
+    "include/nucleus/Text/StaticString.h"
     "include/nucleus/Text/String.h"
     "include/nucleus/Text/StringPool.h"
     "include/nucleus/Text/StringView.h"

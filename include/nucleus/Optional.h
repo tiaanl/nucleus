@@ -18,13 +18,13 @@ template <typename T>
 class Optional {
 public:
   // Construct default empty value.
-  Optional() : m_empty(detail::emptyValue) {}
+  Optional() : m_empty{detail::emptyValue}, m_valid{false} {}
 
   // Construct with an initial value.
-  explicit Optional(const T& value) : m_value(value), m_valid(true) {}
+  explicit Optional(const T& value) : m_value{value}, m_valid{true} {}
 
   // Copy constructor.
-  Optional(const Optional& other) : m_value(other.m_value), m_valid(other.m_valid) {}
+  Optional(const Optional& other) = default;
 
   // Construct by moving the value.
   Optional(Optional&& other) : m_value(std::move(other.m_value)), m_valid(other.m_valid) {}
@@ -36,14 +36,6 @@ public:
     if (m_valid) {
       reset();
     }
-  }
-
-  // Assign another Optional to this optional.
-  Optional& operator=(const Optional& other) {
-    m_value = other.m_value;
-    m_valid = other.m_value;
-
-    return *this;
   }
 
   // Move another Optional into this one.
@@ -69,6 +61,7 @@ public:
   T& get() {
     return m_value;
   }
+
   const T& get() const {
     return m_value;
   }
@@ -82,11 +75,11 @@ private:
   // The value we're holding.
   union {
     T m_value;
-    detail::EmptyType m_empty = detail::emptyValue;
+    detail::EmptyType m_empty;
   };
 
   // Set to true if the value we are holding is valid.
-  bool m_valid = false;
+  bool m_valid;
 };
 
 template <typename T, typename... Args>
