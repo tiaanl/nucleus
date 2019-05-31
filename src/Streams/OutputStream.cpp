@@ -10,11 +10,11 @@ namespace nu {
 
 namespace {
 
-MemSize writeNumberToBuffer(I8* buffer, MemSize size, I64 value) {
+MemSize writeNumberToBuffer(I8* buffer, MemSize, I64 value) {
   return sprintf(buffer, "%lld", value);
 }
 
-MemSize writeFloatToBuffer(I8* buffer, MemSize size, F64 value) {
+MemSize writeFloatToBuffer(I8* buffer, MemSize, F64 value) {
   return sprintf(buffer, "%.3f", value);
 }
 

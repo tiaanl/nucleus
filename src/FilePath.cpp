@@ -2,6 +2,14 @@
 #include "nucleus/FilePath.h"
 
 #include "nucleus/Macros.h"
+#if OS(POSIX)
+#include <unistd.h>
+#if OS(LINUX)
+#include <linux/limits.h>
+#endif
+#elif OS(WIN)
+#include "nucleus/Win/WindowsMixin.h"
+#endif
 
 #include "nucleus/MemoryDebug.h"
 
@@ -87,7 +95,9 @@ bool FilePath::isSeparator(String::CharType ch) {
 
 // static
 FilePath FilePath::normalizeSeparators(const nu::String& path) {
-  FilePath result{path};
+  FilePath result;
+  result.m_path = path;
+
   for (String::SizeType i = 0; i < result.m_path.getLength(); ++i) {
     String::CharType ch = result.m_path[i];
     if (isSeparator(ch)) {
@@ -99,11 +109,9 @@ FilePath FilePath::normalizeSeparators(const nu::String& path) {
 
 FilePath::FilePath() = default;
 
-FilePath::FilePath(const String& path) : m_path(path) {}
+FilePath::FilePath(StringView path) : m_path{path.getData(), path.getLength()} {}
 
-FilePath::FilePath(const FilePath& other) : m_path{other.m_path} {}
-
-FilePath::~FilePath() = default;
+FilePath::FilePath(const FilePath& other) = default;
 
 FilePath& FilePath::operator=(const FilePath& other) = default;
 
@@ -122,7 +130,7 @@ bool FilePath::operator!=(const FilePath& other) const {
 void FilePath::clear() {}
 
 FilePath FilePath::dirName() const {
-  FilePath newPath{m_path};
+  FilePath newPath = *this;
   newPath.stripTrailingSeparators();
 
   String::SizeType letter = findDriveLetter(newPath.m_path);
@@ -153,7 +161,7 @@ FilePath FilePath::dirName() const {
 }
 
 FilePath FilePath::baseName() const {
-  FilePath newPath{m_path};
+  FilePath newPath = *this;
   newPath.stripTrailingSeparators();
 
   // The drive letter, if any, is always stripped.
@@ -173,30 +181,32 @@ FilePath FilePath::baseName() const {
   return newPath;
 }
 
-FilePath FilePath::append(const char* component) const {
-  return append(String{component});
+FilePath FilePath::append(const StringView& component) const {
+  return append(FilePath{component});
 }
 
-FilePath FilePath::append(const String& component) const {
+FilePath FilePath::append(const FilePath& component) const {
 #if 0
   DCHECK(!isPathAbsolute(*appended));
 #endif  // 0
 
+#if 0
   if (m_path.compare(String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1)) == 0 &&
       !component.isEmpty()) {
     // Append normally doesn't do any normalization, but as a special case, when appending to
     // `kCurrentDirectory`, just return a new path for the `component` argument.  Appending
     // `component` to `kCurrentDirectory` would serve no purpose other than needlessly lengthening
     // the path.
-    return FilePath(component);
+    return FilePath{component};
   }
+#endif  // 0
 
-  FilePath newPath{m_path};
+  FilePath newPath = *this;
   newPath.stripTrailingSeparators();
 
   // Don't append a separator if the path is empty (indicating the current directory) or if the path
   // component is empty (indicating nothing to append).
-  if (!component.isEmpty() && !newPath.m_path.isEmpty()) {
+  if (!component.m_path.isEmpty() && !newPath.m_path.isEmpty()) {
     // Don't append a separator if the path still ends with a trailing separator after stripping
     // (indicating the root directory).
     if (!isSeparator(newPath.m_path[newPath.m_path.getLength() - 1])) {
@@ -207,13 +217,9 @@ FilePath FilePath::append(const String& component) const {
     }
   }
 
-  newPath.m_path.append(component);
+  newPath.m_path.append(component.m_path);
 
   return newPath;
-}
-
-FilePath FilePath::append(const FilePath& component) const {
-  return append(component.getPath());
 }
 
 void FilePath::stripTrailingSeparators() {
@@ -233,6 +239,18 @@ void FilePath::stripTrailingSeparators() {
       lastStripped = pos;
     }
   }
+}
+
+FilePath getCurrentWorkingDirectory() {
+#if OS(POSIX)
+  char buf[PATH_MAX] = {0};
+  const char* result = ::getcwd(buf, PATH_MAX);
+  return FilePath{result};
+#elif OS(WIN)
+  char buf[MAX_PATH] = {0};
+  DWORD result = ::GetCurrentDirectoryA(MAX_PATH, buf);
+  return FilePath{String{buf, result}};
+#endif
 }
 
 }  // namespace nu

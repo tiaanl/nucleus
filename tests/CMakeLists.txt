@@ -10,6 +10,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "Containers/ArrayTests.cpp"
     "Containers/BitSetTests.cpp"
     "Containers/DynamicArrayTests.cpp"
+    "FilePathTests.cpp"
     "HighPerformanceTimerTests.cpp"
     "LoggingTests.cpp"
     "LoggingTests.cpp"
@@ -27,7 +28,6 @@ set(nucleus_TESTS_SOURCE_FILES
     "Text/StringPoolTests.cpp"
     "Text/StringTests.cpp"
     "Text/StringViewTests.cpp"
-    # "FilePathTests.cpp"
 )
 
 add_executable(nucleusTests ${nucleus_TESTS_SOURCE_FILES})

@@ -6,6 +6,7 @@
 
 #include "nucleus/Config.h"
 #include "nucleus/Text/String.h"
+#include "nucleus/Text/StringView.h"
 
 #if OS(WIN)
 #define FILE_PATH_USES_DRIVE_LETTERS 1
@@ -26,9 +27,8 @@ public:
   static FilePath normalizeSeparators(const nu::String& path);
 
   FilePath();
-  explicit FilePath(const String& path);
+  FilePath(StringView path);
   FilePath(const FilePath& other);
-  ~FilePath();
 
   FilePath& operator=(const FilePath& other);
 
@@ -51,11 +51,8 @@ public:
   // directory.
   FilePath baseName() const;
 
-  // Returns a FilePath by appending a separator and the supplied path component to this object's
-  // path.  Append takes care to avoid adding excessive separators if this object's path already
-  // ends with a separator.
-  FilePath append(const char* component) const;
-  FilePath append(const String& component) const;
+  // Returns a FilePath by appending a separator (if needed) and the supplied path component.
+  FilePath append(const StringView& component) const;
   FilePath append(const FilePath& component) const;
 
 private:
@@ -66,10 +63,20 @@ private:
   String m_path;
 };
 
+inline FilePath operator/(const FilePath& left, const StringView& right) {
+  return left.append(right);
+}
+
+inline FilePath operator/(const FilePath& left, const FilePath& right) {
+  return left.append(right);
+}
+
 inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
   os << filePath.getPath();
   return os;
 }
+
+FilePath getCurrentWorkingDirectory();
 
 }  // namespace nu
 

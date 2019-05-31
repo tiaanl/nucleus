@@ -94,10 +94,10 @@ TEST_CASE("DirName") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input(String{cases[i].input});
+  for (auto& i : cases) {
+    FilePath input{i.input};
     FilePath observed = input.dirName();
-    CHECK(observed.getPath() == String(cases[i].expected));  // << "i: " << i << ", input: " << input.getPath();
+    CHECK(observed.getPath() == String(i.expected));
   }
 }
 
@@ -184,9 +184,9 @@ TEST_CASE("BaseName") {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath input{String{cases[i].input}};
+    FilePath input{cases[i].input};
     FilePath observed = input.baseName();
-    CHECK(observed.getPath() == String(cases[i].expected));  // << "i: " << i << ", input: " << input.getPath();
+    CHECK(observed.getPath() == String(cases[i].expected));
   }
 }
 
@@ -266,8 +266,8 @@ TEST_CASE("Append") {
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
-    FilePath root{String{cases[i].inputs[0]}};
-    String leaf(cases[i].inputs[1]);
+    FilePath root{cases[i].inputs[0]};
+    FilePath leaf{cases[i].inputs[1]};
 
     FilePath observedStr = root.append(leaf);
     CHECK(observedStr.getPath() == String(cases[i].expected));
@@ -288,6 +288,17 @@ TEST_CASE("Append") {
               "i: " << i << ", root: " << root.value() << ", leaf: " << leaf;
 #endif  // 0
   }
+}
+
+TEST_CASE("print some general uses of FilePath") {
+  FilePath resources{"resources"};
+  FilePath root = getCurrentWorkingDirectory() / resources / "default.png";
+  FilePath dirName = root.dirName();
+  FilePath baseName = root.baseName();
+
+  LOG(Info) << "Path: " << root;
+  LOG(Info) << "Dir name: " << dirName;
+  LOG(Info) << "Base name: " << baseName;
 }
 
 }  // namespace nu
