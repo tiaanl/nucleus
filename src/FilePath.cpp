@@ -249,7 +249,7 @@ FilePath getCurrentWorkingDirectory() {
 #elif OS(WIN)
   char buf[MAX_PATH] = {0};
   DWORD result = ::GetCurrentDirectoryA(MAX_PATH, buf);
-  return FilePath{String{buf, result}};
+  return FilePath{StringView{buf, result}};
 #endif
 }
 
