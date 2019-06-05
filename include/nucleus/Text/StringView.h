@@ -54,7 +54,7 @@ public:
                       (startIndex + length > m_length) ? m_length - startIndex : length};
   }
 
-private:
+protected:
   Char* m_text;
   StringLength m_length;
 };

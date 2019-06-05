@@ -68,6 +68,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Streams/WrappedMemoryInputStream.h"
     "include/nucleus/Synchronization/AutoLock.h"
     "include/nucleus/Synchronization/Lock.h"
+    "include/nucleus/Text/DynamicString.h"
     "include/nucleus/Text/StaticString.h"
     "include/nucleus/Text/String.h"
     "include/nucleus/Text/StringPool.h"
@@ -100,6 +101,7 @@ set(nucleus_SOURCE_FILES
     "src/Streams/OutputStream.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
+    "src/Text/DynamicString.cpp"
     )
 
 if(WIN32)

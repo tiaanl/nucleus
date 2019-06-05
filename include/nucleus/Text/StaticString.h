@@ -7,28 +7,34 @@
 namespace nu {
 
 template <MemSize Size = 64>
-class StaticString {
+class StaticString : public StringView {
 public:
-  StaticString() : m_data{0}, m_length{0} {}
+  StaticString() : StringView{m_storage, 0} {}
 
-  StaticString(const StringView& source) {
-    MemSize bytesToCopy = std::min(Size - 1, source.getLength());
-    std::memcpy(m_data, source.getData(), bytesToCopy);
-    m_data[bytesToCopy] = 0;
+  StaticString(const StringView& text) : StaticString{} {
+    MemSize bytesToCopy = std::min(Size - 1, text.getLength());
+    std::strncpy(m_text, text.getData(), bytesToCopy);
     m_length = bytesToCopy;
+    m_text[m_length] = 0;
   }
 
-  const Char* getData() const {
-    return m_data;
+  MemSize getStorageSize() {
+    return Size;
   }
 
-  StringLength getLength() const {
-    return m_length;
+  void append(const char* text) {
+    append(text, std::strlen(text));
+  }
+
+  void append(const char* text, StringLength length) {
+    StringLength bytesToCopy = std::min(Size - m_length - 1, length);
+    std::strncat(m_storage, text, bytesToCopy);
+    m_length += bytesToCopy;
+    m_text[m_length] = '\0';
   }
 
 private:
-  Char m_data[Size];
-  StringLength m_length;
+  Char m_storage[Size];
 };
 
 }  // namespace nu

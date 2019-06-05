@@ -24,6 +24,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "SignalsTests.cpp"
     "SingletonTests.cpp"
     "Streams/ConsoleOutputStreamTests.cpp"
+    "Text/DynamicStringTests.cpp"
     "Text/StaticStringTests.cpp"
     "Text/StringPoolTests.cpp"
     "Text/StringTests.cpp"
