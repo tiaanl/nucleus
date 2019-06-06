@@ -30,7 +30,7 @@ public:
   }
 
   DynamicString& operator=(const DynamicString& other) {
-    ensureAllocated(other.m_length, false);
+    ensureAllocated(other.m_length + 1, false);
     std::strncpy(m_text, other.m_text, other.m_length);
     m_text[other.m_length] = '\0';
     m_length = other.m_length;
@@ -38,9 +38,27 @@ public:
     return *this;
   }
 
+  DynamicString& operator=(const StringView& other) {
+    auto otherLength = other.getLength();
+
+    ensureAllocated(otherLength + 1, false);
+    std::strncpy(m_text, other.getData(), otherLength);
+    m_length = otherLength;
+    m_text[m_length] = '\0';
+
+    return *this;
+  }
+
   // Return the amount of bytes allocated to store text data.
   MemSize getAllocated() const {
     return m_allocated;
+  }
+
+  // Append a single character.
+  void append(Char ch) {
+    ensureAllocated(m_length + 2, true);
+    m_text[m_length++] = ch;
+    m_text[m_length] = '\0';
   }
 
   void append(const char* text) {
@@ -56,6 +74,33 @@ public:
 
   void append(const StringView& text) {
     append(text.getData(), text.getLength());
+  }
+
+  void resize(StringLength length) {
+    if (m_length == length) {
+      return;
+    }
+
+    if (length > m_length) {
+      ensureAllocated(length + 1, true);
+    }
+
+    m_length = length;
+    m_text[m_length] = '\0';
+  }
+
+  void erase(StringLength position, StringLength count) {
+    if (position >= m_length) {
+      return;
+    }
+
+    count = std::min(count, m_length - position);
+
+    for (auto i = position; i < m_length - count; ++i) {
+      m_text[i] = m_text[i + count];
+    }
+    m_length -= count;
+    m_text[m_length] = '\0';
   }
 
 private:

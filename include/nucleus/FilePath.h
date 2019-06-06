@@ -5,8 +5,7 @@
 #include <ostream>
 
 #include "nucleus/Config.h"
-#include "nucleus/Text/String.h"
-#include "nucleus/Text/StringView.h"
+#include "nucleus/Text/DynamicString.h"
 
 #if OS(WIN)
 #define FILE_PATH_USES_DRIVE_LETTERS 1
@@ -21,13 +20,13 @@ namespace nu {
 class FilePath {
 public:
   // Returns true if ch is a FilePath separator.
-  static bool isSeparator(String::CharType ch);
+  static bool isSeparator(Char ch);
 
   // Normalize separators to all be the default separator for the platform.
-  static FilePath normalizeSeparators(const nu::String& path);
+  static FilePath normalizeSeparators(const StringView& path);
 
   FilePath();
-  FilePath(StringView path);
+  FilePath(const StringView& path);
   FilePath(const FilePath& other);
 
   FilePath& operator=(const FilePath& other);
@@ -36,7 +35,7 @@ public:
   bool operator!=(const FilePath& other) const;
 
   // Return the path as a string.
-  const String& getPath() const {
+  const StringView& getPath() const {
     return m_path;
   }
 
@@ -60,7 +59,7 @@ private:
   void stripTrailingSeparators();
 
   // A string representation of the path in this object.
-  String m_path;
+  DynamicString m_path;
 };
 
 inline FilePath operator/(const FilePath& left, const StringView& right) {
@@ -72,7 +71,7 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
 }
 
 inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
-  os << filePath.getPath();
+  os << filePath.getPath().getData();
   return os;
 }
 

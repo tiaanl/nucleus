@@ -11,6 +11,8 @@ namespace nu {
 
 class StringView {
 public:
+  static constexpr StringLength kInvalidPosition = std::numeric_limits<StringLength>::max();
+
   // The default constructor is used when you want to return a piece of text, but it is not
   // available.
   StringView() : m_text{0}, m_length{0} {}
@@ -31,6 +33,14 @@ public:
     return m_text[index];
   }
 
+  bool operator==(const StringView& other) const {
+    return compare(other) == 0;
+  }
+
+  bool operator!=(const StringView& other) const {
+    return compare(other) != 0;
+  }
+
   Char* getData() const {
     return m_text;
   }
@@ -39,7 +49,11 @@ public:
     return m_length;
   }
 
-  I32 compare(StringView other) {
+  bool isEmpty() const {
+    return m_length == 0;
+  }
+
+  I32 compare(const StringView& other) const {
     return std::strncmp(m_text, other.m_text, std::min(m_length, other.m_length));
   }
 
@@ -52,6 +66,42 @@ public:
   StringView subString(StringLength startIndex, StringLength length) const {
     return StringView{m_text + startIndex,
                       (startIndex + length > m_length) ? m_length - startIndex : length};
+  }
+
+  // Return the position of the first character that matches the given character.
+  StringLength findFirstOf(Char ch) const {
+    for (StringLength i = 0; i < m_length; ++i) {
+      if (ch == m_text[i]) {
+        return i;
+      }
+    }
+
+    return kInvalidPosition;
+  }
+
+  // Return the position of the first character that matches any of the predicate characters.
+  StringLength findFirstOfAny(const StringView& characters) const {
+    for (StringLength i = 0; i < m_length; ++i) {
+      auto pos = characters.findFirstOf(m_text[i]);
+      if (pos != kInvalidPosition) {
+        return i;
+      }
+    }
+
+    return kInvalidPosition;
+  }
+
+  // Return the position of the last character that matches any of the predicate characters.
+  StringLength findLastOfAny(const StringView& characters) {
+    for (auto i = 0; i <= m_length; ++i) {
+      auto currentPos = m_length - 1 - i;
+      auto pos = characters.findFirstOf(m_text[currentPos]);
+      if (pos != kInvalidPosition) {
+        return currentPos;
+      }
+    }
+
+    return kInvalidPosition;
   }
 
 protected:

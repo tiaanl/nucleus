@@ -97,7 +97,7 @@ TEST_CASE("DirName") {
   for (auto& i : cases) {
     FilePath input{i.input};
     FilePath observed = input.dirName();
-    CHECK(observed.getPath() == String(i.expected));
+    CHECK(observed.getPath() == StringView{i.expected});
   }
 }
 
@@ -186,7 +186,7 @@ TEST_CASE("BaseName") {
   for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
     FilePath input{cases[i].input};
     FilePath observed = input.baseName();
-    CHECK(observed.getPath() == String(cases[i].expected));
+    CHECK(observed.getPath() == StringView{cases[i].expected});
   }
 }
 
@@ -270,11 +270,11 @@ TEST_CASE("Append") {
     FilePath leaf{cases[i].inputs[1]};
 
     FilePath observedStr = root.append(leaf);
-    CHECK(observedStr.getPath() == String(cases[i].expected));
+    CHECK(observedStr.getPath() == StringView{cases[i].expected});
     // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
     FilePath observedPath = root.append(FilePath(leaf));
-    CHECK(observedPath.getPath() == String(cases[i].expected));
+    CHECK(observedPath.getPath() == StringView{cases[i].expected});
     // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
 
 #if 0

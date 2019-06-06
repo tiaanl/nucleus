@@ -57,4 +57,18 @@ TEST_CASE("DynamicString grows when appending") {
   }
 }
 
+TEST_CASE("DynamicString can erase text") {
+  DynamicString str{"abcd"};
+
+  SECTION("erase from beginning") {
+    str.erase(0, 2);
+    CHECK(str.compare("cd") == 0);
+  }
+
+  SECTION("erase past the allocated size") {
+    str.erase(2, 10);
+    CHECK(str.compare("ab") == 0);
+  }
+}
+
 }  // namespace nu

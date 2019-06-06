@@ -22,12 +22,13 @@ namespace {
 // Windows, when a pathname begins with a letter followed by a colon.  On other platforms, this
 // always returns npos.
 #if OS(WIN)
-String::SizeType findDriveLetter(const String& path) {
+StringLength findDriveLetter(const StringView& path) {
   if (path.getLength() >= 2 && path[1] == ':' &&
       ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))) {
     return 1;
   }
-  return String::npos;
+
+  return StringView::kInvalidPosition;
 }
 #else
 String::SizeType findDriveLetter(const String&) {
@@ -36,23 +37,24 @@ String::SizeType findDriveLetter(const String&) {
 #endif
 
 #if OS(WIN)
-bool equalDriveLetterCaseInsensitive(const String& left, const String& right) {
+bool equalDriveLetterCaseInsensitive(const StringView& left, const StringView& right) {
   auto leftLetterPos = findDriveLetter(left);
   auto rightLetterPos = findDriveLetter(right);
 
-  if (leftLetterPos == String::npos || rightLetterPos == String::npos) {
+  if (leftLetterPos == StringView::kInvalidPosition ||
+      rightLetterPos == StringView::kInvalidPosition) {
     return leftLetterPos == rightLetterPos;
   }
 
-  String leftLetter{left.sub(0, leftLetterPos + 1)};
-  String rightLetter{right.sub(0, rightLetterPos + 1)};
+  auto leftLetter{left.subString(0, leftLetterPos + 1)};
+  auto rightLetter{right.subString(0, rightLetterPos + 1)};
 #if 0
   if (!StartsWith(leftLetter, rightLetter, false))
     return false;
 #endif  // 0
 
-  String leftRest{left.sub(leftLetterPos + 1)};
-  String rightRest{right.sub(rightLetterPos + 1)};
+  auto leftRest = left.subString(leftLetterPos + 1);
+  auto rightRest = left.subString(rightLetterPos + 1);
 
   return leftRest == rightRest;
 }
@@ -83,7 +85,7 @@ static const char kExtensionSeparator = '.';
 }  // namespace
 
 // static
-bool FilePath::isSeparator(String::CharType ch) {
+bool FilePath::isSeparator(Char ch) {
   for (MemSize i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
     if (ch == kSeparators[i]) {
       return true;
@@ -94,22 +96,21 @@ bool FilePath::isSeparator(String::CharType ch) {
 }
 
 // static
-FilePath FilePath::normalizeSeparators(const nu::String& path) {
-  FilePath result;
-  result.m_path = path;
+FilePath FilePath::normalizeSeparators(const StringView& path) {
+  FilePath result{path};
 
-  for (String::SizeType i = 0; i < result.m_path.getLength(); ++i) {
-    String::CharType ch = result.m_path[i];
-    if (isSeparator(ch)) {
+  for (StringLength i = 0; i < result.m_path.getLength(); ++i) {
+    if (isSeparator(result.m_path[i])) {
       result.m_path[i] = kSeparators[0];
     }
   }
+
   return result;
 }
 
 FilePath::FilePath() = default;
 
-FilePath::FilePath(StringView path) : m_path{path.getData(), path.getLength()} {}
+FilePath::FilePath(const StringView& path) : m_path{path.getData(), path.getLength()} {}
 
 FilePath::FilePath(const FilePath& other) = default;
 
@@ -130,14 +131,16 @@ bool FilePath::operator!=(const FilePath& other) const {
 void FilePath::clear() {}
 
 FilePath FilePath::dirName() const {
-  FilePath newPath = *this;
+  FilePath newPath{*this};
+
   newPath.stripTrailingSeparators();
 
-  String::SizeType letter = findDriveLetter(newPath.m_path);
+  auto letter = findDriveLetter(newPath.m_path);
 
-  String::SizeType lastSeparator =
-      newPath.m_path.findLastOfAnyChar(String{kSeparators, ARRAY_SIZE(kSeparators) - 1});
-  if (lastSeparator == String::npos) {
+  auto lastSeparator =
+      newPath.m_path.findLastOfAny(StringView{kSeparators, ARRAY_SIZE(kSeparators) - 1});
+
+  if (lastSeparator == StringView::kInvalidPosition) {
     // m_path is in the current directory.
     newPath.m_path.resize(letter + 1);
   } else if (lastSeparator == letter + 1) {
@@ -154,7 +157,7 @@ FilePath FilePath::dirName() const {
 
   newPath.stripTrailingSeparators();
   if (newPath.m_path.isEmpty()) {
-    newPath.m_path = String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1);
+    newPath.m_path = StringView{kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1};
   }
 
   return newPath;
@@ -165,16 +168,17 @@ FilePath FilePath::baseName() const {
   newPath.stripTrailingSeparators();
 
   // The drive letter, if any, is always stripped.
-  String::SizeType letter = findDriveLetter(newPath.m_path);
-  if (letter != String::npos) {
+  auto letter = findDriveLetter(newPath.m_path);
+  if (letter != StringView::kInvalidPosition) {
     newPath.m_path.erase(0, letter + 1);
   }
 
   // Keep everything after the final separator, but if the pathname is only one character and it's a
   // separator, leave it alone.
-  String::SizeType lastSeparator =
-      newPath.m_path.findLastOfAnyChar(String(kSeparators, ARRAY_SIZE(kSeparators) - 1));
-  if (lastSeparator != String::npos && lastSeparator < newPath.m_path.getLength() - 1) {
+  auto lastSeparator =
+      newPath.m_path.findLastOfAny(StringView{kSeparators, ARRAY_SIZE(kSeparators) - 1});
+  if (lastSeparator != StringView::kInvalidPosition &&
+      lastSeparator < newPath.m_path.getLength() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
   }
 
@@ -227,11 +231,10 @@ void FilePath::stripTrailingSeparators() {
   // separator if there is only one separator.  If there is a drive letter, start will be set
   // appropriately to prevent stripping the first separator following the drive letter, if a
   // separator immediately follows the drive letter.
-  String::SizeType start = findDriveLetter(m_path) + 2;
+  auto start = findDriveLetter(m_path) + 2;
 
-  String::SizeType lastStripped = String::npos;
-  for (String::SizeType pos = m_path.getLength(); pos > start && isSeparator(m_path[pos - 1]);
-       --pos) {
+  auto lastStripped = StringView::kInvalidPosition;
+  for (auto pos = m_path.getLength(); pos > start && isSeparator(m_path[pos - 1]); --pos) {
     // If the string only has two separators and they're at the beginning, don't strip them, unless
     // the string began with more than two separators.
     if (pos != start + 1 || lastStripped == start + 2 || !isSeparator(m_path[start - 1])) {
