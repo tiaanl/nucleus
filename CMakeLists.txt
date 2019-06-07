@@ -104,6 +104,7 @@ set(nucleus_SOURCE_FILES
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
     "src/Text/DynamicString.cpp"
+    "src/Text/StringView.cpp"
     )
 
 if(WIN32)

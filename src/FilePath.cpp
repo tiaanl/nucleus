@@ -31,8 +31,8 @@ StringLength findDriveLetter(const StringView& path) {
   return StringView::kInvalidPosition;
 }
 #else
-String::SizeType findDriveLetter(const String&) {
-  return String::npos;
+StringLength findDriveLetter(const StringView&) {
+  return StringView::kInvalidPosition;
 }
 #endif
 

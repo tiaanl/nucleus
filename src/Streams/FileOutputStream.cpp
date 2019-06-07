@@ -28,7 +28,7 @@ void FileOutputStream::openHandle() {
     m_handle = (void*)h;
   }
 #elif OS(POSIX)
-  int f = open(m_path.getPath().getRawBytes(), O_WRONLY, 00644);
+  int f = open(m_path.getPath().getData(), O_WRONLY, 00644);
   if (f != -1) {
     m_handle = f;
   } else {

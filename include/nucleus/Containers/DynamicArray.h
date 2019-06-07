@@ -2,10 +2,10 @@
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
-#include <algorithm>  // max
-#include <cstring>    // memcpy
-#include <new>        // new
-#include <utility>    // std::forward
+#include <algorithm>
+#include <cstring>
+#include <new>
+#include <utility>
 
 #undef free
 
@@ -30,9 +30,11 @@ public:
 
     // Do not do a memcpy here, because we need to call the copy constructor of the elements being
     // copied.
-    for (SizeType i = 0; i < dataSize; ++i) {
-      m_data[i] = data[i];
-    }
+    std::copy(m_data, m_data + dataSize, data);
+
+    // for (SizeType i = 0; i < dataSize; ++i) {
+    //   m_data[i] = data[i];
+    // }
   }
 
   DynamicArray(const DynamicArray& other) : m_size(other.m_size) {
@@ -224,7 +226,7 @@ public:
     return m_data + m_size;
   }
 
-private:
+protected:
   enum KeepOld { KeepOldData = true, DiscardOldData = false };
 
   // Ensure that we can accommodate `size` elements.
@@ -235,6 +237,7 @@ private:
     }
   }
 
+private:
   void allocateData(SizeType size, KeepOld keepOld) {
     const MemSize oldSizeInBytes = m_size * sizeof(ElementType);
     const MemSize newSizeInBytes = size * sizeof(ElementType);
