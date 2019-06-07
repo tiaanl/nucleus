@@ -18,6 +18,9 @@ public:
 
   void writeBool(bool data);
   void writeU8(U8 data);
+  void writeU16(U16 data);
+  void writeU32(U32 data);
+  void writeU64(U64 data);
   void writeInt16(I16 data);
   void writeInt32(I32 data);
   void writeInt64(I64 data);
@@ -39,6 +42,12 @@ inline OutputStream& operator<<(OutputStream& output, bool value) {
   return output;
 }
 
+inline OutputStream& operator<<(OutputStream& output, U32 value) {
+  output.writeU32(value);
+  return output;
+}
+
+#if 0
 inline OutputStream& operator<<(OutputStream& output, U8 value) {
   output.writeU8(value);
   return output;
@@ -53,6 +62,7 @@ inline OutputStream& operator<<(OutputStream& output, I32 value) {
   output.writeInt32(value);
   return output;
 }
+#endif  // 0
 
 inline OutputStream& operator<<(OutputStream& output, I64 value) {
   output.writeInt64(value);

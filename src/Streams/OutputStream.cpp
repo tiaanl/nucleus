@@ -27,8 +27,39 @@ void OutputStream::writeBool(bool data) {
 void OutputStream::writeU8(U8 data) {
   if (m_mode == Text) {
     writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
-  } else {
+    write(m_buffer, std::strlen(m_buffer));
+  }
+  else {
+    write(&data, sizeof(data));
+  }
+}
+
+void OutputStream::writeU16(U16 data) {
+  if (m_mode == Text) {
+    writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
+    write(m_buffer, std::strlen(m_buffer));
+  }
+  else {
+    write(&data, sizeof(data));
+  }
+}
+
+void OutputStream::writeU32(U32 data) {
+  if (m_mode == Text) {
+    writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
+    write(m_buffer, std::strlen(m_buffer));
+  }
+  else {
+    write(&data, sizeof(data));
+  }
+}
+
+void OutputStream::writeU64(U64 data) {
+  if (m_mode == Text) {
+    writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
+    write(m_buffer, std::strlen(m_buffer));
+  }
+  else {
     write(&data, sizeof(data));
   }
 }
@@ -36,7 +67,7 @@ void OutputStream::writeU8(U8 data) {
 void OutputStream::writeInt16(I16 data) {
   if (m_mode == Text) {
     writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
+    write(m_buffer, std::strlen(m_buffer));
   } else {
     write(&data, sizeof(data));
   }
@@ -45,7 +76,7 @@ void OutputStream::writeInt16(I16 data) {
 void OutputStream::writeInt32(I32 data) {
   if (m_mode == Text) {
     writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
+    write(m_buffer, std::strlen(m_buffer));
   } else {
     write(&data, sizeof(data));
   }
@@ -54,7 +85,7 @@ void OutputStream::writeInt32(I32 data) {
 void OutputStream::writeInt64(I64 data) {
   if (m_mode == Text) {
     writeNumberToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
+    write(m_buffer, std::strlen(m_buffer));
   } else {
     write(&data, sizeof(data));
   }
@@ -63,7 +94,7 @@ void OutputStream::writeInt64(I64 data) {
 void OutputStream::writeFloat32(F32 data) {
   if (m_mode == Text) {
     writeFloatToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
+    write(m_buffer, std::strlen(m_buffer));
   } else {
     write(&data, sizeof(data));
   }
@@ -72,7 +103,7 @@ void OutputStream::writeFloat32(F32 data) {
 void OutputStream::writeFloat64(F64 data) {
   if (m_mode == Text) {
     writeFloatToBuffer(m_buffer, sizeof(m_buffer), data);
-    write(m_buffer, sizeof(m_buffer));
+    write(m_buffer, std::strlen(m_buffer));
   } else {
     write(&data, sizeof(data));
   }

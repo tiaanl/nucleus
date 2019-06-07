@@ -67,7 +67,7 @@ public:
 
   void append(const char* text, StringLength length) {
     ensureAllocated(m_length + length + 1, true);
-    std::strncat(m_text, text, length);
+    std::memcpy(m_text + m_length, text, length);
     m_length += length;
     m_text[m_length] = '\0';
   }

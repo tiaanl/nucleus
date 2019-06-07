@@ -54,7 +54,11 @@ public:
   }
 
   I32 compare(const StringView& other) const {
-    return std::strncmp(m_text, other.m_text, std::min(m_length, other.m_length));
+    if (m_length != other.m_length) {
+      return m_length - other.m_length;
+    }
+
+    return ::strncmp(m_text, other.m_text, std::min(m_length, other.m_length));
   }
 
   // Return a new StringView, starting from the startIndex and ending where this StringView ended.
