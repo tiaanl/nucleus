@@ -12,38 +12,38 @@
 namespace nu {
 
 InputStream::SizeType InputStream::getBytesRemaining() {
-  DCHECK(getPosition() <= getLength())
+  DCHECK(getPosition() <= getSize())
       << "The position should never go over the length of the stream";
 
-  return getLength() - getPosition();
+  return getSize() - getPosition();
 }
 
-void InputStream::skipNextBytes(SizeType numBytesToSkip) {
+void InputStream::skip(SizeType numberOfBytes) {
   constexpr SizeType kBufferedSizeToSkip = 16384;
 
   const SizeType skipBufferSize =
-      std::min(numBytesToSkip, static_cast<SizeType>(kBufferedSizeToSkip));
+      std::min(numberOfBytes, static_cast<SizeType>(kBufferedSizeToSkip));
 
   nu::DynamicArray<I8> temp;
   temp.resize(skipBufferSize);
 
-  while (numBytesToSkip != 0 && !isExhausted()) {
-    numBytesToSkip -=
-        read(temp.getData(), std::min(numBytesToSkip, static_cast<SizeType>(kBufferedSizeToSkip)));
+  while (numberOfBytes != 0 && !isExhausted()) {
+    numberOfBytes -=
+        read(temp.getData(), std::min(numberOfBytes, static_cast<SizeType>(kBufferedSizeToSkip)));
   }
 }
 
-uint8_t InputStream::readByte() {
+bool InputStream::readBool() {
+  return readI8() != 0;
+}
+
+I8 InputStream::readI8() {
   char temp = 0;
   read(&temp, 1);
   return temp;
 }
 
-bool InputStream::readBool() {
-  return readByte() != 0;
-}
-
-I16 InputStream::readInt16() {
+I16 InputStream::readI16() {
   char temp[2];
 
   if (read(temp, 2) == 2)
@@ -52,7 +52,7 @@ I16 InputStream::readInt16() {
   return 0;
 }
 
-I32 InputStream::readInt32() {
+I32 InputStream::readI32() {
   char temp[4];
 
   if (read(temp, 4) == 4)
@@ -61,7 +61,7 @@ I32 InputStream::readInt32() {
   return 0;
 }
 
-I64 InputStream::readInt64() {
+I64 InputStream::readI64() {
   union {
     uint8_t asBytes[8];
     U64 asInt64;
@@ -73,7 +73,7 @@ I64 InputStream::readInt64() {
   return 0;
 }
 
-F32 InputStream::readFloat32() {
+F32 InputStream::readF32() {
   static_assert(sizeof(I32) == sizeof(float),
                 "Size of int32 and float must match for the union to work.");
 
@@ -81,12 +81,12 @@ F32 InputStream::readFloat32() {
     I32 asInt;
     float asFloat;
   } n;
-  n.asInt = readInt32();
+  n.asInt = readI32();
 
   return n.asFloat;
 }
 
-F64 InputStream::readFloat64() {
+F64 InputStream::readF64() {
   static_assert(sizeof(I64) == sizeof(double),
                 "Size of int64 and float must match for the union to work.");
 
@@ -94,7 +94,7 @@ F64 InputStream::readFloat64() {
     I64 asInt;
     double asDouble;
   } n;
-  n.asInt = readInt64();
+  n.asInt = readI64();
 
   return n.asDouble;
 }

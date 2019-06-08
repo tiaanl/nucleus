@@ -55,7 +55,7 @@ public:
 
   I32 compare(const StringView& other) const {
     if (m_length != other.m_length) {
-      return m_length - other.m_length;
+      return static_cast<I32>(m_length - other.m_length);
     }
 
     return ::strncmp(m_text, other.m_text, std::min(m_length, other.m_length));

@@ -32,7 +32,7 @@ public:
   // Override: InputStream
   SizeType getPosition() override;
   bool setPosition(SizeType newPosition) override;
-  SizeType getLength() override;
+  SizeType getSize() override;
   bool isExhausted() override;
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
@@ -46,7 +46,9 @@ private:
   // The current position of the stream in the source data.
   MemSize m_currentPosition{0};
 
-  DISALLOW_IMPLICIT_CONSTRUCTORS(WrappedMemoryInputStream);
+  WrappedMemoryInputStream() = delete;
+
+  DELETE_COPY_AND_MOVE(WrappedMemoryInputStream);
 };
 
 }  // namespace nu

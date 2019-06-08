@@ -3,7 +3,6 @@
 #define NUCLEUS_PARSER_XML_PARSER_H_
 
 #include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Optional.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
@@ -23,7 +22,7 @@ struct XMLDocument {
   XMLNode rootNode;
 };
 
-Optional<XMLDocument> parseXMLDocument(const StringView& source);
+XMLDocument parseXMLDocument(const StringView& source);
 
 }  // namespace nu
 

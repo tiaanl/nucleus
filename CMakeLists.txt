@@ -8,6 +8,7 @@ project(nucleus)
 # Options
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+option(NUCLEUS_BUILD_TESTS "Build nucleus tests" ON)
 
 # Third party libraries.
 
@@ -16,14 +17,12 @@ add_subdirectory("external")
 # nucleus
 
 set(nucleus_HEADER_FILES
-    "include/nucleus/Allocators/Allocated.h"
     "include/nucleus/Allocators/Allocator.h"
     "include/nucleus/Allocators/DebugAllocator.h"
     "include/nucleus/Allocators/DefaultAllocator.h"
     "include/nucleus/Allocators/GlobalAllocator.h"
     "include/nucleus/Allocators/LinearAllocator.h"
     "include/nucleus/Allocators/TestAllocator.h"
-    "include/nucleus/AtExit.h"
     "include/nucleus/ByteOrder.h"
     "include/nucleus/Callbacks/Bind.h"
     "include/nucleus/Callbacks/BindDetail.h"
@@ -50,15 +49,9 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Memory/ScopedPtr.h"
     "include/nucleus/Memory/ScopedRefPtr.h"
     "include/nucleus/MemoryDebug.h"
-    "include/nucleus/MessageLoop/MessageLoop.h"
-    "include/nucleus/MessageLoop/MessagePump.h"
-    "include/nucleus/MessageLoop/MessagePumpDefault.h"
-    "include/nucleus/Optional.h"
     "include/nucleus/Parser/Tokenizer.h"
     "include/nucleus/Parser/XMLParser.h"
     "include/nucleus/RefCounted.h"
-    "include/nucleus/Signals.h"
-    "include/nucleus/Singleton.h"
     "include/nucleus/Streams/ConsoleOutputStream.h"
     "include/nucleus/Streams/FileInputStream.h"
     "include/nucleus/Streams/FileOutputStream.h"
@@ -83,15 +76,11 @@ set(nucleus_SOURCE_FILES
     "src/Allocators/DefaultAllocator.cpp"
     "src/Allocators/GlobalAllocator.cpp"
     "src/Allocators/LinearAllocator.cpp"
-    "src/AtExit.cpp"
     "src/Callbacks/CallbackDetail.cpp"
     "src/Debugger.cpp"
     "src/FilePath.cpp"
     "src/HighPerformanceTimer.cpp"
     "src/Logging.cpp"
-    "src/MessageLoop/MessageLoop.cpp"
-    "src/MessageLoop/MessagePump.cpp"
-    "src/MessageLoop/MessagePumpDefault.cpp"
     "src/Parser/Tokenizer.cpp"
     "src/Parser/XMLParser.cpp"
     "src/Streams/ConsoleOutputStream.cpp"
@@ -105,6 +94,31 @@ set(nucleus_SOURCE_FILES
     "src/Synchronization/Lock.cpp"
     "src/Text/DynamicString.cpp"
     "src/Text/StringView.cpp"
+    )
+
+set(nucleus_TESTS_SOURCE_FILES
+    "tests/Allocators/AllocatorTests.cpp"
+    "tests/Allocators/DebugAllocatorTests.cpp"
+    "tests/Callbacks/CallbackTests.cpp"
+    "tests/Containers/ArrayTests.cpp"
+    "tests/Containers/BitSetTests.cpp"
+    "tests/Containers/DynamicArrayTests.cpp"
+    "tests/FilePathTests.cpp"
+    "tests/HighPerformanceTimerTests.cpp"
+    "tests/LoggingTests.cpp"
+    "tests/LoggingTests.cpp"
+    "tests/Memory/ScopedPtrTests.cpp"
+    "tests/Memory/ScopedRefPtrTests.cpp"
+    "tests/Parser/TokenizerTests.cpp"
+    "tests/Parser/XMLParserTests.cpp"
+    "tests/RefCountedTests.cpp"
+    "tests/Streams/ConsoleOutputStreamTests.cpp"
+    "tests/Streams/StringOutputStreamTests.cpp"
+    "tests/Text/DynamicStringTests.cpp"
+    "tests/Text/StaticStringTests.cpp"
+    "tests/Text/StringPoolTests.cpp"
+    "tests/Text/StringTests.cpp"
+    "tests/Text/StringViewTests.cpp"
     )
 
 if(WIN32)
@@ -141,7 +155,21 @@ set_target_properties(nucleus PROPERTIES
     FOLDER nucleus
     )
 
-add_subdirectory(tests "tests")
+if(NUCLEUS_BUILD_TESTS)
+    add_executable(nucleusTests ${nucleus_TESTS_SOURCE_FILES})
+    target_link_libraries(nucleusTests nucleus testing)
+    set_target_properties(nucleusTests PROPERTIES
+        CXX_STANDARD 14
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+        FOLDER nucleus
+        )
+    if(MSVC)
+        target_compile_options(nucleusTests PUBLIC "/MP")
+        target_compile_definitions(nucleusTests PUBLIC "-D_CRTDBG_MAP_ALLOC")
+    endif()
+endif()
+
 if(WIN32)
     add_subdirectory(benchmarks "benchmarks")
 endif()

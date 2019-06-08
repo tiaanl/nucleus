@@ -40,7 +40,7 @@ public:
   bool openedOk() const;
 
   // Override: InputStream
-  SizeType getLength() override;
+  SizeType getSize() override;
   bool isExhausted() override;
   SizeType getPosition() override;
   bool setPosition(SizeType newPosition) override;
@@ -62,7 +62,7 @@ private:
   bool m_status{true};
   bool m_needToSeek{true};
 
-  DISALLOW_COPY_AND_ASSIGN(FileInputStream);
+  DELETE_COPY_AND_MOVE(FileInputStream);
 };
 
 }  // namespace nu

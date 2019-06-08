@@ -48,7 +48,7 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer, SizeType maxBy
 }
 
 bool FileInputStream::isExhausted() {
-  return m_currentPosition >= getLength();
+  return m_currentPosition >= getSize();
 }
 
 FileInputStream::SizeType FileInputStream::getPosition() {
@@ -60,7 +60,7 @@ bool FileInputStream::setPosition(SizeType newPosition) {
 
   if (newPosition != m_currentPosition) {
     newPosition = std::max(newPosition, static_cast<SizeType>(0));
-    newPosition = std::min(newPosition, getLength());
+    newPosition = std::min(newPosition, getSize());
 
     m_needToSeek |= (m_currentPosition != newPosition);
     m_currentPosition = newPosition;

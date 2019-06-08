@@ -27,7 +27,7 @@ public:
   // Override: InputStream
   SizeType getPosition() override;
   bool setPosition(SizeType newPosition) override;
-  SizeType getLength() override;
+  SizeType getSize() override;
   bool isExhausted() override;
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
@@ -37,7 +37,7 @@ private:
   nu::DynamicArray<U8> m_buffer;
   MemSize m_currentPosition;
 
-  DISALLOW_COPY_AND_ASSIGN(MemoryInputStream);
+  DELETE_COPY_AND_MOVE(MemoryInputStream);
 };
 
 }  // namespace nu

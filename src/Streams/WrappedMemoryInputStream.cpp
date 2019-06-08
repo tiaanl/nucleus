@@ -15,7 +15,7 @@ WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, MemSize siz
 WrappedMemoryInputStream::WrappedMemoryInputStream(const nu::DynamicArray<I8>& data)
   : m_data(data.getData()), m_size(data.getSize()) {}
 
-WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getLength() {
+WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getSize() {
   return m_size;
 }
 

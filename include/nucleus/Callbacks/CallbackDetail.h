@@ -11,10 +11,9 @@ namespace nu {
 namespace detail {
 
 class BindStateBase : public RefCountedPtr<BindStateBase> {
-public:
-  COPY_DELETE(BindStateBase);
-  MOVE_DELETE(BindStateBase);
+  DELETE_COPY_AND_MOVE(BindStateBase);
 
+public:
   using InvokeFuncStorage = void (*)();
 
 private:

@@ -28,7 +28,7 @@ public:
   void release();
 
 private:
-  DISALLOW_COPY_AND_ASSIGN(Lock);
+  DELETE_COPY_AND_MOVE(Lock);
 };
 
 }  // namespace nu

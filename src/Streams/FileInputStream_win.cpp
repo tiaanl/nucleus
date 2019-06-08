@@ -17,7 +17,7 @@ I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
 
 }  // namespace detail
 
-FileInputStream::SizeType FileInputStream::getLength() {
+FileInputStream::SizeType FileInputStream::getSize() {
   SizeType fileSize = 0;
   DWORD lowSize = ::GetFileSize(static_cast<HANDLE>(m_handle), nullptr);
   fileSize = lowSize;

@@ -17,7 +17,7 @@ MemoryInputStream::MemoryInputStream(nu::DynamicArray<U8> data)
 
 MemoryInputStream::~MemoryInputStream() = default;
 
-MemoryInputStream::SizeType MemoryInputStream::getLength() {
+MemoryInputStream::SizeType MemoryInputStream::getSize() {
   return m_buffer.getSize();
 }
 

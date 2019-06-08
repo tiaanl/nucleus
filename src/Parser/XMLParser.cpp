@@ -36,16 +36,16 @@ bool readXMLTagLine(Tokenizer& tokenizer) {
 
 }  // namespace
 
-Optional<XMLDocument> parseXMLDocument(const StringView& source) {
+XMLDocument parseXMLDocument(const StringView& source) {
   auto tokenizer = Tokenizer(source);
 
   XMLDocument result;
 
   if (!readXMLTagLine(tokenizer)) {
-    return Optional<XMLDocument>{};
+    return {};
   }
 
-  return Optional<XMLDocument>{std::move(result)};
+  return result;
 }
 
 }  // namespace nu

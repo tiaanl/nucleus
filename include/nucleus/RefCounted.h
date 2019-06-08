@@ -11,6 +11,7 @@ namespace nu {
 namespace detail {
 
 class RefCountedBase {
+  DELETE_COPY_AND_MOVE(RefCountedBase);
 public:
   bool hasOneRef() const {
     return m_refCount.load(std::memory_order_relaxed) == 1;
@@ -29,8 +30,6 @@ protected:
   ~RefCountedBase() = default;
 
 private:
-  COPY_DELETE(RefCountedBase);
-  MOVE_DELETE(RefCountedBase);
 
   mutable std::atomic<MemSize> m_refCount;
 };
