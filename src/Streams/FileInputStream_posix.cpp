@@ -35,7 +35,7 @@ I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
 
 }  // namespace detail
 
-FileInputStream::SizeType FileInputStream::getLength() {
+FileInputStream::SizeType FileInputStream::getSize() {
   long size = 0;
   FILE* fp = fopen(m_path.getPath().getData(), "rb");
   if (fp != 0) {
