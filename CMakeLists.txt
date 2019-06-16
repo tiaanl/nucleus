@@ -50,7 +50,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Memory/ScopedRefPtr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/Parser/Tokenizer.h"
-    "include/nucleus/Parser/XMLParser.h"
+    # "include/nucleus/Parser/XMLParser.h"
     "include/nucleus/RefCounted.h"
     "include/nucleus/Streams/ConsoleOutputStream.h"
     "include/nucleus/Streams/FileInputStream.h"
@@ -82,7 +82,7 @@ set(nucleus_SOURCE_FILES
     "src/HighPerformanceTimer.cpp"
     "src/Logging.cpp"
     "src/Parser/Tokenizer.cpp"
-    "src/Parser/XMLParser.cpp"
+    # "src/Parser/XMLParser.cpp"
     "src/Streams/ConsoleOutputStream.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
@@ -110,7 +110,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "tests/Memory/ScopedPtrTests.cpp"
     "tests/Memory/ScopedRefPtrTests.cpp"
     "tests/Parser/TokenizerTests.cpp"
-    "tests/Parser/XMLParserTests.cpp"
+    # "tests/Parser/XMLParserTests.cpp"
     "tests/RefCountedTests.cpp"
     "tests/Streams/ConsoleOutputStreamTests.cpp"
     "tests/Streams/StringOutputStreamTests.cpp"
@@ -139,7 +139,7 @@ target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Enable warnings and multi-process compilation.
-    target_compile_options(nucleus PUBLIC /W3 /MP)
+    target_compile_options(nucleus PUBLIC /W4 /WX /MP)
 
     # Enable memory debugging.
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
@@ -164,9 +164,16 @@ if(NUCLEUS_BUILD_TESTS)
         CXX_EXTENSIONS OFF
         FOLDER nucleus
         )
-    if(MSVC)
-        target_compile_options(nucleusTests PUBLIC "/MP")
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        # Enable warnings and multi-process compilation.
+        target_compile_options(nucleusTests PUBLIC /W4 /WX /MP)
+    
+        # Enable memory debugging.
         target_compile_definitions(nucleusTests PUBLIC "-D_CRTDBG_MAP_ALLOC")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+        # Enable warnings.
+        target_compile_options(nucleusTests PUBLIC -Wall -Wextra -pedantic)
     endif()
 endif()
 

@@ -15,7 +15,7 @@ public:
 
   DynamicString(const char* text, StringLength length) : StringView{}, m_allocated{0} {
     ensureAllocated(length + 1, false);
-    std::strncpy(m_text, text, length);
+    std::memcpy(m_text, text, length);
     m_text[length] = '\0';
     m_length = length;
   }
@@ -31,7 +31,7 @@ public:
 
   DynamicString& operator=(const DynamicString& other) {
     ensureAllocated(other.m_length + 1, false);
-    std::strncpy(m_text, other.m_text, other.m_length);
+    std::memcpy(m_text, other.m_text, other.m_length);
     m_text[other.m_length] = '\0';
     m_length = other.m_length;
 
@@ -42,7 +42,7 @@ public:
     auto otherLength = other.getLength();
 
     ensureAllocated(otherLength + 1, false);
-    std::strncpy(m_text, other.getData(), otherLength);
+    std::memcpy(m_text, other.getData(), otherLength);
     m_length = otherLength;
     m_text[m_length] = '\0';
 

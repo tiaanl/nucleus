@@ -13,7 +13,7 @@ public:
 
   StaticString(const StringView& text) : StaticString{} {
     MemSize bytesToCopy = std::min(Size - 1, text.getLength());
-    std::strncpy(m_text, text.getData(), bytesToCopy);
+    std::memcpy(m_text, text.getData(), bytesToCopy);
     m_length = bytesToCopy;
     m_text[m_length] = 0;
   }
@@ -28,7 +28,7 @@ public:
 
   void append(const char* text, StringLength length) {
     StringLength bytesToCopy = std::min(Size - m_length - 1, length);
-    std::strncat(m_storage, text, bytesToCopy);
+    std::memcpy(m_storage + m_length, text, bytesToCopy);
     m_length += bytesToCopy;
     m_text[m_length] = '\0';
   }

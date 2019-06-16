@@ -21,7 +21,7 @@ void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
 
   if (m_text) {
     if (keepOld) {
-      std::strncpy(newText, m_text, m_length + 1);
+      std::memcpy(newText, m_text, m_length + 1);
     }
 
     delete[] m_text;
