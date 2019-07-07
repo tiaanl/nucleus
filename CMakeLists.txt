@@ -45,12 +45,12 @@ set(nucleus_HEADER_FILES
     "include/nucleus/HighPerformanceTimer.h"
     "include/nucleus/Logging.h"
     "include/nucleus/Macros.h"
+    "include/nucleus/Memory/Common.h"
     "include/nucleus/Memory/RefCountedPtr.h"
     "include/nucleus/Memory/ScopedPtr.h"
     "include/nucleus/Memory/ScopedRefPtr.h"
     "include/nucleus/MemoryDebug.h"
     "include/nucleus/Parser/Tokenizer.h"
-    # "include/nucleus/Parser/XMLParser.h"
     "include/nucleus/RefCounted.h"
     "include/nucleus/Streams/ConsoleOutputStream.h"
     "include/nucleus/Streams/FileInputStream.h"
@@ -59,6 +59,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Streams/MemoryInputStream.h"
     "include/nucleus/Streams/OutputStream.h"
     "include/nucleus/Streams/StringOutputStream.h"
+    "include/nucleus/Streams/WrappedDynamicArrayOutputStream.h"
     "include/nucleus/Streams/WrappedMemoryInputStream.h"
     "include/nucleus/Synchronization/AutoLock.h"
     "include/nucleus/Synchronization/Lock.h"
@@ -69,6 +70,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Text/StringView.h"
     "include/nucleus/Types.h"
     "include/nucleus/Win/WindowsMixin.h"
+    # "include/nucleus/Parser/XMLParser.h"
     )
 
 set(nucleus_SOURCE_FILES

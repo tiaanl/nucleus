@@ -89,8 +89,7 @@ void OutputStream::writeI8(I8 data) {
     I8 buffer[32];
     auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
     write(buffer, bytesWritten);
-  }
-  else {
+  } else {
     write(&data, sizeof(data));
   }
 }
@@ -100,8 +99,7 @@ void OutputStream::writeI16(I16 data) {
     I8 buffer[32];
     auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
     write(buffer, bytesWritten);
-  }
-  else {
+  } else {
     write(&data, sizeof(data));
   }
 }
@@ -144,6 +142,14 @@ void OutputStream::writeF64(F64 data) {
   } else {
     write(&data, sizeof(data));
   }
+}
+
+void OutputStream::writeBuffer(U8* buffer, MemSize bufferSize) {
+  write(buffer, bufferSize);
+}
+
+void OutputStream::writeBuffer(const nu::DynamicArray<U8>& buffer) {
+  write(const_cast<U8*>(buffer.getData()), buffer.getSize());
 }
 
 void OutputStream::writeString(const StringView& data) {

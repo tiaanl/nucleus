@@ -1,10 +1,12 @@
 #ifndef NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 #define NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
 
+// TODO: Add seeking!
 class OutputStream {
 public:
   using SizeType = MemSize;
@@ -28,6 +30,9 @@ public:
   void writeF32(F32 data);
   void writeF64(F64 data);
 
+  void writeBuffer(U8* buffer, MemSize bufferSize);
+  void writeBuffer(const nu::DynamicArray<U8>& buffer);
+
   void writeString(const StringView& data);
 
 protected:
@@ -41,27 +46,40 @@ inline OutputStream& operator<<(OutputStream& output, bool value) {
   return output;
 }
 
-inline OutputStream& operator<<(OutputStream& output, U32 value) {
-  output.writeU32(value);
-  return output;
-}
-
-#if 0
 inline OutputStream& operator<<(OutputStream& output, U8 value) {
   output.writeU8(value);
   return output;
 }
 
+inline OutputStream& operator<<(OutputStream& output, U16 value) {
+  output.writeU16(value);
+  return output;
+}
+
+inline OutputStream& operator<<(OutputStream& output, U32 value) {
+  output.writeU32(value);
+  return output;
+}
+
+inline OutputStream& operator<<(OutputStream& output, U64 value) {
+  output.writeU64(value);
+  return output;
+}
+
+inline OutputStream& operator<<(OutputStream& output, I8 value) {
+  output.writeI8(value);
+  return output;
+}
+
 inline OutputStream& operator<<(OutputStream& output, I16 value) {
-  output.writeInt16(value);
+  output.writeI16(value);
   return output;
 }
 
 inline OutputStream& operator<<(OutputStream& output, I32 value) {
-  output.writeInt32(value);
+  output.writeI32(value);
   return output;
 }
-#endif  // 0
 
 inline OutputStream& operator<<(OutputStream& output, I64 value) {
   output.writeI64(value);
@@ -75,6 +93,11 @@ inline OutputStream& operator<<(OutputStream& output, F32 value) {
 
 inline OutputStream& operator<<(OutputStream& output, F64 value) {
   output.writeF64(value);
+  return output;
+}
+
+inline OutputStream& operator<<(OutputStream& output, const DynamicArray<U8>& value) {
+  output.writeBuffer(value);
   return output;
 }
 
