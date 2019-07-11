@@ -18,6 +18,20 @@ public:
     m_text[m_length] = 0;
   }
 
+  StaticString(const StaticString& other) : StaticString{} {
+    std::memcpy(m_storage, other.m_storage, Size);
+    m_length = other.m_length;
+  }
+
+  StaticString& operator=(const StaticString& other) {
+    m_text = m_storage;
+
+    std::memcpy(m_storage, other.m_storage, Size);
+    m_length = other.m_length;
+
+    return *this;
+  }
+
   MemSize getStorageSize() {
     return Size;
   }

@@ -5,6 +5,12 @@
 
 namespace nu {
 
+TEST_CASE("can copy static string") {
+  StaticString<8> str{"test"};
+  auto str2 = str;
+  CHECK(str2.compare(str) == 0);
+}
+
 TEST_CASE("text is pointing to storage") {
   StaticString<4> str{"testing"};
   CHECK(str.getStorageSize() == 4);
