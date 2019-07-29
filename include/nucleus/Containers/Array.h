@@ -11,7 +11,7 @@ class Array {
 public:
   using SizeType = MemSize;
 
-  Array() {}
+  Array() = default;
 
   const T& operator[](SizeType index) const {
     return m_data[index];

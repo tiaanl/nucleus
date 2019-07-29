@@ -40,6 +40,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Containers/Array.h"
     "include/nucleus/Containers/BitSet.h"
     "include/nucleus/Containers/DynamicArray.h"
+    "include/nucleus/Containers/GrowingArray.h"
     "include/nucleus/Debugger.h"
     "include/nucleus/FilePath.h"
     "include/nucleus/HighPerformanceTimer.h"
@@ -58,6 +59,7 @@ set(nucleus_HEADER_FILES
     "include/nucleus/Streams/MemoryInputStream.h"
     "include/nucleus/Streams/OutputStream.h"
     "include/nucleus/Streams/StringOutputStream.h"
+    "include/nucleus/Streams/Utils.h"
     "include/nucleus/Streams/WrappedDynamicArrayOutputStream.h"
     "include/nucleus/Streams/WrappedMemoryInputStream.h"
     "include/nucleus/Synchronization/AutoLock.h"
@@ -83,7 +85,6 @@ set(nucleus_SOURCE_FILES
     "src/HighPerformanceTimer.cpp"
     "src/Logging.cpp"
     "src/Parser/Tokenizer.cpp"
-    # "src/Parser/XMLParser.cpp"
     "src/Streams/ConsoleOutputStream.cpp"
     "src/Streams/FileInputStream.cpp"
     "src/Streams/FileOutputStream.cpp"
@@ -91,10 +92,12 @@ set(nucleus_SOURCE_FILES
     "src/Streams/MemoryInputStream.cpp"
     "src/Streams/OutputStream.cpp"
     "src/Streams/StringOutputStream.cpp"
+    "src/Streams/Utils.cpp"
     "src/Streams/WrappedMemoryInputStream.cpp"
     "src/Synchronization/Lock.cpp"
     "src/Text/DynamicString.cpp"
     "src/Text/StringView.cpp"
+    # "src/Parser/XMLParser.cpp"
     )
 
 set(nucleus_TESTS_SOURCE_FILES
@@ -120,6 +123,7 @@ set(nucleus_TESTS_SOURCE_FILES
     "tests/Text/StringPoolTests.cpp"
     "tests/Text/StringTests.cpp"
     "tests/Text/StringViewTests.cpp"
+    "tests/Containers/GrowingArrayTests.cpp"
     )
 
 if(WIN32)
@@ -140,7 +144,7 @@ target_include_directories(nucleus PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Enable warnings and multi-process compilation.
-    target_compile_options(nucleus PUBLIC /W4 /WX /MP)
+    target_compile_options(nucleus PUBLIC /W3 /WX /MP)
 
     # Enable memory debugging.
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
@@ -168,7 +172,7 @@ if(NUCLEUS_BUILD_TESTS)
 
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         # Enable warnings and multi-process compilation.
-        target_compile_options(nucleusTests PUBLIC /W4 /WX /MP)
+        target_compile_options(nucleusTests PUBLIC /W3 /WX /MP)
     
         # Enable memory debugging.
         target_compile_definitions(nucleusTests PUBLIC "-D_CRTDBG_MAP_ALLOC")
