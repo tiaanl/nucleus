@@ -76,6 +76,7 @@ inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
 }
 
 FilePath getCurrentWorkingDirectory();
+bool exists(const FilePath& path);
 
 }  // namespace nu
 

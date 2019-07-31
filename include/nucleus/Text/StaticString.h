@@ -23,6 +23,10 @@ public:
     m_length = other.m_length;
   }
 
+  Char& operator[](StringLength index) {
+    return m_text[index];
+  }
+
   StaticString& operator=(const StaticString& other) {
     m_text = m_storage;
 

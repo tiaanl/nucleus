@@ -256,4 +256,8 @@ FilePath getCurrentWorkingDirectory() {
 #endif
 }
 
+bool exists(const FilePath& path) {
+  return access(path.getPath().getData(), F_OK) != -1;
+}
+
 }  // namespace nu

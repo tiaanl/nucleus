@@ -244,11 +244,13 @@ private:
 
     auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(newSizeInBytes));
 
-    // If we have a previously alloced buffer, then discard it, after copying it we should keep the
-    // old data.
+    // If we have a previously allocated buffer, then discard it, after copying it we should keep
+    // the old data.
     if (m_data) {
       if (keepOld == KeepOldData) {
-        ::memcpy(newData, m_data, oldSizeInBytes);
+        for (SizeType i = 0; i < m_size; ++i) {
+          newData[i] = std::move(m_data[i]);
+        }
       }
 
       getDefaultAllocator()->free(m_data, oldSizeInBytes);
