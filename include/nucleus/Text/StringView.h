@@ -41,6 +41,10 @@ public:
     return compare(other) != 0;
   }
 
+  bool operator<(const StringView& other) const {
+    return compare(other) < 0;
+  }
+
   Char* getData() const {
     return m_text;
   }
