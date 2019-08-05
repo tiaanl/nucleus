@@ -150,7 +150,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_definitions(nucleus PUBLIC "-D_CRTDBG_MAP_ALLOC")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
     # Enable warnings.
-    target_compile_options(nucleus PUBLIC -Wall -Wextra -pedantic)
+    target_compile_options(nucleus PUBLIC -Wall -Wextra -pedantic -Werror)
 endif()
 
 set_target_properties(nucleus PROPERTIES
@@ -178,7 +178,7 @@ if(NUCLEUS_BUILD_TESTS)
         target_compile_definitions(nucleusTests PUBLIC "-D_CRTDBG_MAP_ALLOC")
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
         # Enable warnings.
-        target_compile_options(nucleusTests PUBLIC -Wall -Wextra -pedantic)
+        target_compile_options(nucleusTests PUBLIC -Wall -Wextra -pedantic -Werror)
     endif()
 endif()
 

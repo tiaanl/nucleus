@@ -10,26 +10,29 @@ namespace nu {
 
 namespace {
 
-MemSize writeSignedNumberToBuffer(I8* buffer, MemSize bufferSize, I64 value) {
 #if COMPILER(MSVC)
+MemSize writeSignedNumberToBuffer(I8* buffer, MemSize bufferSize, I64 value) {
   return sprintf_s(buffer, bufferSize, "%lld", value);
 #else
+MemSize writeSignedNumberToBuffer(I8* buffer, MemSize, I64 value) {
   return sprintf(buffer, "%lld", value);
 #endif
 }
 
-MemSize writeUnsignedNumberToBuffer(I8* buffer, MemSize bufferSize, U64 value) {
 #if COMPILER(MSVC)
+MemSize writeUnsignedNumberToBuffer(I8* buffer, MemSize bufferSize, U64 value) {
   return sprintf_s(buffer, bufferSize, "%llu", value);
 #else
+MemSize writeUnsignedNumberToBuffer(I8* buffer, MemSize, U64 value) {
   return sprintf(buffer, "%llu", value);
 #endif
 }
 
-MemSize writeFloatToBuffer(I8* buffer, MemSize bufferSize, F64 value) {
 #if COMPILER(MSVC)
+MemSize writeFloatToBuffer(I8* buffer, MemSize bufferSize, F64 value) {
   return sprintf_s(buffer, bufferSize, "%.3f", value);
 #else
+MemSize writeFloatToBuffer(I8* buffer, MemSize, F64 value) {
   return sprintf(buffer, "%.3f", value);
 #endif
 }
