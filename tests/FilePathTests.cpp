@@ -296,9 +296,9 @@ TEST_CASE("print some general uses of FilePath") {
   FilePath dirName = root.dirName();
   FilePath baseName = root.baseName();
 
-  LOG(Info) << "Path: " << root;
-  LOG(Info) << "Dir name: " << dirName;
-  LOG(Info) << "Base name: " << baseName;
+  LOG(Info) << "Path: " << root.getPath();
+  LOG(Info) << "Dir name: " << dirName.getPath();
+  LOG(Info) << "Base name: " << baseName.getPath();
 }
 
 }  // namespace nu

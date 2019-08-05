@@ -5,8 +5,8 @@
 namespace nu {
 
 TEST_CASE("Can output to the console") {
-  ConsoleOutputStream cout;
-  // cout << 65 << " and some text\n";
+  ConsoleOutputStream consoleOutputStream;
+  consoleOutputStream << 65 << " and some text\n";
 }
 
 }  // namespace nu

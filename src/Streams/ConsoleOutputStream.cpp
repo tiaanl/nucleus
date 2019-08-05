@@ -3,12 +3,10 @@
 
 #include <cstdio>
 
-#include "nucleus/MemoryDebug.h"
-
 namespace nu {
 
 OutputStream::SizeType ConsoleOutputStream::write(void* buffer, OutputStream::SizeType size) {
-  fprintf(stdout, "%s", static_cast<const char*>(buffer));
+  std::fwrite(buffer, 1, size, stdout);
   return size;
 }
 

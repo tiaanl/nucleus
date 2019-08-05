@@ -2,6 +2,7 @@
 #ifndef NUCLEUS_TEXT_STRING_VIEW_H_
 #define NUCLEUS_TEXT_STRING_VIEW_H_
 
+#include "nucleus/Streams/OutputStream.h"
 #include "nucleus/Types.h"
 
 #include <algorithm>
@@ -117,6 +118,11 @@ protected:
   Char* m_text;
   StringLength m_length;
 };
+
+inline OutputStream& operator<<(OutputStream& stream, const nu::StringView& value) {
+  stream.write(value.getData(), value.getLength());
+  return stream;
+}
 
 inline std::ostream& operator<<(std::ostream& os, const StringView& value) {
   for (StringLength i = 0; i < value.getLength(); ++i) {

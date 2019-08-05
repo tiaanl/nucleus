@@ -1,8 +1,9 @@
 #ifndef NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 #define NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 
-#include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Text/StringView.h"
+#include "nucleus/Types.h"
+
+#include <cstring>
 
 namespace nu {
 
@@ -29,11 +30,6 @@ public:
   void writeI64(I64 data);
   void writeF32(F32 data);
   void writeF64(F64 data);
-
-  void writeBuffer(U8* buffer, MemSize bufferSize);
-  void writeBuffer(const nu::DynamicArray<U8>& buffer);
-
-  void writeString(const StringView& data);
 
 protected:
   explicit OutputStream(OutputStreamMode mode) : m_mode{mode} {}
@@ -96,13 +92,9 @@ inline OutputStream& operator<<(OutputStream& output, F64 value) {
   return output;
 }
 
-inline OutputStream& operator<<(OutputStream& output, const DynamicArray<U8>& value) {
-  output.writeBuffer(value);
-  return output;
-}
-
-inline OutputStream& operator<<(OutputStream& output, const StringView& value) {
-  output.writeString(value);
+inline OutputStream& operator<<(OutputStream& output, const char* value) {
+  auto length = std::strlen(value);
+  output.write((void*)value, length);
   return output;
 }
 

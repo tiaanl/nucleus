@@ -38,7 +38,11 @@ MemSize writeFloatToBuffer(I8* buffer, MemSize bufferSize, F64 value) {
 
 void OutputStream::writeBool(bool data) {
   if (m_mode == Text) {
-    writeString(data ? "true" : "false");
+    if (data) {
+      write((void*)"true", 4);
+    } else {
+      write((void*)"false", 5);
+    }
   } else {
     writeU8(data ? 1 : 0);
   }
@@ -142,18 +146,6 @@ void OutputStream::writeF64(F64 data) {
   } else {
     write(&data, sizeof(data));
   }
-}
-
-void OutputStream::writeBuffer(U8* buffer, MemSize bufferSize) {
-  write(buffer, bufferSize);
-}
-
-void OutputStream::writeBuffer(const nu::DynamicArray<U8>& buffer) {
-  write(const_cast<U8*>(buffer.getData()), buffer.getSize());
-}
-
-void OutputStream::writeString(const StringView& data) {
-  write(data.getData(), data.getLength());
 }
 
 }  // namespace nu
