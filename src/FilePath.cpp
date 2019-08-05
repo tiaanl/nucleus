@@ -257,7 +257,12 @@ FilePath getCurrentWorkingDirectory() {
 }
 
 bool exists(const FilePath& path) {
+#if OS(POSIX)
   return access(path.getPath().getData(), F_OK) != -1;
+#else
+  DWORD fileAttributes = GetFileAttributesA(path.getPath().getData());
+  return fileAttributes != INVALID_FILE_ATTRIBUTES;
+#endif
 }
 
 }  // namespace nu
