@@ -34,7 +34,7 @@ public:
   virtual bool setPosition(SizeType newPosition) = 0;
 
   // Read some data from the stream into a memory buffer.
-  virtual SizeType read(void* destBuffer, SizeType bytesToRead) = 0;
+  virtual SizeType read(void* destination, SizeType bytesToRead) = 0;
 
   // Read and discard a number of bytes from the stream.
   virtual void skip(SizeType numberOfBytesToSkip);
@@ -81,6 +81,10 @@ public:
   // Read eight bytes as a little-endian 64-bit floating point value.  If the stream is exhausted,
   // then 0.0 will be returned.
   F64 readF64();
+
+  // Read some data from the stream into the destination, stopping when `bytesToRead` have been read
+  // or the predicate byte has been reached.
+  SizeType readUntil(void* destination, SizeType bytesToRead,U8 predicate);
 
 protected:
   InputStream();

@@ -73,6 +73,19 @@ I64 InputStream::readI64() {
   return 0;
 }
 
+U32 InputStream::readU32() {
+  union {
+    U8 asBytes[4];
+    U32 asU32;
+  } n;
+
+  if (read(n.asBytes, sizeof(n)) == sizeof(n)) {
+    return static_cast<U32>(ByteOrder::swapIfBigEndian(n.asU32));
+  }
+
+  return 0;
+}
+
 F32 InputStream::readF32() {
   static_assert(sizeof(I32) == sizeof(float),
                 "Size of int32 and float must match for the union to work.");
@@ -97,6 +110,21 @@ F64 InputStream::readF64() {
   n.asInt = readI64();
 
   return n.asDouble;
+}
+
+InputStream::SizeType InputStream::readUntil(void* destination, SizeType bytesToRead,
+                                             U8 predicate) {
+  U8* buffer = (U8*)destination;
+  SizeType bytesRead = 0;
+  for (;;) {
+    bytesRead += read(buffer, 1);
+
+    if (*buffer == predicate || bytesRead == bytesToRead) {
+      return bytesRead;
+    }
+
+    ++buffer;
+  }
 }
 
 InputStream::InputStream() = default;

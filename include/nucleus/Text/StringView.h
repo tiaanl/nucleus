@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <ostream>
 
 namespace nu {
 
@@ -116,6 +117,13 @@ protected:
   Char* m_text;
   StringLength m_length;
 };
+
+inline std::ostream& operator<<(std::ostream& os, const StringView& value) {
+  for (StringLength i = 0; i < value.getLength(); ++i) {
+    os << static_cast<I8>(value[i]);
+  }
+  return os;
+}
 
 }  // namespace nu
 

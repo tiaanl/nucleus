@@ -4,11 +4,74 @@
 #include "nucleus/Logging.h"
 #include "nucleus/Macros.h"
 
+#include <functional>
+
 namespace nu {
 
 template <typename T, MemSize BlockSize = 64>
 class GrowingArray {
 public:
+  struct Block {
+    T items[BlockSize];
+    MemSize size = 0;
+    Block* next = nullptr;
+  };
+
+  class Iterator {
+  public:
+    Iterator& operator++() {
+      next();
+      return *this;
+    }
+
+    bool operator==(const Iterator& other) const {
+      if (m_block == nullptr && other.m_block == nullptr) {
+        return true;
+      }
+
+      return m_block == other.m_block && m_index == other.m_index;
+    }
+
+    bool operator!=(const Iterator& other) const {
+      return !operator==(other);
+    }
+
+    T& get() const {
+      return m_block->items[m_index];
+    }
+
+    T& operator*() {
+      return m_block->items[m_index];
+    }
+
+    T* operator->() const {
+      return &m_block->items[m_index];
+    }
+
+  private:
+    friend class GrowingArray;
+
+    explicit Iterator(Block* firstBlock = nullptr) : m_block{firstBlock}, m_index{0} {}
+
+    void next() {
+      if (!m_block) {
+        return;
+      }
+
+      ++m_index;
+
+      if (m_index < m_block->size) {
+        return;
+      }
+
+      m_block = m_block->next;
+      m_index = 0;
+    }
+
+    GrowingArray::Block* m_block;
+    MemSize m_index;
+  };
+
   GrowingArray() = default;
 
   ~GrowingArray() {
@@ -41,30 +104,40 @@ public:
     return &block->items[blockIndex];
   }
 
+  Iterator begin() {
+    return Iterator{m_firstBlock};
+  }
+
+  Iterator end() {
+    return Iterator{};
+  }
+
   const T* operator[](MemSize index) const {
     return operator[](index);
   }
 
-  void append(const T& item) {
+  T* append(T item) {
     ensureSpace();
-    m_currentBlock->items[m_currentBlock->size] = item;
+    T* storage = &m_currentBlock->items[m_currentBlock->size];
+    *storage = item;
+    ++m_currentBlock->size;
     ++m_size;
+
+    return storage;
   }
 
-  void append(T&& item) {
+  T* append(std::function<void(T*)> function) {
     ensureSpace();
-    m_currentBlock->items[m_currentBlock->size] = item;
+    T* storage = &m_currentBlock->items[m_currentBlock->size];
+    function(storage);
+    ++m_currentBlock->size;
     ++m_size;
+
+    return storage;
   }
 
 private:
   DELETE_COPY_AND_MOVE(GrowingArray);
-
-  struct Block {
-    T items[BlockSize];
-    MemSize size = 0;
-    Block* next = nullptr;
-  };
 
   // Make sure there is enough space to append one more item.
   void ensureSpace() {

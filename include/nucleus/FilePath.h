@@ -26,7 +26,7 @@ public:
   static FilePath normalizeSeparators(const StringView& path);
 
   FilePath();
-  FilePath(const StringView& path);
+  explicit FilePath(const StringView& path);
   FilePath(const FilePath& other);
 
   FilePath& operator=(const FilePath& other);
@@ -70,10 +70,10 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
   return left.append(right);
 }
 
-inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
-  os << filePath.getPath().getData();
-  return os;
-}
+//inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
+//  os << filePath.getPath().getData();
+//  return os;
+//}
 
 FilePath getCurrentWorkingDirectory();
 bool exists(const FilePath& path);
