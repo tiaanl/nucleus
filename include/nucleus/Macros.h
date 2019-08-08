@@ -34,4 +34,8 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 
 #define IS_BIT_SET(Value, Bit) ((Value & Bit) == Bit)
 
+// UNUSED
+
+#define UNUSED(x)
+
 #endif  // NUCLEUS_MACROS_H_
