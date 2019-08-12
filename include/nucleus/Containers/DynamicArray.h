@@ -21,6 +21,23 @@ public:
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
 
+  class PushBackResult {
+  public:
+    PushBackResult(ElementType* element, SizeType index) : m_element{m_element}, m_index{index} {}
+
+    ElementType& element() {
+      return *element;
+    }
+
+    SizeType index() {
+      return m_index;
+    }
+
+  private:
+    ElementType* m_element;
+    SizeType m_index;
+  };
+
   // Construct/destruct
 
   DynamicArray() = default;
@@ -124,10 +141,27 @@ public:
 
   // Push
 
-  void pushBack(ElementType element) {
+  PushBackResult pushBack(ElementType element) {
     ensureAllocated(m_size + 1, KeepOldData);
 
-    m_data[m_size++] = element;
+    SizeType index = m_size++;
+    ElementType* storage = &m_data[index];
+
+    *storage = element;
+
+    return {storage, index};
+  }
+
+  template <typename Func>
+  PushBackResult pushBack(Func&& func) {
+    ensureAllocated(m_size + 1, KeepOldData);
+
+    SizeType index = m_size++;
+    ElementType* storage = &m_data[index];
+
+    func(storage);
+
+    return {storage, index};
   }
 
   // Push back a range of elements.
