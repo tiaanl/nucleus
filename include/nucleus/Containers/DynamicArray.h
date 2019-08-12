@@ -23,10 +23,10 @@ public:
 
   class PushBackResult {
   public:
-    PushBackResult(ElementType* element, SizeType index) : m_element{m_element}, m_index{index} {}
+    PushBackResult(ElementType* element, SizeType index) : m_element{element}, m_index{index} {}
 
     ElementType& element() {
-      return *element;
+      return *m_element;
     }
 
     SizeType index() {
