@@ -6,6 +6,7 @@
 #include <cstring>
 #include <functional>
 #include <new>
+#include <type_traits>
 #include <utility>
 
 #undef free
@@ -21,23 +22,6 @@ public:
   using SizeType = MemSize;
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
-
-  class PushBackResult {
-  public:
-    PushBackResult(ElementType* element, SizeType index) : m_element{element}, m_index{index} {}
-
-    ElementType& element() {
-      return *m_element;
-    }
-
-    SizeType index() {
-      return m_index;
-    }
-
-  private:
-    ElementType* m_element;
-    SizeType m_index;
-  };
 
   // Construct/destruct
 
@@ -142,13 +126,43 @@ public:
 
   // Push
 
-  PushBackResult pushBack(ElementType element) {
+  class PushBackResult {
+  public:
+    PushBackResult(ElementType* element, SizeType index) : m_element{element}, m_index{index} {}
+
+    ElementType& element() {
+      return *m_element;
+    }
+
+    SizeType index() {
+      return m_index;
+    }
+
+  private:
+    ElementType* m_element;
+    SizeType m_index;
+  };
+
+  PushBackResult pushBack(const ElementType& element) {
     ensureAllocated(m_size + 1, KeepOldData);
 
     SizeType index = m_size++;
     ElementType* storage = &m_data[index];
 
+    // Invoke the copy constructor on the ElementType to copy the element into place.
     new (storage) ElementType(element);
+
+    return {storage, index};
+  }
+
+  PushBackResult pushBack(ElementType&& element) {
+    ensureAllocated(m_size + 1, KeepOldData);
+
+    SizeType index = m_size++;
+    ElementType* storage = &m_data[index];
+
+    // Invoke the move constructor on ElementType to move the element into place.
+    new (storage) ElementType(std::forward<ElementType>(element));
 
     return {storage, index};
   }
@@ -172,7 +186,7 @@ public:
     m_size += end - begin;
 
     for (Iterator i = m_data; begin != end;) {
-      *i++ = *begin++;
+      new (i++) ElementType(*begin++);
     }
   }
 
@@ -180,13 +194,16 @@ public:
   void emplaceBack(Args&&... args) {
     ensureAllocated(m_size + 1, KeepOldData);
 
-    new (&m_data[m_size++]) ElementType{std::forward<Args>(args)...};
+    SizeType index = m_size++;
+    ElementType* storage = &m_data[index];
+
+    new (storage) ElementType{std::forward<Args>(args)...};
   }
 
   // Modify
 
   void remove(Iterator pos) {
-    // Destroy the object.
+    // Destroy the element.
     pos->~ElementType();
 
     // If we didn't remove the last item, then move all the items one to the left.

@@ -1,6 +1,6 @@
 
-#include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/Logging.h"
 #include "nucleus/Testing.h"
 #include "nucleus/Types.h"
 
@@ -91,7 +91,7 @@ public:
   }
 
   LifetimeType(const LifetimeType& other) : m_a(other.m_a), m_b(other.m_b) {
-    creates++;
+    copies++;
   }
 
   LifetimeType(LifetimeType&& other) : m_a(other.m_a), m_b(other.m_b) {
@@ -162,19 +162,50 @@ TEST_CASE("create and destroy elements") {
   {
     nu::DynamicArray<LifetimeType> buffer;
     buffer.pushBack(LifetimeType{1, 2});
+  }
+
+  REQUIRE(LifetimeType::creates == 1);
+  REQUIRE(LifetimeType::destroys == 2);
+  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeType::moves == 1);
+
+  LifetimeType::reset();
+
+  {
+    nu::DynamicArray<LifetimeType> buffer;
+    LifetimeType l{1, 2};
+    buffer.pushBack(l);
+  }
+
+  REQUIRE(LifetimeType::creates == 1);
+  REQUIRE(LifetimeType::destroys == 2);
+  REQUIRE(LifetimeType::copies == 1);
+  REQUIRE(LifetimeType::moves == 0);
+
+  LifetimeType::reset();
+
+  {
+    nu::DynamicArray<LifetimeType> buffer;
+    LifetimeType l{1, 2};
+    buffer.pushBack(std::move(l));
+  }
+
+  REQUIRE(LifetimeType::creates == 1);
+  REQUIRE(LifetimeType::destroys == 2);
+  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeType::moves == 1);
+
+  LifetimeType::reset();
+
+  {
+    nu::DynamicArray<LifetimeType> buffer;
     buffer.emplaceBack(3, 4);
   }
 
-  // The temporary is created before pushing it back.
-  // Inside emplace back it is created inplace.
-  REQUIRE(LifetimeType::creates == 2);
-
-  // The temporary which was pushed back.
-  // The 2 elements in the array when it is destroyed.
-  REQUIRE(LifetimeType::destroys == 3);
-
-  // Once when the temporary in copied into the array when pushed back.
-  REQUIRE(LifetimeType::copies == 1);
+  REQUIRE(LifetimeType::creates == 1);
+  REQUIRE(LifetimeType::destroys == 1);
+  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeType::moves == 0);
 }
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U64>& buffer) {
