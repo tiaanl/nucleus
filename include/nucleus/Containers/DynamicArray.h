@@ -148,7 +148,7 @@ public:
     SizeType index = m_size++;
     ElementType* storage = &m_data[index];
 
-    *storage = element;
+    new (storage) ElementType(element);
 
     return {storage, index};
   }

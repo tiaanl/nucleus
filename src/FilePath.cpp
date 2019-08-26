@@ -114,7 +114,11 @@ FilePath::FilePath(const StringView& path) : m_path{path.getData(), path.getLeng
 
 FilePath::FilePath(const FilePath& other) = default;
 
-FilePath& FilePath::operator=(const FilePath& other) = default;
+FilePath& FilePath::operator=(const FilePath& other) {
+  m_path = other.m_path;
+
+  return *this;
+}
 
 bool FilePath::operator==(const FilePath& other) const {
 #if OS(WIN)
