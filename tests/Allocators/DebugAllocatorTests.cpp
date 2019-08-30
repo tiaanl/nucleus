@@ -1,4 +1,5 @@
 
+#if 0
 #include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/Testing.h"
 
@@ -18,3 +19,4 @@ TEST_CASE("allocate from debug allocator", "[Allocators]") {
   debug.free(p1, 16, 16);
   expectDebugValues(debug, 16, 16);
 }
+#endif  // 0

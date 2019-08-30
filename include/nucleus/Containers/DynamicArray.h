@@ -2,16 +2,15 @@
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
+#include "nucleus/Logging.h"
+#include "nucleus/Types.h"
+
 #include <algorithm>
 #include <cstring>
 #include <functional>
 #include <new>
 #include <type_traits>
 #include <utility>
-
-#undef free
-
-#include "nucleus/Allocators/DefaultAllocator.h"
 
 namespace nu {
 
@@ -167,6 +166,7 @@ public:
     return {storage, index};
   }
 
+#if 0
   template <typename Func>
   PushBackResult constructBack(Func func) {
     ensureAllocated(m_size + 1, KeepOldData);
@@ -178,6 +178,7 @@ public:
 
     return {storage, index};
   }
+#endif  // 0
 
   // Push back a range of elements.
   void pushBack(Iterator begin, Iterator end) {
@@ -191,13 +192,15 @@ public:
   }
 
   template <typename... Args>
-  void emplaceBack(Args&&... args) {
+  PushBackResult emplaceBack(Args&&... args) {
     ensureAllocated(m_size + 1, KeepOldData);
 
     SizeType index = m_size++;
     ElementType* storage = &m_data[index];
 
     new (storage) ElementType{std::forward<Args>(args)...};
+
+    return {storage, index};
   }
 
   // Modify
@@ -281,34 +284,33 @@ public:
 protected:
   enum KeepOld { KeepOldData = true, DiscardOldData = false };
 
-  // Ensure that we can accommodate `size` elements.
-  void ensureAllocated(SizeType size, KeepOld keepOld) {
-    if (size > m_allocated) {
+  // Ensure that we can accommodate `elementsRequired` elements.
+  void ensureAllocated(SizeType elementsRequired, KeepOld keepOld) {
+    if ((elementsRequired * sizeof(ElementType)) > m_allocated) {
       // We take the maximum number between 16 or twice our current size.
-      allocateData(std::max<SizeType>(size << 1, 1 << 4), keepOld);
+      MemSize bytesToAllocate = (elementsRequired * sizeof(ElementType)) << 1;
+      resizeData(std::max<SizeType>(bytesToAllocate, sizeof(ElementType) << 4), keepOld);
     }
   }
 
 private:
-  void allocateData(SizeType size, KeepOld keepOld) {
-    const MemSize oldSizeInBytes = m_size * sizeof(ElementType);
-    const MemSize newSizeInBytes = size * sizeof(ElementType);
+  void resizeData(MemSize bytesRequired, KeepOld keepOld) {
+    DCHECK(m_allocated <= bytesRequired)
+        << "The container already has enough space to fit the new elements.";
 
-    auto newData = static_cast<ElementType*>(getDefaultAllocator()->allocate(newSizeInBytes));
+    ElementType* newData = static_cast<ElementType*>(std::malloc(bytesRequired));
 
-    // If we have a previously allocated buffer, then discard it, after copying it we should keep
-    // the old data.
+    // If we have old data already in the buffer, then we have to destroy it.  If `keepOld` is set,
+    // then we copy the old data to the new data first.
     if (m_data) {
       if (keepOld == KeepOldData) {
-        for (SizeType i = 0; i < m_size; ++i) {
-          newData[i] = std::move(m_data[i]);
-        }
+        std::move(m_data, m_data + m_size, newData);
       }
 
-      getDefaultAllocator()->free(m_data, oldSizeInBytes);
+      std::free(m_data);
     }
 
-    m_allocated = size;
+    m_allocated = bytesRequired;
     m_data = newData;
   }
 
@@ -319,7 +321,7 @@ private:
         el->~ElementType();
       }
 
-      getDefaultAllocator()->free(m_data, m_allocated * sizeof(ElementType));
+      std::free(m_data);
 
       m_data = nullptr;
       m_size = 0;
@@ -327,9 +329,14 @@ private:
     }
   }
 
+  // Pointer to the data inside this container.
   ElementType* m_data = nullptr;
+
+  // Total amount of elements currently in the container.
   SizeType m_size = 0;
-  SizeType m_allocated = 0;
+
+  // Total amount of bytes allocated for this container.
+  MemSize m_allocated = 0;
 };
 
 }  // namespace nu
