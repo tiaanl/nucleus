@@ -167,8 +167,8 @@ public:
     return {storage, index};
   }
 
-  // PushBackResult pushBack(Func&& func) {
-  PushBackResult pushBack(std::function<void(ElementType*)>&& func) {
+  template <typename Func>
+  PushBackResult constructBack(Func func) {
     ensureAllocated(m_size + 1, KeepOldData);
 
     SizeType index = m_size++;
