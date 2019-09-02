@@ -18,15 +18,15 @@ MemoryInputStream::MemoryInputStream(nu::DynamicArray<U8> data)
 MemoryInputStream::~MemoryInputStream() = default;
 
 MemoryInputStream::SizeType MemoryInputStream::getSize() {
-  return m_buffer.getSize();
+  return m_buffer.size();
 }
 
 MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytesToRead) {
-  SizeType num = std::min(bytesToRead, m_buffer.getSize() - m_currentPosition);
+  SizeType num = std::min(bytesToRead, m_buffer.size() - m_currentPosition);
   if (num <= 0)
     return 0;
 
-  memcpy(buffer, static_cast<const U8*>(m_buffer.getData()) + m_currentPosition,
+  memcpy(buffer, static_cast<const U8*>(m_buffer.data()) + m_currentPosition,
          static_cast<MemSize>(num));
   m_currentPosition += static_cast<MemSize>(num);
 
@@ -34,12 +34,12 @@ MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytes
 }
 
 bool MemoryInputStream::isExhausted() {
-  return m_currentPosition >= m_buffer.getSize();
+  return m_currentPosition >= m_buffer.size();
 }
 
 bool MemoryInputStream::setPosition(SizeType newPosition) {
   m_currentPosition = std::max(newPosition, static_cast<SizeType>(0));
-  m_currentPosition = std::min(newPosition, m_buffer.getSize());
+  m_currentPosition = std::min(newPosition, m_buffer.size());
   return true;
 }
 

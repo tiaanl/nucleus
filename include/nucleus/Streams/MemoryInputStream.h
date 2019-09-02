@@ -16,12 +16,12 @@ public:
 
   // Return a pointer to the source data block from which this stream is reading.
   const void* getData() const {
-    return m_buffer.getData();
+    return m_buffer.data();
   }
 
   // Returns the number of bytes of source data in the block from which this stream is reading.
   MemSize GetDataSize() const {
-    return m_buffer.getSize();
+    return m_buffer.size();
   }
 
   // Override: InputStream

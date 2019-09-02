@@ -12,7 +12,13 @@
 #include <type_traits>
 #include <utility>
 
+#undef free
+
 namespace nu {
+
+struct P {
+  I32 p;
+};
 
 template <typename T>
 class DynamicArray {
@@ -28,26 +34,19 @@ public:
 
   DynamicArray(ElementType* data, SizeType dataSize) : m_size(dataSize) {
     ensureAllocated(m_size, DiscardOldData);
-
-    // Do not do a memcpy here, because we need to call the copy constructor of the elements being
-    // copied.
     std::copy(m_data, m_data + dataSize, data);
-
-    // for (SizeType i = 0; i < dataSize; ++i) {
-    //   m_data[i] = data[i];
-    // }
   }
 
   DynamicArray(const DynamicArray& other) : m_size(other.m_size) {
     ensureAllocated(m_size, DiscardOldData);
-    ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
+    std::copy(other.m_data, other.m_data + other.m_size, m_data);
   }
 
   DynamicArray(DynamicArray&& other) noexcept
-    : m_data(other.m_data), m_size(other.m_size), m_allocated(other.m_allocated) {
+    : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
     other.m_data = nullptr;
     other.m_size = 0;
-    other.m_allocated = 0;
+    other.m_capacity = 0;
   }
 
   explicit DynamicArray(SizeType initialCapacity) {
@@ -61,12 +60,8 @@ public:
   // Operators
 
   DynamicArray& operator=(const DynamicArray& other) {
-    m_data = nullptr;
-    m_size = other.m_size;
-    m_allocated = 0;
-
     ensureAllocated(m_size, DiscardOldData);
-    ::memcpy(m_data, other.m_data, m_size * sizeof(ElementType));
+    std::copy(other.m_data, other.m_data + other.m_size, m_data);
 
     return *this;
   }
@@ -74,23 +69,23 @@ public:
   DynamicArray& operator=(DynamicArray&& other) noexcept {
     m_data = other.m_data;
     m_size = other.m_size;
-    m_allocated = other.m_allocated;
+    m_capacity = other.m_capacity;
 
     other.m_data = nullptr;
     other.m_size = 0;
-    other.m_allocated = 0;
+    other.m_capacity = 0;
 
     return *this;
   }
 
   // State
 
-  SizeType getSize() const {
+  SizeType size() const {
     return m_size;
   }
 
-  SizeType getAllocated() const {
-    return m_allocated;
+  SizeType capacity() const {
+    return m_capacity;
   }
 
   bool isEmpty() const {
@@ -99,11 +94,11 @@ public:
 
   // Get
 
-  ElementType* getData() {
+  ElementType* data() {
     return m_data;
   }
 
-  const ElementType* getData() const {
+  const ElementType* data() const {
     return m_data;
   }
 
@@ -166,20 +161,6 @@ public:
     return {storage, index};
   }
 
-#if 0
-  template <typename Func>
-  PushBackResult constructBack(Func func) {
-    ensureAllocated(m_size + 1, KeepOldData);
-
-    SizeType index = m_size++;
-    ElementType* storage = &m_data[index];
-
-    func(storage);
-
-    return {storage, index};
-  }
-#endif  // 0
-
   // Push back a range of elements.
   void pushBack(Iterator begin, Iterator end) {
     ensureAllocated(m_size + end - begin, KeepOldData);
@@ -237,10 +218,6 @@ public:
   }
 
   void reserve(SizeType size) {
-    if (size <= m_allocated) {
-      return;
-    }
-
     ensureAllocated(size, KeepOldData);
   }
 
@@ -286,17 +263,23 @@ protected:
 
   // Ensure that we can accommodate `elementsRequired` elements.
   void ensureAllocated(SizeType elementsRequired, KeepOld keepOld) {
-    if ((elementsRequired * sizeof(ElementType)) > m_allocated) {
-      // We take the maximum number between 16 or twice our current size.
-      MemSize bytesToAllocate = (elementsRequired * sizeof(ElementType)) << 1;
-      resizeData(std::max<SizeType>(bytesToAllocate, sizeof(ElementType) << 4), keepOld);
+    if (elementsRequired > m_capacity) {
+      // We take the maximum number between 16 or twice our current capacity.
+      SizeType requiredCapacity = std::max<SizeType>(m_capacity, 1 << 4);
+      while (requiredCapacity < elementsRequired) {
+        requiredCapacity <<= 1;
+      }
+
+      resizeData(requiredCapacity, keepOld);
     }
   }
 
 private:
-  void resizeData(MemSize bytesRequired, KeepOld keepOld) {
-    DCHECK(m_allocated <= bytesRequired)
+  void resizeData(MemSize elementsRequired, KeepOld keepOld) {
+    DCHECK(m_capacity <= elementsRequired)
         << "The container already has enough space to fit the new elements.";
+
+    MemSize bytesRequired = elementsRequired * sizeof(ElementType);
 
     ElementType* newData = static_cast<ElementType*>(std::malloc(bytesRequired));
 
@@ -307,26 +290,27 @@ private:
         std::move(m_data, m_data + m_size, newData);
       }
 
+      // Free the old data.
       std::free(m_data);
     }
 
-    m_allocated = bytesRequired;
+    m_capacity = elementsRequired;
     m_data = newData;
   }
 
   void free() {
     if (m_data) {
       // Destruct all the objects we contain.
-      for (ElementType* el = m_data; el != m_data + m_size; el++) {
+      for (ElementType* el = m_data; el != m_data + m_size; ++el) {
         el->~ElementType();
       }
 
       std::free(m_data);
-
       m_data = nullptr;
-      m_size = 0;
-      m_allocated = 0;
     }
+
+    m_size = 0;
+    m_capacity = 0;
   }
 
   // Pointer to the data inside this container.
@@ -335,8 +319,8 @@ private:
   // Total amount of elements currently in the container.
   SizeType m_size = 0;
 
-  // Total amount of bytes allocated for this container.
-  MemSize m_allocated = 0;
+  // Total amount of elements currently allocated.
+  MemSize m_capacity = 0;
 };
 
 }  // namespace nu

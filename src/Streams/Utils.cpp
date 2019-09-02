@@ -8,7 +8,7 @@ DynamicArray<U8> readEntireStream(InputStream* inputStream) {
   DynamicArray<U8> result;
   result.resize(bytesRemaining);
 
-  inputStream->read(result.getData(), bytesRemaining);
+  inputStream->read(result.data(), bytesRemaining);
 
   return result;
 }

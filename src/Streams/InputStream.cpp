@@ -29,7 +29,7 @@ void InputStream::skip(SizeType numberOfBytes) {
 
   while (numberOfBytes != 0 && !isExhausted()) {
     numberOfBytes -=
-        read(temp.getData(), std::min(numberOfBytes, static_cast<SizeType>(kBufferedSizeToSkip)));
+        read(temp.data(), std::min(numberOfBytes, static_cast<SizeType>(kBufferedSizeToSkip)));
   }
 }
 

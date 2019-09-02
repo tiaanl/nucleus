@@ -116,20 +116,13 @@ public:
     return operator[](index);
   }
 
-  T* append(T item) {
+  T* append(const T& item) {
     ensureSpace();
     T* storage = &m_currentBlock->items[m_currentBlock->size];
-    *storage = item;
-    ++m_currentBlock->size;
-    ++m_size;
 
-    return storage;
-  }
+    // Invoke the copy constructor on the element.
+    new (storage) T(item);
 
-  T* append(std::function<void(T*)> function) {
-    ensureSpace();
-    T* storage = &m_currentBlock->items[m_currentBlock->size];
-    function(storage);
     ++m_currentBlock->size;
     ++m_size;
 

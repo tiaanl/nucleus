@@ -13,7 +13,7 @@ WrappedMemoryInputStream::WrappedMemoryInputStream(const void* data, MemSize siz
   : m_data(data), m_size(size) {}
 
 WrappedMemoryInputStream::WrappedMemoryInputStream(const nu::DynamicArray<I8>& data)
-  : m_data(data.getData()), m_size(data.getSize()) {}
+  : m_data(data.data()), m_size(data.size()) {}
 
 WrappedMemoryInputStream::SizeType WrappedMemoryInputStream::getSize() {
   return m_size;
