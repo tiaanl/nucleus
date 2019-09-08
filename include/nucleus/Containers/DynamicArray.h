@@ -60,8 +60,10 @@ public:
   // Operators
 
   DynamicArray& operator=(const DynamicArray& other) {
-    ensureAllocated(m_size, DiscardOldData);
+    ensureAllocated(other.m_size, DiscardOldData);
+
     std::copy(other.m_data, other.m_data + other.m_size, m_data);
+    m_size = other.m_size;
 
     return *this;
   }

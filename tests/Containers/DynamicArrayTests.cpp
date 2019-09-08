@@ -12,7 +12,7 @@ TEST_CASE("basic") {
   nu::DynamicArray<U64> buffer;
   buffer.pushBack(10);
 
-  REQUIRE(buffer.getSize() == static_cast<MemSize>(1));
+  REQUIRE(buffer.size() == static_cast<MemSize>(1));
   REQUIRE(buffer[0] == 10);
 }
 
@@ -23,7 +23,7 @@ TEST_CASE("copy construct") {
 
   nu::DynamicArray<U64> buffer2{buffer1};
 
-  REQUIRE(buffer1.getSize() == buffer2.getSize());
+  REQUIRE(buffer1.size() == buffer2.size());
   REQUIRE(buffer1[0] == buffer2[0]);
   REQUIRE(buffer1[1] == buffer2[1]);
 }
@@ -34,11 +34,11 @@ TEST_CASE("copy assignment") {
   buffer1.pushBack(20);
 
   nu::DynamicArray<U64> buffer2;
-  REQUIRE(buffer2.getSize() == 0);
+  REQUIRE(buffer2.size() == 0);
 
   buffer2 = buffer1;
 
-  REQUIRE(buffer1.getSize() == buffer2.getSize());
+  REQUIRE(buffer1.size() == buffer2.size());
   REQUIRE(buffer1[0] == buffer2[0]);
   REQUIRE(buffer1[1] == buffer2[1]);
 }
@@ -50,8 +50,8 @@ TEST_CASE("move construct") {
 
   nu::DynamicArray<U64> buffer2{std::move(buffer)};
 
-  REQUIRE(buffer.getSize() == 0);
-  REQUIRE(buffer2.getSize() == 2);
+  REQUIRE(buffer.size() == 0);
+  REQUIRE(buffer2.size() == 2);
   REQUIRE(buffer2[0] == 10);
   REQUIRE(buffer2[1] == 20);
 }
@@ -62,12 +62,12 @@ TEST_CASE("move assignment") {
   buffer.pushBack(20);
 
   nu::DynamicArray<U64> buffer2;
-  REQUIRE(buffer2.getSize() == 0);
+  REQUIRE(buffer2.size() == 0);
 
   buffer2 = std::move(buffer);
 
-  REQUIRE(buffer.getSize() == 0);
-  REQUIRE(buffer2.getSize() == 2);
+  REQUIRE(buffer.size() == 0);
+  REQUIRE(buffer2.size() == 2);
   REQUIRE(buffer2[0] == 10);
   REQUIRE(buffer2[1] == 20);
 }
@@ -149,7 +149,7 @@ TEST_CASE("emplace back") {
   buffer.pushBack(LifetimeType{1, 2});
   buffer.emplaceBack(3, 4);
 
-  REQUIRE(buffer.getSize() == 2);
+  REQUIRE(buffer.size() == 2);
   REQUIRE(buffer[0].getA() == 1);
   REQUIRE(buffer[0].getB() == 2);
   REQUIRE(buffer[1].getA() == 3);
@@ -209,13 +209,13 @@ TEST_CASE("create and destroy elements") {
 }
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U64>& buffer) {
-  for (MemSize i = 0; i < buffer.getSize(); ++i) {
+  for (MemSize i = 0; i < buffer.size(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
 
 void dynamicArrayWithConst(const nu::DynamicArray<U64>& buffer) {
-  for (MemSize i = 0; i < buffer.getSize(); ++i) {
+  for (MemSize i = 0; i < buffer.size(); ++i) {
     REQUIRE(buffer[i] == (i + 1) * 10);
   }
 }
@@ -240,7 +240,7 @@ TEST_CASE("remove single element") {
   SECTION("from beginning of array") {
     buffer.remove(buffer.begin());
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 20);
     REQUIRE(buffer[1] == 30);
     REQUIRE(buffer[2] == 40);
@@ -250,7 +250,7 @@ TEST_CASE("remove single element") {
   SECTION("from middle of array") {
     buffer.remove(buffer.begin() + 1);
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 30);
     REQUIRE(buffer[2] == 40);
@@ -260,7 +260,7 @@ TEST_CASE("remove single element") {
   SECTION("from end of array") {
     buffer.remove(buffer.begin() + 1);
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 30);
     REQUIRE(buffer[2] == 40);
@@ -296,7 +296,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 1 element from the beginning of the array") {
     buffer.remove(buffer.begin(), buffer.begin() + 1);
 
-    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer.size() == 5);
     REQUIRE(buffer[0] == 20);
     REQUIRE(buffer[1] == 30);
     REQUIRE(buffer[2] == 40);
@@ -308,7 +308,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 3 elements from the beginning of the array") {
     buffer.remove(buffer.begin(), buffer.begin() + 3);
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 40);
     REQUIRE(buffer[1] == 50);
     REQUIRE(buffer[2] == 60);
@@ -318,7 +318,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 1 element from the middle of the array") {
     buffer.remove(buffer.begin() + 2, buffer.begin() + 3);
 
-    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer.size() == 5);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 20);
     REQUIRE(buffer[2] == 40);
@@ -330,7 +330,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 3 elements from the middle of the array") {
     buffer.remove(buffer.begin() + 2, buffer.begin() + 5);
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 20);
     REQUIRE(buffer[2] == 60);
@@ -340,7 +340,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 1 element from the end of the array") {
     buffer.remove(buffer.begin() + 5, buffer.end());
 
-    REQUIRE(buffer.getSize() == 5);
+    REQUIRE(buffer.size() == 5);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 20);
     REQUIRE(buffer[2] == 30);
@@ -352,7 +352,7 @@ TEST_CASE("remove range of elements") {
   SECTION("remove 3 elements from the middle of the array") {
     buffer.remove(buffer.begin() + 3, buffer.end());
 
-    REQUIRE(buffer.getSize() == 3);
+    REQUIRE(buffer.size() == 3);
     REQUIRE(buffer[0] == 10);
     REQUIRE(buffer[1] == 20);
     REQUIRE(buffer[2] == 30);
@@ -385,11 +385,11 @@ TEST_CASE("clears elements and calls destructors") {
   buffer.emplaceBack(5, 6);
   buffer.emplaceBack(6, 7);
 
-  REQUIRE(buffer.getSize() == 4);
+  REQUIRE(buffer.size() == 4);
 
   buffer.clear();
 
-  REQUIRE(buffer.getSize() == 0);
+  REQUIRE(buffer.size() == 0);
 
   REQUIRE(LifetimeType::creates == 4);
   REQUIRE(LifetimeType::destroys == 4);

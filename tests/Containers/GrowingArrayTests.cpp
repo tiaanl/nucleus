@@ -59,6 +59,7 @@ TEST_CASE("can use range based for") {
   CHECK(testData[2].value2 == 6);
 }
 
+#if 0
 TEST_CASE("append with creator function") {
   GrowingArray<Data, 2> ga;
   ga.append([](Data* storage) {
@@ -70,5 +71,6 @@ TEST_CASE("append with creator function") {
   CHECK(ga[0]->value1 == 1);
   CHECK(ga[0]->value2 == 2);
 }
+#endif  // 0
 
 }  // namespace nu
