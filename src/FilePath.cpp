@@ -46,9 +46,9 @@ bool equalDriveLetterCaseInsensitive(const StringView& left, const StringView& r
     return leftLetterPos == rightLetterPos;
   }
 
+#if 0
   auto leftLetter{left.subString(0, leftLetterPos + 1)};
   auto rightLetter{right.subString(0, rightLetterPos + 1)};
-#if 0
   if (!StartsWith(leftLetter, rightLetter, false))
     return false;
 #endif  // 0

@@ -3,7 +3,7 @@
 #include "nucleus/Config.h"
 
 #if OS(WIN)
-#include "nucleus/win/WindowsMixin.h"
+#include "nucleus/Win/WindowsMixin.h"
 #elif OS(MACOSX)
 #include <mach/mach_time.h>
 #elif OS(POSIX)
