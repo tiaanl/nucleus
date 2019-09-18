@@ -129,6 +129,19 @@ public:
     return storage;
   }
 
+  T* emplace(T&& item) {
+    ensureSpace();
+    T* storage = &m_currentBlock->items[m_currentBlock->size];
+
+    // Invoke the move constructor of the item if it is available.
+    new (storage) T(std::forward<T>(item));
+
+    ++m_currentBlock->size;
+    ++m_size;
+
+    return storage;
+  }
+
 private:
   DELETE_COPY_AND_MOVE(GrowingArray);
 
