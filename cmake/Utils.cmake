@@ -26,7 +26,7 @@ function(nucleus_add_library name)
 endfunction(nucleus_add_library)
 
 function(nucleus_add_executable name)
-    add_executable(${name} WIN32 MACOSX_BUNDLE ${ARGN})
+    add_executable(${name} ${ARGN})
 
     if (CMAKE_CXX_COMPILER_ID MATCHES MSVC)
         # Enable warnings and multi-process compilation.
