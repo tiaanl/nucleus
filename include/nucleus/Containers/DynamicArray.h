@@ -32,25 +32,30 @@ public:
 
   DynamicArray() = default;
 
-  DynamicArray(ElementType* data, SizeType dataSize) : m_size(dataSize) {
-    ensureAllocated(m_size, DiscardOldData);
-    std::copy(m_data, m_data + dataSize, data);
+  DynamicArray(ElementType* data, SizeType size) : m_size{size} {
+    ensureAllocated(size, DiscardOldData);
+    std::copy(data, data + size, m_data);
   }
 
-  DynamicArray(const DynamicArray& other) : m_size(other.m_size) {
+  DynamicArray(const DynamicArray& other) : m_size{other.m_size} {
     ensureAllocated(m_size, DiscardOldData);
     std::copy(other.m_data, other.m_data + other.m_size, m_data);
   }
 
   DynamicArray(DynamicArray&& other) noexcept
-    : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
+    : m_data{other.m_data}, m_size{other.m_size}, m_capacity{other.m_capacity} {
     other.m_data = nullptr;
     other.m_size = 0;
     other.m_capacity = 0;
   }
 
-  explicit DynamicArray(SizeType initialCapacity) {
+  explicit DynamicArray(SizeType initialCapacity, const ElementType& value = ElementType{}) {
     ensureAllocated(initialCapacity, DiscardOldData);
+  }
+
+  DynamicArray(std::initializer_list<ElementType> list) : m_size{list.size()} {
+    ensureAllocated(list.size(), DiscardOldData);
+    std::copy(list.begin(), list.end(), m_data);
   }
 
   ~DynamicArray() {

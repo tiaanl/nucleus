@@ -1,31 +1,65 @@
 
 #include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Logging.h"
-#include "nucleus/Testing.h"
+#include "nucleus/DynamicArrayTesting.h"
 #include "nucleus/Types.h"
-
-#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
-TEST_CASE("basic") {
-  nu::DynamicArray<U64> buffer;
-  buffer.pushBack(10);
+TEST_CASE("DynamicArray/construct") {
+  SECTION("default") {
+    DynamicArray<I32> a;
 
-  REQUIRE(buffer.size() == static_cast<MemSize>(1));
-  REQUIRE(buffer[0] == 10);
-}
+    checkThat(a).hasSizeOf(0);
+    checkThat(a).isEmpty();
+  }
 
-TEST_CASE("copy construct") {
-  nu::DynamicArray<U64> buffer1;
-  buffer1.pushBack(10);
-  buffer1.pushBack(20);
+  SECTION("initializer list") {
+    DynamicArray<I32> a = {10, 20, 30};
 
-  nu::DynamicArray<U64> buffer2{buffer1};
+    requireThat(a).hasSizeOf(3);
+    checkThat(a).element(0).isEqualTo(10);
+    checkThat(a).element(1).isEqualTo(20);
+    checkThat(a).element(2).isEqualTo(30);
+  }
 
-  REQUIRE(buffer1.size() == buffer2.size());
-  REQUIRE(buffer1[0] == buffer2[0]);
-  REQUIRE(buffer1[1] == buffer2[1]);
+  SECTION("from raw pointer and size") {
+    I32 data[] = {10, 20, 30};
+    DynamicArray<I32> a{data, 3};
+
+    REQUIRE(a.size() == 3);
+    CHECK(a[0] == 10);
+    CHECK(a[1] == 20);
+    CHECK(a[2] == 30);
+  }
+
+  SECTION("copy") {
+    DynamicArray<I32> a = {10, 20, 30};
+    DynamicArray<I32> b{a};
+
+    REQUIRE(a.size() == 3);
+    CHECK(a[0] == 10);
+    CHECK(a[1] == 20);
+    CHECK(a[2] == 30);
+  }
+
+  SECTION("move") {
+    DynamicArray<I32> a = {10, 20, 30};
+
+    REQUIRE(a.size() == 3);
+
+    DynamicArray<I32> b{std::move(a)};
+
+    REQUIRE(b.size() == 3);
+    CHECK(b[0] == 10);
+    CHECK(b[1] == 20);
+    CHECK(b[2] == 30);
+  }
+
+  SECTION("with initial capacity") {
+    DynamicArray<I32> a{3};
+
+    REQUIRE(a.size() == 0);
+  }
 }
 
 TEST_CASE("copy assignment") {
