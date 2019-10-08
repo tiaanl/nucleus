@@ -103,7 +103,7 @@ public:
 
   // Return the position of the last character that matches any of the predicate characters.
   StringLength findLastOfAny(const StringView& characters) {
-    for (StringLength i = 0; i <= m_length; ++i) {
+    for (StringLength i = 0; i < m_length; ++i) {
       auto currentPos = m_length - 1 - i;
       auto pos = characters.findFirstOf(m_text[currentPos]);
       if (pos != kInvalidPosition) {

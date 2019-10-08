@@ -51,6 +51,8 @@ public:
 
   explicit DynamicArray(SizeType initialCapacity, const ElementType& value = ElementType{}) {
     ensureAllocated(initialCapacity, DiscardOldData);
+    m_size = initialCapacity;
+    std::fill(m_data, m_data + m_size, value);
   }
 
   DynamicArray(std::initializer_list<ElementType> list) : m_size{list.size()} {

@@ -112,7 +112,6 @@ endif ()
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 set(nucleusTests_SOURCE_FILES
-    tests/Containers/HashMapTests.cpp
     tests/Allocators/AllocatorTests.cpp
     tests/Allocators/DebugAllocatorTests.cpp
     tests/Callbacks/CallbackTests.cpp
