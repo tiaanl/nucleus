@@ -40,6 +40,18 @@ public:
     return Size;
   }
 
+  void resize(StringLength length, Char fill = '\0') {
+    length = std::min(length, Size);
+
+    if (length > m_length) {
+      for (auto i = m_length; i < length; ++i) {
+        m_storage[i] = fill;
+      }
+    }
+
+    m_length = length;
+  }
+
   void append(const char* text) {
     append(text, std::strlen(text));
   }
