@@ -193,6 +193,18 @@ public:
     return {storage, index};
   }
 
+  template <typename Func>
+  PushBackResult constructBack(Func init) {
+    ensureAllocated(m_size + 1, KeepOldData);
+
+    SizeType index = m_size++;
+    ElementType* storage = &m_data[index];
+
+    init(storage);
+
+    return {storage, index};
+  }
+
   // Modify
 
   void remove(Iterator pos) {
