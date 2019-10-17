@@ -50,6 +50,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Memory/ScopedRefPtr.h
     include/nucleus/MemoryDebug.h
     include/nucleus/Parser/Tokenizer.h
+    include/nucleus/Profiling.h
     include/nucleus/RefCounted.h
     include/nucleus/Streams/ConsoleOutputStream.h
     include/nucleus/Streams/FileInputStream.h
@@ -83,6 +84,7 @@ set(nucleus_SOURCE_FILES
     src/HighPerformanceTimer.cpp
     src/Logging.cpp
     src/Parser/Tokenizer.cpp
+    src/Profiling.cpp
     src/Streams/ConsoleOutputStream.cpp
     src/Streams/FileInputStream.cpp
     src/Streams/FileOutputStream.cpp
