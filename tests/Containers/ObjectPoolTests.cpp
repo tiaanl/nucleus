@@ -66,8 +66,8 @@ TEST(ObjectPoolTests, "destroyes elements on destruction") {
     auto* e1 = pool.acquire(10);
     auto* e2 = pool.acquire(20);
 
-    checkThat(*e1).isEqualTo(10);
-    checkThat(*e2).isEqualTo(20);
+    checkThat(e1->value).isEqualTo(10);
+    checkThat(e2->value).isEqualTo(20);
 
     checkThat(Lifetime::constructed).isEqualTo(2);
     checkThat(Lifetime::destructed).isEqualTo(0);

@@ -21,18 +21,6 @@ set(nucleus_HEADER_FILES
     include/nucleus/Allocators/LinearAllocator.h
     include/nucleus/Allocators/TestAllocator.h
     include/nucleus/ByteOrder.h
-    include/nucleus/Callbacks/Bind.h
-    include/nucleus/Callbacks/BindDetail.h
-    include/nucleus/Callbacks/BindState.h
-    include/nucleus/Callbacks/Callback.h
-    include/nucleus/Callbacks/CallbackDetail.h
-    include/nucleus/Callbacks/CallbackForward.h
-    include/nucleus/Callbacks/ExtractReturnType.h
-    include/nucleus/Callbacks/FunctorTraits.h
-    include/nucleus/Callbacks/MakeBindStateType.h
-    include/nucleus/Callbacks/MakeFunctionType.h
-    include/nucleus/Callbacks/PassingTraits.h
-    include/nucleus/Callbacks/TypeList.h
     include/nucleus/Config.h
     include/nucleus/Containers/Array.h
     include/nucleus/Containers/BitSet.h
@@ -79,7 +67,6 @@ set(nucleus_SOURCE_FILES
     src/Allocators/DefaultAllocator.cpp
     src/Allocators/GlobalAllocator.cpp
     src/Allocators/LinearAllocator.cpp
-    src/Callbacks/CallbackDetail.cpp
     src/Debugger.cpp
     src/FilePath.cpp
     src/HighPerformanceTimer.cpp
@@ -117,7 +104,6 @@ nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 set(nucleusTests_SOURCE_FILES
     tests/Allocators/AllocatorTests.cpp
     tests/Allocators/DebugAllocatorTests.cpp
-    tests/Callbacks/CallbackTests.cpp
     tests/Containers/ArrayTests.cpp
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
