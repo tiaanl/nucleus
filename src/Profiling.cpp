@@ -1,76 +1,76 @@
 #include "nucleus/Profiling.h"
 
+#include "nucleus/HighPerformanceTimer.h"
+#include "nucleus/Logging.h"
+
 namespace nu {
+
+namespace detail {
 
 namespace {
 
-Profiler g_globalProfiler;
+ProfileMetrics* g_globalProfileMetrics = nullptr;
 
 }  // namespace
 
-Profiler::Profiler() noexcept
-  : m_root{nu::StringView{"root"}, nullptr, nullptr, nullptr, nullptr}, m_current{&m_root} {}
+ProfileMetrics::ProfileMetrics() noexcept
+  : m_root{nu::StringView{"root"}, nullptr, nullptr, 0.0f}, m_current{&m_root} {}
 
-auto Profiler::reset() -> void {
+auto ProfileMetrics::reset() -> void {
+  m_blocks.releaseAll();
+
   m_current = &m_root;
-  m_root.next = nullptr;
   m_root.children = nullptr;
-  return;
+}
 
-  Block* last = &m_root;
-  while (last->next) {
-    last = last->next;
-  }
-
-  if (last == &m_root) {
+auto ProfileMetrics::startBlock(const StringView& name) -> void {
+  if (!g_globalProfileMetrics) {
+    LOG(Fatal) << "No profile metrics defined. Create a Profiling object on the stack.";
     return;
   }
 
-  auto current = last;
-  while (true) {
-    auto prev = current->prev;
-
-    // This might be nullptr, but that's OK.
-    delete current;
-    current = prev;
-
-    if (prev == &m_root) {
-      break;
-    }
-  }
-
-  m_current = &m_root;
-}
-
-auto Profiler::startBlock(const StringView& name) -> void {
   if (m_current->children) {
     // Find the last child.
-    auto c = m_current->children;
-    while (c->next) {
-      c = c->next;
+    auto lastChild = m_current->children;
+    while (lastChild->next) {
+      lastChild = lastChild->next;
     }
 
-    auto newBlock = new Block{name, nullptr, c, m_current, nullptr};
-    c->next = newBlock;
+    auto newBlock = m_blocks.acquire(name, lastChild, nullptr, nu::getCurrentHighPerformanceTick());
+
+    lastChild->next = newBlock;
 
     m_current = newBlock;
   } else {
-    auto newBlock = new Block{name, nullptr, nullptr, m_current, nullptr};
+    auto newBlock = m_blocks.acquire(name, nullptr, m_current, nu::getCurrentHighPerformanceTick());
+
     m_current->children = newBlock;
     m_current = newBlock;
   }
 }
 
-auto Profiler::stopBlock() -> void {
+auto ProfileMetrics::stopBlock() -> void {
+  m_current->stopTime = nu::getCurrentHighPerformanceTick();
+
   if (m_current->prev) {
     m_current = m_current->prev;
-  } else {
+  } else if (m_current->parent) {
     m_current = m_current->parent;
   }
 }
 
-Profiler* getGlobalProfiler() {
-  return &g_globalProfiler;
+ProfileMetrics* getCurrentProfileMetrics() {
+  return g_globalProfileMetrics;
+}
+
+}  // namespace detail
+
+Profiling::Profiling() : m_oldProfileMetrics{detail::g_globalProfileMetrics} {
+  detail::g_globalProfileMetrics = &m_profileMetrics;
+}
+
+Profiling::~Profiling() {
+  detail::g_globalProfileMetrics = m_oldProfileMetrics;
 }
 
 }  // namespace nu

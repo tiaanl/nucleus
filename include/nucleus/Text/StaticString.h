@@ -52,6 +52,10 @@ public:
     m_length = length;
   }
 
+  void append(const nu::StringView& text) {
+    append(text.getData(), text.getLength());
+  }
+
   void append(const char* text) {
     append(text, std::strlen(text));
   }

@@ -6,6 +6,8 @@
 
 namespace nu {
 
+#if 0
+
 template <typename T, typename Compare>
 struct Assertions<DynamicArray<T>, Compare> : BaseAssertions<DynamicArray<T>, Compare> {
   using SizeType = typename DynamicArray<T>::SizeType;
@@ -24,6 +26,8 @@ struct Assertions<DynamicArray<T>, Compare> : BaseAssertions<DynamicArray<T>, Co
     return Assertions<T, Compare>(value[index]);
   }
 };
+
+#endif  // 0
 
 }  // namespace nu
 

@@ -4,7 +4,7 @@
 
 namespace nu {
 
-TEST(HashMapTestsBasic) {
+TEST(HashMapTests, "basic") {
   HashMap<MemSize, StaticString<64>> hm;
 
   checkThat(hm.size()).isEqualTo(0);

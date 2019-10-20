@@ -39,6 +39,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/DynamicArray.h
     include/nucleus/Containers/GrowingArray.h
     include/nucleus/Containers/HashMap.h
+    include/nucleus/Containers/ObjectPool.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Hash.h
@@ -143,6 +144,8 @@ target_link_libraries(nucleusTests nucleus testing)
 
 set(nucleusTestsNeedle_SOURCE_FILES
     tests/Containers/HashMapTests.cpp
+    tests/Containers/ObjectPoolTests.cpp
+    tests/ProfilingTests.cpp
     )
 
 nucleus_add_executable(nucleusTestsNeedle ${nucleusTestsNeedle_SOURCE_FILES})

@@ -37,6 +37,22 @@ public:
     return *this;
   }
 
+  bool operator==(const ScopedPtr& other) const {
+    return m_ptr == other.m_ptr;
+  }
+
+  bool operator==(T* other) const {
+    return m_ptr == other;
+  }
+
+  bool operator!= (const ScopedPtr& other) const {
+    return m_ptr != other.m_ptr;
+  }
+
+  bool operator !=(const T* other) const {
+    return m_ptr != other;
+  }
+
   const T* operator->() const {
     return m_ptr;
   }

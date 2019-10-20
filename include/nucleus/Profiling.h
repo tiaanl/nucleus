@@ -1,24 +1,40 @@
 #ifndef NUCLEUS_PROFILING_H_
 #define NUCLEUS_PROFILING_H_
 
+#include "nucleus/Containers/ObjectPool.h"
+#include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/Text/StaticString.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
 
-class Profiler {
+namespace detail {
+
+class ProfileMetrics {
 public:
   struct Block {
-    nu::StaticString<128> name;
+    StaticString<128> name;
 
     Block* next;
     Block* prev;
 
     Block* parent;
     Block* children;
+
+    F64 startTime;
+    F64 stopTime;
+
+    Block(const StringView& name, Block* prev, Block* parent, F64 startTime)
+      : name{name},
+        next{nullptr},
+        prev{prev},
+        parent{parent},
+        children{nullptr},
+        startTime{startTime},
+        stopTime{0.0} {}
   };
 
-  Profiler() noexcept;
+  ProfileMetrics() noexcept;
 
   auto reset() -> void;
 
@@ -32,13 +48,30 @@ public:
 private:
   Block m_root;
   Block* m_current;
+
+  ObjectPool<Block> m_blocks;
+
+  // DynamicArray<Block*> m_blocks;
 };
 
-Profiler* getGlobalProfiler();
+ProfileMetrics* getCurrentProfileMetrics();
+
+}  // namespace detail
+
+class Profiling {
+public:
+  Profiling();
+  ~Profiling();
+
+private:
+  detail::ProfileMetrics* m_oldProfileMetrics;
+  detail::ProfileMetrics m_profileMetrics;
+};
 
 class ScopedProfileBlock {
 public:
-  ScopedProfileBlock(const StringView& name) : m_profiler(getGlobalProfiler()) {
+  explicit ScopedProfileBlock(const StringView& name)
+    : m_profiler(detail::getCurrentProfileMetrics()) {
     m_profiler->startBlock(name);
   }
 
@@ -47,7 +80,7 @@ public:
   }
 
 private:
-  Profiler* m_profiler;
+  detail::ProfileMetrics* m_profiler;
 };
 
 #define PROFILE3(Description, Counter) ::nu::ScopedProfileBlock __PROFILE_##Counter(Description);
