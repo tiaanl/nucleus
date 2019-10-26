@@ -1,25 +1,25 @@
 
 #include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/DynamicArrayTesting.h"
+#include "nucleus/Testing.h"
 #include "nucleus/Types.h"
 
 namespace nu {
 
-TEST_CASE("DynamicArray/construct") {
+TEST_CASE("DynamicArray construct") {
   SECTION("default") {
     DynamicArray<I32> a;
 
-    checkThat(a).hasSizeOf(0);
-    checkThat(a).isEmpty();
+    CHECK(a.size() == 0);
+    CHECK(a.isEmpty());
   }
 
   SECTION("initializer list") {
     DynamicArray<I32> a = {10, 20, 30};
 
-    requireThat(a).hasSizeOf(3);
-    checkThat(a).element(0).isEqualTo(10);
-    checkThat(a).element(1).isEqualTo(20);
-    checkThat(a).element(2).isEqualTo(30);
+    REQUIRE(a.size() == 3);
+    CHECK(a[0] == 10);
+    CHECK(a[1] == 20);
+    CHECK(a[2] == 30);
   }
 
   SECTION("from raw pointer and size") {

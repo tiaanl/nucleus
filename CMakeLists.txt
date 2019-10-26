@@ -11,7 +11,6 @@ include(cmake/Utils.cmake)
 option(NUCLEUS_BUILD_BENCHMARKS "Build nucleus benchmarks" OFF)
 
 add_subdirectory(external)
-add_subdirectory(../needle needle)
 
 set(nucleus_HEADER_FILES
     include/nucleus/Allocators/Allocator.h
@@ -87,18 +86,6 @@ set(nucleus_SOURCE_FILES
     src/Text/StringView.cpp
     )
 
-if (WIN32)
-    list(APPEND nucleus_SOURCE_FILES
-        src/Streams/FileInputStream_win.cpp
-        )
-endif ()
-
-if (UNIX)
-    list(APPEND nucleus_SOURCE_FILES
-        src/Streams/FileInputStream_posix.cpp
-        )
-endif ()
-
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 set(nucleusTests_SOURCE_FILES
@@ -128,20 +115,20 @@ set(nucleusTests_SOURCE_FILES
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
 target_link_libraries(nucleusTests nucleus testing)
 
-set(nucleusTestsNeedle_SOURCE_FILES
-    tests/Containers/HashMapTests.cpp
-    tests/Containers/ObjectPoolTests.cpp
-    tests/ProfilingTests.cpp
-    )
+#set(nucleusTestsNeedle_SOURCE_FILES
+#    tests/Containers/HashMapTests.cpp
+#    tests/Containers/ObjectPoolTests.cpp
+#    tests/ProfilingTests.cpp
+#    )
 
-nucleus_add_executable(nucleusTestsNeedle ${nucleusTestsNeedle_SOURCE_FILES})
-target_link_libraries(nucleusTestsNeedle nucleus needleMain)
+#nucleus_add_executable(nucleusTestsNeedle ${nucleusTestsNeedle_SOURCE_FILES})
+#target_link_libraries(nucleusTestsNeedle nucleus needleMain)
 
 if (NUCLEUS_BUILD_BENCHMARKS)
-    set(nucleus_BENCHMARKS_SOURCE_FILES
+    set(nucleusBenchmarks_SOURCE_FILES
         src/Allocators/AllocatorBenchmarks.cpp
         )
 
-    nucleus_add_executable(nucleusBenchmarks ${nucleus_BENCHMARKS_SOURCE_FILES})
+    nucleus_add_executable(nucleusBenchmarks ${nucleusBenchmarks_SOURCE_FILES})
     target_link_libraries(nucleusBenchmarks nucleus benchmarks)
 endif ()

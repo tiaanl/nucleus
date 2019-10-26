@@ -47,6 +47,11 @@ public:
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
 private:
+  DELETE_COPY_AND_MOVE(FileInputStream);
+
+  // Represents an invalid state for the internal handle.
+  static HandleType kInvalidHandle;
+
   // Open the handle to the file.
   void openHandle();
 
@@ -57,12 +62,10 @@ private:
   SizeType readInternal(void* buffer, SizeType numBytes);
 
   FilePath m_path;
-  HandleType m_handle{0};
-  SizeType m_currentPosition{0};
-  bool m_status{true};
-  bool m_needToSeek{true};
-
-  DELETE_COPY_AND_MOVE(FileInputStream);
+  HandleType m_handle = kInvalidHandle;
+  SizeType m_currentPosition = 0;
+  bool m_status = true;
+  bool m_needToSeek = true;
 };
 
 }  // namespace nu
