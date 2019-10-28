@@ -2,6 +2,7 @@
 #ifndef NUCLEUS_TEXT_STATIC_STRING_H_
 #define NUCLEUS_TEXT_STATIC_STRING_H_
 
+#include "nucleus/Macros.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
@@ -11,16 +12,18 @@ class StaticString : public StringView {
 public:
   StaticString() : StringView{m_storage, 0} {}
 
-  StaticString(const StringView& text) : StaticString{} {
-    MemSize bytesToCopy = std::min(Size - 1, text.getLength());
-    std::memcpy(m_text, text.getData(), bytesToCopy);
+  StaticString(const StaticString& other) : StaticString{} {
+    auto bytesToCopy = std::min(Size, other.getLength());
+    std::memcpy(m_text, other.getData(), bytesToCopy);
     m_length = bytesToCopy;
-    m_text[m_length] = 0;
   }
 
-  StaticString(const StaticString& other) : StaticString{} {
-    std::memcpy(m_storage, other.m_storage, Size);
-    m_length = other.m_length;
+  StaticString(StaticString&&) = delete;
+
+  StaticString(const StringView& other) : StaticString{} {
+    auto bytesToCopy = std::min(Size, other.getLength());
+    std::memcpy(m_text, other.getData(), bytesToCopy);
+    m_length = bytesToCopy;
   }
 
   Char& operator[](StringLength index) {
@@ -28,15 +31,22 @@ public:
   }
 
   StaticString& operator=(const StaticString& other) {
-    m_text = m_storage;
-
-    std::memcpy(m_storage, other.m_storage, Size);
+    std::memcpy(m_text, other.m_text, Size);
     m_length = other.m_length;
 
     return *this;
   }
 
-  MemSize getStorageSize() {
+  StaticString& operator=(StaticString&&) = delete;
+
+  StaticString& operator=(const StringView& other) {
+    std::memcpy(m_text, other.m_text, Size);
+    m_length = other.m_length;
+
+    return *this;
+  }
+
+  constexpr MemSize getStorageSize() {
     return Size;
   }
 
@@ -64,7 +74,6 @@ public:
     StringLength bytesToCopy = std::min(Size - m_length - 1, length);
     std::memcpy(m_storage + m_length, text, bytesToCopy);
     m_length += bytesToCopy;
-    m_text[m_length] = '\0';
   }
 
 private:

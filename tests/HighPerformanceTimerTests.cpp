@@ -1,10 +1,9 @@
 
 #include "nucleus/HighPerformanceTimer.h"
 
-#include <thread>
-
-#include "nucleus/Logging.h"
 #include "nucleus/Testing.h"
+
+#include <thread>
 
 namespace nu {
 
@@ -26,8 +25,7 @@ TEST_CASE("make sure frequency is in milliseconds") {
 
   total /= 100.0;
 
-  CHECK(total >= 1000.0);
-  CHECK(total <= 2000.0);
+  CHECK((total >= 1000.0 && total <= 2000.0));
 }
 
 }  // namespace nu

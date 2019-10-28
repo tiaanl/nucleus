@@ -31,10 +31,6 @@ public:
     return m_text[index];
   }
 
-  Char& operator[](StringLength index) {
-    return m_text[index];
-  }
-
   bool operator==(const StringView& other) const {
     return compare(other) == 0;
   }
@@ -115,6 +111,9 @@ public:
   }
 
 protected:
+  template <MemSize Size>
+  friend class StaticString;
+
   Char* m_text;
   StringLength m_length;
 };

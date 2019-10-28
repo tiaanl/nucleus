@@ -56,8 +56,10 @@ TEST_CASE("DynamicArray construct") {
   }
 
   SECTION("with initial capacity") {
-    DynamicArray<I32> a{3};
+    auto a = DynamicArray<F32>::withInitialCapacity(3);
 
+    // Capacity should be at least what we requested.
+    REQUIRE(a.capacity() >= 3);
     REQUIRE(a.size() == 0);
   }
 }
@@ -158,6 +160,14 @@ public:
     moves++;
 
     return *this;
+  }
+
+  auto operator==(const LifetimeType& other) const -> bool {
+    return m_a == other.m_a && m_b == other.m_b;
+  }
+
+  auto operator!=(const LifetimeType& other) const -> bool {
+    return !operator==(other);
   }
 
   I32 getA() const {
@@ -265,19 +275,19 @@ TEST_CASE("can use range-based for loops") {
 }
 
 TEST_CASE("remove single element") {
-  nu::DynamicArray<U64> buffer;
-  buffer.pushBack(10);
-  buffer.pushBack(20);
-  buffer.pushBack(30);
-  buffer.pushBack(40);
+  DynamicArray<LifetimeType> buffer;
+  buffer.emplaceBack(10, 20);
+  buffer.emplaceBack(30, 40);
+  buffer.emplaceBack(50, 60);
+  buffer.emplaceBack(70, 80);
 
   SECTION("from beginning of array") {
     buffer.remove(buffer.begin());
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == 20);
-    REQUIRE(buffer[1] == 30);
-    REQUIRE(buffer[2] == 40);
+    REQUIRE(buffer[0] == LifetimeType{30, 40});
+    REQUIRE(buffer[1] == LifetimeType{50, 60});
+    REQUIRE(buffer[2] == LifetimeType{70, 80});
     REQUIRE(&buffer[3] == buffer.end());
   }
 
@@ -285,19 +295,19 @@ TEST_CASE("remove single element") {
     buffer.remove(buffer.begin() + 1);
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == 10);
-    REQUIRE(buffer[1] == 30);
-    REQUIRE(buffer[2] == 40);
+    REQUIRE(buffer[0] == LifetimeType{10, 20});
+    REQUIRE(buffer[1] == LifetimeType{50, 60});
+    REQUIRE(buffer[2] == LifetimeType{70, 80});
     REQUIRE(&buffer[3] == buffer.end());
   }
 
   SECTION("from end of array") {
-    buffer.remove(buffer.begin() + 1);
+    buffer.remove(buffer.end() - 1);
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == 10);
-    REQUIRE(buffer[1] == 30);
-    REQUIRE(buffer[2] == 40);
+    REQUIRE(buffer[0] == LifetimeType{10, 20});
+    REQUIRE(buffer[1] == LifetimeType{30, 40});
+    REQUIRE(buffer[2] == LifetimeType{50, 60});
     REQUIRE(&buffer[3] == buffer.end());
   }
 }

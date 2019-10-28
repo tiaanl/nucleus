@@ -27,6 +27,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/GrowingArray.h
     include/nucleus/Containers/HashMap.h
     include/nucleus/Containers/ObjectPool.h
+    include/nucleus/Containers/StaticArray.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Hash.h
@@ -95,6 +96,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/GrowingArrayTests.cpp
+    tests/Containers/StaticArrayTests.cpp
     tests/FilePathTests.cpp
     tests/HighPerformanceTimerTests.cpp
     tests/LoggingTests.cpp

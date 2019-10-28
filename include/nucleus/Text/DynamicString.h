@@ -29,6 +29,10 @@ public:
     delete[] m_text;
   }
 
+  Char& operator[](StringLength index) {
+    return m_text[index];
+  }
+
   DynamicString& operator=(const DynamicString& other) {
     ensureAllocated(other.m_length + 1, false);
     std::memcpy(m_text, other.m_text, other.m_length);

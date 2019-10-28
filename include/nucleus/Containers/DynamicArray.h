@@ -28,6 +28,27 @@ public:
   using Iterator = ElementType*;
   using ConstIterator = const ElementType*;
 
+  // Factory Methods
+
+  static auto withInitialCapacity(SizeType initialCapacity) -> DynamicArray {
+    DynamicArray result;
+
+    result.ensureAllocated(initialCapacity, DiscardOldData);
+
+    return result;
+  }
+
+  static auto withInitialSize(SizeType initialSize, const ElementType& value = ElementType{})
+      -> DynamicArray {
+    DynamicArray result;
+
+    result.ensureAllocated(initialSize, DiscardOldData);
+    result.m_size = initialSize;
+    std::fill(result.m_data, result.m_data + result.m_size, value);
+
+    return result;
+  }
+
   // Construct/destruct
 
   DynamicArray() = default;
@@ -47,12 +68,6 @@ public:
     other.m_data = nullptr;
     other.m_size = 0;
     other.m_capacity = 0;
-  }
-
-  explicit DynamicArray(SizeType initialCapacity, const ElementType& value = ElementType{}) {
-    ensureAllocated(initialCapacity, DiscardOldData);
-    m_size = initialCapacity;
-    std::fill(m_data, m_data + m_size, value);
   }
 
   DynamicArray(std::initializer_list<ElementType> list) : m_size{list.size()} {
@@ -208,11 +223,13 @@ public:
   // Modify
 
   void remove(Iterator pos) {
+    DCHECK(pos >= m_data && pos < m_data + m_size) << "Iterator out of bounds.";
+
     // Destroy the element.
     pos->~ElementType();
 
     // If we didn't remove the last item, then move all the items one to the left.
-    if (pos + 1 < m_data + m_size) {
+    if (pos + 1 != m_data + m_size) {
       for (auto i = pos; i != m_data + (m_size - 1); ++i) {
         *i = std::move(*(i + 1));
       }
@@ -236,6 +253,15 @@ public:
     }
 
     m_size -= numberOfElementsToRemove;
+  }
+
+  // Remove all the elements from the array, but keep the current capacity.
+  auto removeAll() -> void {
+    for (Iterator it = m_data; it != m_data + m_size; ++it) {
+      it->~ElementType();
+    }
+
+    m_size = 0;
   }
 
   void reserve(SizeType size) {
