@@ -20,8 +20,8 @@ public:
     m_length = length;
   }
 
-  explicit DynamicString(const StringView& text)
-    : DynamicString{text.getData(), text.getLength()} {}
+//  explicit DynamicString(const StringView& text)
+//    : DynamicString{text.getData(), text.getLength()} {}
 
   DynamicString(const DynamicString& other) : DynamicString{other.m_text, other.m_length} {}
 
@@ -43,12 +43,12 @@ public:
   }
 
   DynamicString& operator=(const StringView& other) {
-    auto otherLength = other.getLength();
+//    auto otherLength = other.getLength();
 
-    ensureAllocated(otherLength + 1, false);
-    std::memcpy(m_text, other.getData(), otherLength);
-    m_length = otherLength;
-    m_text[m_length] = '\0';
+//    ensureAllocated(otherLength + 1, false);
+//    std::memcpy(m_text, other.getData(), otherLength);
+//    m_length = otherLength;
+//    m_text[m_length] = '\0';
 
     return *this;
   }
@@ -76,9 +76,9 @@ public:
     m_text[m_length] = '\0';
   }
 
-  void append(const StringView& text) {
-    append(text.getData(), text.getLength());
-  }
+//  void append(const StringView& text) {
+//    append(text.getData(), text.getLength());
+//  }
 
   void resize(StringLength length) {
     if (m_length == length) {
@@ -109,6 +109,9 @@ public:
 
 private:
   void ensureAllocated(MemSize sizeRequired, bool keepOld);
+
+  Char* m_text;
+  StringLength m_length;
 
   MemSize m_allocated;
 };
