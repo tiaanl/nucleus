@@ -3,65 +3,104 @@
 #define NUCLEUS_TEXT_DYNAMIC_STRING_H_
 
 #include "nucleus/Logging.h"
+#include "nucleus/Text/CharTraits.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
 
-class DynamicString : public StringView {
+class DynamicString {
 public:
-  DynamicString() : StringView(), m_allocated{0} {}
+  constexpr DynamicString() : m_data{nullptr}, m_length{0}, m_capacity{0} {}
 
-  DynamicString(const char* text) : DynamicString{text, std::strlen(text)} {}
+  DynamicString(const char* text)
+    : DynamicString{text, CharTraits<Char>::calculateZeroTerminatedLength(text)} {}
 
-  DynamicString(const char* text, StringLength length) : StringView{}, m_allocated{0} {
-    ensureAllocated(length + 1, false);
-    std::memcpy(m_text, text, length);
-    m_text[length] = '\0';
-    m_length = length;
+  DynamicString(const char* text, std::size_t length) : m_length{length} {
+    ensureAllocated(length, false);
+    std::memcpy(m_data, text, length);
   }
 
   explicit DynamicString(const StringView& text) : DynamicString{text.data(), text.length()} {}
 
-  DynamicString(const DynamicString& other) : DynamicString{other.m_text, other.m_length} {}
+  DynamicString(const DynamicString& other) : DynamicString{other.m_data, other.m_length} {}
 
-  ~DynamicString() {
-    delete[] m_text;
+  DynamicString(DynamicString&& other)
+    : m_data{other.m_data}, m_length{other.m_length}, m_capacity{other.m_capacity} {
+    other.m_data = nullptr;
+    other.m_length = 0;
+    other.m_capacity = 0;
   }
 
-  Char& operator[](StringLength index) {
-    return m_text[index];
+  ~DynamicString() {
+    delete[] m_data;
   }
 
   DynamicString& operator=(const DynamicString& other) {
     ensureAllocated(other.m_length + 1, false);
-    std::memcpy(m_text, other.m_text, other.m_length);
-    m_text[other.m_length] = '\0';
+    std::memcpy(m_data, other.m_data, other.m_length);
+    m_data[other.m_length] = '\0';
     m_length = other.m_length;
+
+    return *this;
+  }
+
+  DynamicString& operator=(DynamicString&& other) {
+    m_data = other.m_data;
+    m_length = other.m_length;
+    m_capacity = other.m_capacity;
+    other.m_data = nullptr;
+    other.m_length = 0;
+    other.m_capacity = 0;
 
     return *this;
   }
 
   DynamicString& operator=(const StringView& other) {
     auto otherLength = other.length();
-
-    ensureAllocated(otherLength + 1, false);
-    std::memcpy(m_text, other.data(), otherLength);
+    ensureAllocated(otherLength, false);
+    std::memcpy(m_data, other.data(), otherLength);
     m_length = otherLength;
-    m_text[m_length] = '\0';
 
     return *this;
   }
 
-  // Return the amount of bytes allocated to store text data.
-  MemSize getAllocated() const {
-    return m_allocated;
+  Char& operator[](StringLength index) {
+    DCHECK(index < m_length) << "Index out of range.";
+    return m_data[index];
   }
 
-  // Append a single character.
+  const Char& operator[](StringLength index) const {
+    DCHECK(index < m_length) << "Index out of range.";
+    return m_data[index];
+  }
+
+  const Char* data() const {
+    return m_data;
+  }
+
+  Char* data() {
+    return m_data;
+  }
+
+  StringLength length() const {
+    return m_length;
+  }
+
+  bool empty() const {
+    return m_length == 0;
+  }
+
+  MemSize capacity() const {
+    return m_capacity;
+  }
+
+  StringView view() const {
+    return {m_data, m_length};
+  }
+
   void append(Char ch) {
-    ensureAllocated(m_length + 2, true);
-    m_text[m_length++] = ch;
-    m_text[m_length] = '\0';
+    ensureAllocated(m_length + 1, true);
+    m_data[m_length++] = ch;
   }
 
   void append(const char* text) {
@@ -70,26 +109,18 @@ public:
 
   void append(const char* text, StringLength length) {
     ensureAllocated(m_length + length + 1, true);
-    std::memcpy(m_text + m_length, text, length);
+    std::memcpy(m_data + m_length, text, length);
     m_length += length;
-    m_text[m_length] = '\0';
+    m_data[m_length] = '\0';
   }
 
-  void append(const StringView& text) {
+  void append(StringView text) {
     append(text.data(), text.length());
   }
 
   void resize(StringLength length) {
-    if (m_length == length) {
-      return;
-    }
-
-    if (length > m_length) {
-      ensureAllocated(length + 1, true);
-    }
-
+    ensureAllocated(length, true);
     m_length = length;
-    m_text[m_length] = '\0';
   }
 
   void erase(StringLength position, StringLength count) {
@@ -100,16 +131,18 @@ public:
     count = std::min(count, m_length - position);
 
     for (auto i = position; i < m_length - count; ++i) {
-      m_text[i] = m_text[i + count];
+      m_data[i] = m_data[i + count];
     }
     m_length -= count;
-    m_text[m_length] = '\0';
+    m_data[m_length] = '\0';
   }
 
 private:
   void ensureAllocated(MemSize sizeRequired, bool keepOld);
 
-  MemSize m_allocated;
+  Char* m_data;
+  StringLength m_length;
+  MemSize m_capacity;
 };
 
 }  // namespace nu

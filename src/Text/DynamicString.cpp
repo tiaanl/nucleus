@@ -4,12 +4,12 @@
 namespace nu {
 
 void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
-  if (sizeRequired <= m_allocated) {
+  if (sizeRequired <= m_capacity) {
     return;
   }
 
   // Minimum of 16 bytes.
-  MemSize bytesToAllocate = std::max<MemSize>(m_allocated, 16);
+  MemSize bytesToAllocate = std::max<MemSize>(m_capacity, 16);
   while (bytesToAllocate < sizeRequired) {
     bytesToAllocate *= 2;
   }
@@ -19,16 +19,16 @@ void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
 
   Char* newText = new Char[bytesToAllocate];
 
-  if (m_text) {
+  if (m_data) {
     if (keepOld) {
-      std::memcpy(newText, m_text, m_length + 1);
+      std::memcpy(newText, m_data, m_length);
     }
 
-    delete[] m_text;
+    delete[] m_data;
   }
 
-  m_text = newText;
-  m_allocated = bytesToAllocate;
+  m_data = newText;
+  m_capacity = bytesToAllocate;
 }
 
 }  // namespace nu

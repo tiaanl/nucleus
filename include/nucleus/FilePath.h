@@ -35,8 +35,8 @@ public:
   bool operator!=(const FilePath& other) const;
 
   // Return the path as a string.
-  const StringView& getPath() const {
-    return m_path;
+  StringView getPath() const {
+    return m_path.view();
   }
 
   // Clear the path.

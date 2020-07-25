@@ -8,76 +8,91 @@
 namespace nu {
 
 template <MemSize Size = 64>
-class StaticString : public StringView {
+class StaticString {
 public:
-  StaticString() : StringView{m_storage, 0} {}
+  StaticString() : m_data{}, m_length{0} {}
 
-  StaticString(const StaticString& other) : StaticString{} {
-    auto bytesToCopy = std::min(Size, other.length());
-    std::memcpy(m_text, other.data(), bytesToCopy);
-    m_length = bytesToCopy;
+  StaticString(StringView text) {
+    initFrom(text.data(), text.length());
+  }
+
+  StaticString(const StaticString& other) {
+    initFrom(other.m_data, other.m_length);
   }
 
   StaticString(StaticString&&) = delete;
 
-  StaticString(const StringView& other) : StaticString{} {
-    auto bytesToCopy = std::min(Size, other.length());
-    std::memcpy(m_text, other.data(), bytesToCopy);
-    m_length = bytesToCopy;
-  }
+  StaticString& operator=(StringView text) {
+    initFrom(text.data(), text.length());
 
-  Char& operator[](StringLength index) {
-    return m_text[index];
+    return *this;
   }
 
   StaticString& operator=(const StaticString& other) {
-    std::memcpy(m_text, other.m_text, Size);
-    m_length = other.m_length;
+    initFrom(other.m_data, other.m_length);
 
     return *this;
+  }
+
+  const Char& operator[](StringLength index) const {
+    DCHECK(index < m_length) << "Index out of range.";
+    return m_data[index];
+  }
+
+  Char& operator[](StringLength index) {
+    DCHECK(index < m_length) << "Index out of range.";
+    return m_data[index];
   }
 
   StaticString& operator=(StaticString&&) = delete;
 
-  StaticString& operator=(const StringView& other) {
-    std::memcpy(m_text, other.m_text, Size);
-    m_length = other.m_length;
-
-    return *this;
+  const Char* data() const {
+    return m_data;
   }
 
-  constexpr MemSize getStorageSize() {
+  Char* data() {
+    return m_data;
+  }
+
+  StringLength length() const {
+    return m_length;
+  }
+
+  constexpr MemSize capacity() const {
     return Size;
   }
 
-  void resize(StringLength length, Char fill = '\0') {
-    length = std::min(length, Size);
-
-    if (length > m_length) {
-      for (auto i = m_length; i < length; ++i) {
-        m_storage[i] = fill;
-      }
-    }
-
-    m_length = length;
+  StringView view() const {
+    return {m_data, m_length};
   }
 
-  void append(const nu::StringView& text) {
+  void append(StringView text) {
     append(text.data(), text.length());
   }
 
   void append(const char* text) {
-    append(text, std::strlen(text));
+    append(StringView{text});
   }
 
   void append(const char* text, StringLength length) {
-    StringLength bytesToCopy = std::min(Size - m_length - 1, length);
-    std::memcpy(m_storage + m_length, text, bytesToCopy);
-    m_length += bytesToCopy;
+    if (m_length == Size) {
+      return;
+    }
+
+    StringLength lengthToAppend = std::min(Size - m_length - 1, length);
+    std::memcpy(m_data + m_length, text, lengthToAppend);
+    m_length += lengthToAppend;
   }
 
 private:
-  Char m_storage[Size];
+  auto initFrom(const Char* text, StringLength length) -> void {
+    auto minLength = std::min(Size, length);
+    std::memcpy(m_data, text, minLength);
+    m_length = minLength;
+  }
+
+  Char m_data[Size];
+  StringLength m_length;
 };
 
 }  // namespace nu

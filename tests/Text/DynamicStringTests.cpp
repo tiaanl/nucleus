@@ -10,7 +10,7 @@ TEST_CASE("DynamicString can be copied") {
   SECTION("copy construction") {
     DynamicString str3{str1};
     CHECK(str3.data() != str1.data());
-    CHECK(str3.compare(str1) == 0);
+    CHECK(str3.view().compare(str1.view()) == 0);
   }
 
   SECTION("copy assignment") {
@@ -18,26 +18,26 @@ TEST_CASE("DynamicString can be copied") {
     str2 = str1;
 
     CHECK(str2.data() != str1.data());
-    CHECK(str1.compare(str2) == 0);
+    CHECK(str1.view().compare(str2.view()) == 0);
   }
 }
 
 TEST_CASE("DynamicString does not allocate a buffer when default constructed") {
   DynamicString str;
-  CHECK(str.getAllocated() == 0);
+  CHECK(str.capacity() == 0);
 }
 
 TEST_CASE("DynamicString increases size correctly") {
   SECTION("with c-string") {
     DynamicString str{"Do this test!"};
     CHECK(str.length() == 13);
-    CHECK(str.getAllocated() == 16);  // Minimum allocation size.
+    CHECK(str.capacity() == 16);  // Minimum allocation size.
   }
 
   SECTION("with StringView") {
     DynamicString str{StringView{"Do this test!", 10}};
     CHECK(str.length() == 10);
-    CHECK(str.getAllocated() == 16);  // Minimum allocation size.
+    CHECK(str.capacity() == 16);  // Minimum allocation size.
   }
 }
 
@@ -47,13 +47,13 @@ TEST_CASE("DynamicString grows when appending") {
   SECTION("with c-string") {
     str.append("some more text");
     CHECK(str.length() == 27);
-    CHECK(str.getAllocated() == 32);
+    CHECK(str.capacity() == 32);
   }
 
   SECTION("with StringView") {
     str.append(StringView{"some more text"});
     CHECK(str.length() == 27);
-    CHECK(str.getAllocated() == 32);
+    CHECK(str.capacity() == 32);
   }
 }
 
@@ -62,12 +62,12 @@ TEST_CASE("DynamicString can erase text") {
 
   SECTION("erase from beginning") {
     str.erase(0, 2);
-    CHECK(str.compare("cd") == 0);
+    CHECK(str.view().compare("cd") == 0);
   }
 
   SECTION("erase past the allocated size") {
     str.erase(2, 10);
-    CHECK(str.compare("ab") == 0);
+    CHECK(str.view().compare("ab") == 0);
   }
 }
 

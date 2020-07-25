@@ -11,7 +11,7 @@ TEST_CASE("construct StaticString") {
     StaticString<64> str;
 
     CHECK(str.length() == 0);
-    CHECK(str.getStorageSize() == 64);
+    CHECK(str.capacity() == 64);
   }
 
   SECTION("from StringView") {
@@ -26,12 +26,12 @@ TEST_CASE("construct StaticString") {
 TEST_CASE("can copy static string") {
   StaticString<8> str{"test"};
   auto str2 = str;
-  CHECK(str2.compare(str) == 0);
+  CHECK(str2.view().compare(str.view()) == 0);
 }
 
 TEST_CASE("text is pointing to storage") {
   StaticString<4> str{"testing"};
-  CHECK(str.getStorageSize() == 4);
+  CHECK(str.capacity() == 4);
   CHECK(str.length() == 4);
 }
 
