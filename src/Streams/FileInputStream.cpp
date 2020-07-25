@@ -114,7 +114,7 @@ bool FileInputStream::setPosition(SizeType newPosition) {
 
 void FileInputStream::openHandle() {
 #if OS(WIN)
-  HANDLE h = ::CreateFileA(m_path.getPath().getData(), GENERIC_READ,
+  HANDLE h = ::CreateFileA(m_path.getPath().data(), GENERIC_READ,
                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
                            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {

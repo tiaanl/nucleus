@@ -21,7 +21,7 @@ public:
   }
 
   explicit DynamicString(const StringView& text)
-    : DynamicString{text.getData(), text.getLength()} {}
+    : DynamicString{text.data(), text.length()} {}
 
   DynamicString(const DynamicString& other) : DynamicString{other.m_text, other.m_length} {}
 
@@ -43,10 +43,10 @@ public:
   }
 
   DynamicString& operator=(const StringView& other) {
-    auto otherLength = other.getLength();
+    auto otherLength = other.length();
 
     ensureAllocated(otherLength + 1, false);
-    std::memcpy(m_text, other.getData(), otherLength);
+    std::memcpy(m_text, other.data(), otherLength);
     m_length = otherLength;
     m_text[m_length] = '\0';
 
@@ -77,7 +77,7 @@ public:
   }
 
   void append(const StringView& text) {
-    append(text.getData(), text.getLength());
+    append(text.data(), text.length());
   }
 
   void resize(StringLength length) {

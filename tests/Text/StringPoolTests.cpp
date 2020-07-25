@@ -28,7 +28,7 @@ TEST_CASE("Can store a stirngs") {
 TEST_CASE("Report error when storing a string that is too long") {
   StringPool<10, 2> sp;
   auto result = sp.store("This is a string longer than 10");
-  CHECK(result.getLength() == 0);
+  CHECK(result.length() == 0);
 }
 
 }  // namespace nu

@@ -53,6 +53,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Streams/WrappedMemoryInputStream.h
     include/nucleus/Synchronization/AutoLock.h
     include/nucleus/Synchronization/Lock.h
+    include/nucleus/Text/CharTraits.h
     include/nucleus/Text/DynamicString.h
     include/nucleus/Text/StaticString.h
     include/nucleus/Text/String.h
@@ -103,7 +104,6 @@ set(nucleusTests_SOURCE_FILES
     tests/LoggingTests.cpp
     tests/Memory/ScopedPtrTests.cpp
     tests/Memory/ScopedRefPtrTests.cpp
-    tests/Parser/TokenizerTests.cpp
     tests/RefCountedTests.cpp
     tests/Streams/ConsoleOutputStreamTests.cpp
     tests/Streams/StringOutputStreamTests.cpp
@@ -112,6 +112,8 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/StringPoolTests.cpp
     tests/Text/StringTests.cpp
     tests/Text/StringViewTests.cpp
+
+    # tests/Parser/TokenizerTests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})

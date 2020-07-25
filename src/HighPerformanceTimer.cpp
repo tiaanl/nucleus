@@ -1,6 +1,7 @@
-
 #include "nucleus/HighPerformanceTimer.h"
+
 #include "nucleus/Config.h"
+#include "nucleus/Logging.h"
 
 #if OS(WIN)
 #include "nucleus/Win/WindowsMixin.h"
@@ -21,55 +22,56 @@ namespace nu {
 
 namespace {
 
-F64 g_highPerformanceTimerFrequency = 1.0;
-
-F64 getHighPerformanceTimerFrequency() {
-  F64 rate = 0.0;
+I64 getHighPerformanceTimerFrequency() {
+  LOG(Info) << "Updating high performance timer frequency.";
 
 #if OS(WIN)
   LARGE_INTEGER frequency;
   QueryPerformanceFrequency(&frequency);
-  rate = static_cast<F64>(frequency.QuadPart);
+  return frequency.QuadPart;
 #elif OS(MACOSX)
   mach_timebase_info_data_t rate_nsec;
   mach_timebase_info(&rate_nsec);
-  rate = 1000.0 * rate_nsec.numer / rate_nsec.denom;
+  return 1000.0 * rate_nsec.numer / rate_nsec.denom;
 #elif OS(POSIX)
   struct timespec specRate;
   clock_getres(CLOCKID, &specRate);
-  rate = 1000.0 * specRate.tv_nsec;
+  return 1000.0 * specRate.tv_nsec;
 #else
 #error Operating system not supported
 #endif
-
-  return rate;
 }
+
+#if OS(WIN)
+struct FrequencyStorage {
+  F64 ticksPerSecond;
+
+  FrequencyStorage() noexcept {
+    LARGE_INTEGER frequency;
+    QueryPerformanceFrequency(&frequency);
+    ticksPerSecond = static_cast<F64>(frequency.QuadPart);
+  }
+};
+#endif  // OS(WIN)
+
+FrequencyStorage s_frequencyStorage;
 
 }  // namespace
 
 F64 getCurrentHighPerformanceTick() {
-  F64 rate = g_highPerformanceTimerFrequency;
-  if (rate == 1.0) {
-    g_highPerformanceTimerFrequency = rate = getHighPerformanceTimerFrequency();
-  }
-
-  F64 now = 0.0;
-
 #if OS(WIN)
-  LARGE_INTEGER time;
-  QueryPerformanceCounter(&time);
-  now = static_cast<F64>(time.QuadPart) * 1000000.0;
+  LARGE_INTEGER counter;
+  QueryPerformanceCounter(&counter);
+  return static_cast<F64>(counter.QuadPart) * 1000.0 * 1000.0 / s_frequencyStorage.ticksPerSecond;
 #elif OS(MACOSX)
   now = mach_absolute_time();
 #elif OS(POSIX)
   struct timespec specTime;
   clock_gettime(CLOCKID, &specTime);
-  now = static_cast<F64>(specTime.tv_sec) * 1000000.0 + static_cast<F64>(specTime.tv_nsec);
+  F64 now = static_cast<F64>(specTime.tv_sec) * 1000000.0 + static_cast<F64>(specTime.tv_nsec);
 #else
 #error Operating system not supported
 #endif
-
-  return now / rate;
 }
 
 }  // namespace nu

@@ -84,14 +84,14 @@ StringView readNumber(const StringView& text) {
   for (; isNumber(text[length]) || text[length] == '.'; ++length) {
   }
 
-  return StringView{text, length};
+  return text.subString(length);
 }
 
 StringView readText(const StringView& source) {
   StringLength length = 0;
   for (;;) {
     Char ch = source[length];
-    if (isWhitespace(ch) || ch == '\0' || length == source.getLength()) {
+    if (isWhitespace(ch) || ch == '\0' || length == source.length()) {
       break;
     }
 
@@ -106,13 +106,13 @@ StringView readText(const StringView& source) {
 Tokenizer::Tokenizer(const StringView& source) : m_source{source}, m_current(source) {}
 
 Token Tokenizer::peekNextTokenInternal(const StringView& source) {
-  Char nextChar = source[0];
-
   // EndOfSource
 
-  if (nextChar == '\0' || source.getLength() == 0) {
+  if (source.length() == 0 || source[0] == '\0') {
     return {};
   }
+
+  Char nextChar = source[0];
 
   // Whitespace
 
@@ -123,7 +123,7 @@ Token Tokenizer::peekNextTokenInternal(const StringView& source) {
 
   // Number (MUST be read before punctuation, because a number can start with a minus symbol)
   StringView number = readNumber(source);
-  if (number.getLength() > 0) {
+  if (number.length() > 0) {
     return {TokenType::Number, number};
   }
 
@@ -137,7 +137,7 @@ Token Tokenizer::peekNextTokenInternal(const StringView& source) {
   // Text
 
   StringView text = readText(m_current);
-  if (text.getLength() > 0) {
+  if (text.length() > 0) {
     return Token{TokenType::Text, text};
   }
 
@@ -147,17 +147,17 @@ Token Tokenizer::peekNextTokenInternal(const StringView& source) {
 Token Tokenizer::peekNextToken(U32 options) {
   auto token = peekNextTokenInternal(m_current);
   if (options & SkipWhitespace && token.type == TokenType::Whitespace) {
-    token = peekNextTokenInternal(m_current.subString(token.text.getLength()));
+    token = peekNextTokenInternal(m_current.subString(token.text.length()));
   }
   return token;
 }
 
 Token Tokenizer::consumeNextToken(U32 options) {
   auto token = peekNextTokenInternal(m_current);
-  advance(token.text.getLength());
+  advance(token.text.length());
   if (options & SkipWhitespace && token.type == TokenType::Whitespace) {
-    auto token2 = peekNextTokenInternal(m_current.subString(token.text.getLength()));
-    advance(token.text.getLength() + token2.text.getLength());
+    auto token2 = peekNextTokenInternal(m_current.subString(token.text.length()));
+    advance(token.text.length() + token2.text.length());
     return token2;
   }
   return token;

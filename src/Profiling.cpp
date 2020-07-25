@@ -14,7 +14,7 @@ ProfileMetrics* g_globalProfileMetrics = nullptr;
 }  // namespace
 
 ProfileMetrics::ProfileMetrics() noexcept
-  : m_root{nu::StringView{"root"}, nullptr, nullptr, 0.0f}, m_current{&m_root} {}
+  : m_root{nu::StringView{"root"}, nullptr, nullptr, 0}, m_current{&m_root} {}
 
 auto ProfileMetrics::reset() -> void {
   m_blocks.releaseAll();

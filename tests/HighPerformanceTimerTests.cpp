@@ -3,29 +3,11 @@
 
 #include "nucleus/Testing.h"
 
-#include <thread>
-
 namespace nu {
 
 TEST_CASE("high performance timer doesn't return 0") {
-  F64 now = getCurrentHighPerformanceTick();
+  auto now = getCurrentHighPerformanceTick();
   REQUIRE(now != 0);
-}
-
-TEST_CASE("make sure frequency is in milliseconds") {
-  F64 total = 0.0;
-
-  for (int i = 0; i < 100; ++i) {
-    F64 first = getCurrentHighPerformanceTick();
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    F64 second = getCurrentHighPerformanceTick();
-
-    total += second - first;
-  }
-
-  total /= 100.0;
-
-  CHECK((total >= 1000.0 && total <= 2000.0));
 }
 
 }  // namespace nu

@@ -13,16 +13,16 @@ public:
   StaticString() : StringView{m_storage, 0} {}
 
   StaticString(const StaticString& other) : StaticString{} {
-    auto bytesToCopy = std::min(Size, other.getLength());
-    std::memcpy(m_text, other.getData(), bytesToCopy);
+    auto bytesToCopy = std::min(Size, other.length());
+    std::memcpy(m_text, other.data(), bytesToCopy);
     m_length = bytesToCopy;
   }
 
   StaticString(StaticString&&) = delete;
 
   StaticString(const StringView& other) : StaticString{} {
-    auto bytesToCopy = std::min(Size, other.getLength());
-    std::memcpy(m_text, other.getData(), bytesToCopy);
+    auto bytesToCopy = std::min(Size, other.length());
+    std::memcpy(m_text, other.data(), bytesToCopy);
     m_length = bytesToCopy;
   }
 
@@ -63,7 +63,7 @@ public:
   }
 
   void append(const nu::StringView& text) {
-    append(text.getData(), text.getLength());
+    append(text.data(), text.length());
   }
 
   void append(const char* text) {

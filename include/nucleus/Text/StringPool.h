@@ -36,7 +36,7 @@ public:
   StringView store(const StringView& source) {
     // If the string we're trying to store is for some reason bigger than a single block, we report
     // an error.
-    if (source.getLength() > Size * Count) {
+    if (source.length() > Size * Count) {
       LOG(Error) << "Tried to store a string in a string pool that will not fit.";
       return StringView{};
     }
@@ -51,7 +51,7 @@ public:
 
     // The amount of strings the source will take up.  Because we return a StringView that already
     // has a length, we don't have to add space for a null terminator.
-    MemSize stringsRequired = source.getLength() / Size + 1;
+    MemSize stringsRequired = source.length() / Size + 1;
 
     // If the last block doesn't have space, then we append a new block.
     if (Count - m_last->used < stringsRequired) {
@@ -64,13 +64,13 @@ public:
     // Store the source into the block and increase the used count.
     Char* destination = m_last->chunks[m_last->used];
 #if COMPILER(MSVC)
-    strncpy_s(destination, stringsRequired * Size, source.getData(), source.getLength());
+    strncpy_s(destination, stringsRequired * Size, source.data(), source.length());
 #else
     std::strncpy(destination, source.getData(), source.getLength());
 #endif
     m_last->used += stringsRequired;
 
-    return StringView(destination, source.getLength());
+    return StringView(destination, source.length());
   }
 
 private:

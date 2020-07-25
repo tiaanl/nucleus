@@ -14,13 +14,38 @@ TEST_CASE("Construct a StringView") {
   const char* text = "test";
 
   auto s1 = StringView{text};
-  CHECK(s1.getLength() == 4);
+  CHECK(s1.length() == 4);
 
   auto s2 = StringView{text, 3};
-  CHECK(s2.getLength() == 3);
+  CHECK(s2.length() == 3);
 
   // Inline syntax.
-  CHECK(StringView(text).getLength() == 4);
+  CHECK(StringView(text).length() == 4);
+}
+
+TEST_CASE("StringView::subString") {
+  StringView s{"Some test string"};
+
+  SECTION("position and length is within the bounds") {
+    auto r = s.subString(5, 4);
+
+    CHECK(r == "test");
+    CHECK(r.length() == 4);
+  }
+
+  SECTION("length is out of bounds") {
+    auto r = s.subString(5, 20);
+
+    CHECK(r == "test string");
+    CHECK(r.length() == 11);
+  }
+
+  SECTION("position is out of bounds") {
+    auto r = s.subString(20, 20);
+
+    CHECK(r == "");
+    CHECK(r.length() == 0);
+  }
 }
 
 TEST_CASE("StringView findFirstOf") {
@@ -30,7 +55,7 @@ TEST_CASE("StringView findFirstOf") {
   CHECK(pos1 == 3);
 
   auto pos2 = str.findFirstOf('z');
-  CHECK(pos2 == StringView::kInvalidPosition);
+  CHECK(pos2 == StringView::npos);
 }
 
 TEST_CASE("StringView findFirstOfAny") {
@@ -43,7 +68,7 @@ TEST_CASE("StringView findFirstOfAny") {
   CHECK(pos2 == 3);
 
   auto pos3 = str.findFirstOfAny("z");
-  CHECK(pos3 == StringView::kInvalidPosition);
+  CHECK(pos3 == StringView::npos);
 }
 
 TEST_CASE("StringView findLastOfAny") {
@@ -56,7 +81,7 @@ TEST_CASE("StringView findLastOfAny") {
   CHECK(pos2 == 20);
 
   auto pos3 = str.findLastOfAny("z");
-  CHECK(pos3 == StringView::kInvalidPosition);
+  CHECK(pos3 == StringView::npos);
 }
 
 }  // namespace nu

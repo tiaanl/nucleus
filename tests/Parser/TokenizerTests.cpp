@@ -86,7 +86,7 @@ TEST_CASE("Token is punctuation") {
 }
 
 TEST_CASE("Token is a number") {
-  auto tokenizer = Tokenizer("- 145 -123 678.54 -123.2133");
+  auto tokenizer = Tokenizer{"- 145 -123 678.54 -123.2133"};
 
   auto other = tokenizer.consumeNextToken();
   CHECK(other.type != TokenType::Number);
