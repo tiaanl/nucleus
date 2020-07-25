@@ -36,7 +36,7 @@ I64 setFileInputStreamPosition(FileInputStream::HandleType handle, I64 pos) {
 FileInputStream::HandleType FileInputStream::kInvalidHandle = INVALID_HANDLE_VALUE;
 #elif OS(POSIX)
 // static
-HandleType FileInputStream::kInvalidHandle = 0;
+FileInputStream::HandleType FileInputStream::kInvalidHandle = 0;
 #endif
 
 FileInputStream::FileInputStream(const FilePath& path) : m_path(path) {
@@ -59,7 +59,7 @@ FileInputStream::SizeType FileInputStream::getSize() {
   return fileSize;
 #elif OS(POSIX)
   long size = 0;
-  FILE* fp = fopen(m_path.getPath().getData(), "rb");
+  FILE* fp = fopen(m_path.getPath().data(), "rb");
   if (fp != 0) {
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
@@ -123,7 +123,7 @@ void FileInputStream::openHandle() {
     m_status = false;
   }
 #elif OS(POSIX)
-  int f = open(m_path.getPath().getData(), O_RDONLY, 00644);
+  int f = open(m_path.getPath().data(), O_RDONLY, 00644);
   if (f != -1) {
     m_handle = f;
   } else {

@@ -146,7 +146,7 @@ template <>
 struct std::hash<nu::StringView> {
   std::size_t operator()(const nu::StringView& value) const {
     std::size_t hash = 7;
-    for (auto i = 0; i < value.length(); ++i) {
+    for (StringLength i = 0; i < value.length(); ++i) {
       hash = hash * 31 + value[i];
     }
     return hash;

@@ -66,7 +66,7 @@ public:
 #if COMPILER(MSVC)
     strncpy_s(destination, stringsRequired * Size, source.data(), source.length());
 #else
-    std::strncpy(destination, source.getData(), source.getLength());
+    std::strncpy(destination, source.data(), source.length());
 #endif
     m_last->used += stringsRequired;
 
