@@ -1,8 +1,6 @@
 
 #include "nucleus/Text/DynamicString.h"
 
-#include "nucleus/Memory/Memory.h"
-
 namespace nu {
 
 void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
@@ -19,15 +17,13 @@ void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
   DCHECK(bytesToAllocate != 0);
   DCHECK((bytesToAllocate & (bytesToAllocate - 1)) == 0) << "We only work with power of 2 numbers.";
 
-  // Char* newText = new Char[bytesToAllocate];
-  Char* newText = static_cast<Char*>(allocate(bytesToAllocate, FROM_HERE));
+  Char* newText = new Char[bytesToAllocate];
 
   if (m_data) {
     if (keepOld) {
       std::memcpy(newText, m_data, m_length);
     }
 
-    // delete[] m_data;
     free();
   }
 
@@ -36,7 +32,7 @@ void DynamicString::ensureAllocated(MemSize sizeRequired, bool keepOld) {
 }
 
 auto DynamicString::free() -> void {
-  deallocate(m_data, FROM_HERE);
+  delete[] m_data;
 }
 
 }  // namespace nu

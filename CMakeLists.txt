@@ -28,7 +28,6 @@ set(nucleus_HEADER_FILES
     include/nucleus/HighPerformanceTimer.h
     include/nucleus/Logging.h
     include/nucleus/Macros.h
-    include/nucleus/Memory/Memory.h
     include/nucleus/Memory/RefCountedPtr.h
     include/nucleus/Memory/ScopedPtr.h
     include/nucleus/Memory/ScopedRefPtr.h
@@ -63,7 +62,6 @@ set(nucleus_SOURCE_FILES
     src/FilePath.cpp
     src/HighPerformanceTimer.cpp
     src/Logging.cpp
-    src/Memory/Memory.cpp
     src/Parser/Tokenizer.cpp
     src/Profiling.cpp
     src/Streams/ConsoleOutputStream.cpp
