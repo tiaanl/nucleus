@@ -121,7 +121,7 @@ FilePath& FilePath::operator=(const FilePath& other) {
 
 bool FilePath::operator==(const FilePath& other) const {
 #if OS(WIN)
-  return equalDriveLetterCaseInsensitive(m_path, other.m_path);
+  return equalDriveLetterCaseInsensitive(m_path.view(), other.m_path.view());
 #else
   return m_path == other.m_path;
 #endif
@@ -138,10 +138,10 @@ FilePath FilePath::dirName() const {
 
   newPath.stripTrailingSeparators();
 
-  auto letter = findDriveLetter(newPath.m_path);
+  auto letter = findDriveLetter(newPath.m_path.view());
 
   auto lastSeparator =
-      newPath.m_path.findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
+      newPath.m_path.view().findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
 
   if (lastSeparator == StringView::npos) {
     // m_path is in the current directory.
@@ -171,7 +171,7 @@ FilePath FilePath::baseName() const {
   newPath.stripTrailingSeparators();
 
   // The drive letter, if any, is always stripped.
-  auto letter = findDriveLetter(newPath.m_path);
+  auto letter = findDriveLetter(newPath.m_path.view());
   if (letter != StringView::npos) {
     newPath.m_path.erase(0, letter + 1);
   }
@@ -179,7 +179,7 @@ FilePath FilePath::baseName() const {
   // Keep everything after the final separator, but if the pathname is only one character and it's a
   // separator, leave it alone.
   auto lastSeparator =
-      newPath.m_path.findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
+      newPath.m_path.view().findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
   if (lastSeparator != StringView::npos && lastSeparator < newPath.m_path.length() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
   }
@@ -217,13 +217,13 @@ FilePath FilePath::append(const FilePath& component) const {
     // (indicating the root directory).
     if (!isSeparator(newPath.m_path[newPath.m_path.length() - 1])) {
       // Don't append a separator if the path is just a drive letter.
-      if (findDriveLetter(newPath.m_path) + 1 != newPath.m_path.length()) {
+      if (findDriveLetter(newPath.m_path.view()) + 1 != newPath.m_path.length()) {
         newPath.m_path.append(kSeparators[0]);
       }
     }
   }
 
-  newPath.m_path.append(component.m_path);
+  newPath.m_path.append(component.m_path.view());
 
   return newPath;
 }
@@ -233,7 +233,7 @@ void FilePath::stripTrailingSeparators() {
   // separator if there is only one separator.  If there is a drive letter, start will be set
   // appropriately to prevent stripping the first separator following the drive letter, if a
   // separator immediately follows the drive letter.
-  auto start = findDriveLetter(m_path) + 2;
+  auto start = findDriveLetter(m_path.view()) + 2;
 
   auto lastStripped = StringView::npos;
   for (auto pos = m_path.length(); pos > start && isSeparator(m_path[pos - 1]); --pos) {

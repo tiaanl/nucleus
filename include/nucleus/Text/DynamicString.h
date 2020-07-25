@@ -15,7 +15,8 @@ public:
   DynamicString(const char* text)
     : DynamicString{text, CharTraits<Char>::calculateZeroTerminatedLength(text)} {}
 
-  DynamicString(const char* text, std::size_t length) : m_length{length} {
+  DynamicString(const char* text, std::size_t length)
+    : m_data{nullptr}, m_length{length}, m_capacity{0} {
     ensureAllocated(length, false);
     std::memcpy(m_data, text, length);
   }
