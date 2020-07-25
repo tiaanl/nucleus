@@ -57,9 +57,9 @@ F64 getCurrentHighPerformanceTick() {
   auto time = mach_absolute_time();
   return static_cast<F64>(time) / s_frequencyStorage.ticksPerSecond;
 #elif OS(POSIX)
-  struct timespec specTime;
-  clock_gettime(CLOCKID, &specTime);
-  F64 now = static_cast<F64>(specTime.tv_sec) * 1000000.0 + static_cast<F64>(specTime.tv_nsec);
+  struct timespec time;
+  clock_gettime(CLOCKID, &time);
+  return static_cast<F64>(time.tv_sec) * 1000000.0 + static_cast<F64>(time.tv_nsec);
 #else
 #error Operating system not supported
 #endif
