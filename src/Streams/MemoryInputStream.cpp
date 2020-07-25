@@ -1,10 +1,9 @@
 
 #include "nucleus/Streams/MemoryInputStream.h"
 
-#include "nucleus/Logging.h"
-
 #include <algorithm>
 
+#include "nucleus/Logging.h"
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
@@ -23,8 +22,9 @@ MemoryInputStream::SizeType MemoryInputStream::getSize() {
 
 MemoryInputStream::SizeType MemoryInputStream::read(void* buffer, SizeType bytesToRead) {
   SizeType num = std::min(bytesToRead, m_buffer.size() - m_currentPosition);
-  if (num <= 0)
+  if (num <= 0) {
     return 0;
+  }
 
   memcpy(buffer, static_cast<const U8*>(m_buffer.data()) + m_currentPosition,
          static_cast<MemSize>(num));

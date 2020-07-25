@@ -1,9 +1,8 @@
 
 #include "nucleus/FilePath.h"
 #include "nucleus/Macros.h"
-#include "nucleus/Testing.h"
-
 #include "nucleus/MemoryDebug.h"
+#include "nucleus/Testing.h"
 
 namespace nu {
 
@@ -246,7 +245,7 @@ TEST_CASE("Append") {
     {{"c:\\a", "b"}, "c:\\a\\b"},
     {{"c:\\a\\", "b"}, "c:\\a\\b"},
 #endif  // defined(FILE_PATH_USES_DRIVE_LETTERS)
-#else   // defined(FILE_PATH_USES_WIN_SEPARATORS)
+#else  // defined(FILE_PATH_USES_WIN_SEPARATORS)
     {{"/aa/bb", "cc"}, "/aa/bb/cc"},
     {{"/aa/bb/", "cc"}, "/aa/bb/cc"},
     {{"aa/bb/", "cc"}, "aa/bb/cc"},

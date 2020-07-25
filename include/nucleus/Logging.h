@@ -55,10 +55,11 @@ public:
 
 }  // namespace nu
 
-#define LAZY_STREAM(Stream, Condition)                                                                                 \
+#define LAZY_STREAM(Stream, Condition)                                                             \
   !(Condition) ? static_cast<void>(0) : ::nu::detail::LogEntryVoidify() & (Stream)
 
-#define LOG_STREAM(LogLevel) ::nu::detail::LogEntry(::nu::detail::LogEntry::LogLevel, __FILE__, __LINE__).getStream()
+#define LOG_STREAM(LogLevel)                                                                       \
+  ::nu::detail::LogEntry(::nu::detail::LogEntry::LogLevel, __FILE__, __LINE__).getStream()
 
 // LOG/DLOG
 
@@ -79,8 +80,9 @@ public:
 #define DCHECK_IS_ON() false
 #endif
 
-#define DCHECK(condition)                                                                                              \
-  LAZY_STREAM(LOG_STREAM(DCheck), DCHECK_IS_ON() ? !(condition) : false) << "Check failed: " #condition ". "
+#define DCHECK(condition)                                                                          \
+  LAZY_STREAM(LOG_STREAM(DCheck), DCHECK_IS_ON() ? !(condition) : false)                           \
+      << "Check failed: " #condition ". "
 
 // NOTREACHED
 

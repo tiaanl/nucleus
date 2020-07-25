@@ -70,11 +70,6 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
   return left.append(right);
 }
 
-//inline std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
-//  os << filePath.getPath().getData();
-//  return os;
-//}
-
 FilePath getCurrentWorkingDirectory();
 bool exists(const FilePath& path);
 

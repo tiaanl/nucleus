@@ -72,7 +72,8 @@ inline U64 ByteOrder::swap(U64 value) {
 #if OS(MACOSX) || OS(IOS)
   return OSSwapInt64(value);
 #else
-  return ((static_cast<I64>(swap(static_cast<U32>(value)))) << 32) | swap(static_cast<U32>(value >> 32));
+  return ((static_cast<I64>(swap(static_cast<U32>(value)))) << 32) |
+         swap(static_cast<U32>(value >> 32));
 #endif
 }
 

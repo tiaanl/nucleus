@@ -1,6 +1,5 @@
 
 #include "nucleus/Testing.h"
-
 #include "nucleus/Text/StaticString.h"
 
 using Catch::Matchers::Equals;

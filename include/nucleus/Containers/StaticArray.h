@@ -1,10 +1,10 @@
 #ifndef NUCLEUS_CONTAINERS_STATIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_STATIC_ARRAY_H_
 
+#include <algorithm>
+
 #include "nucleus/Logging.h"
 #include "nucleus/Types.h"
-
-#include <algorithm>
 
 namespace nu {
 

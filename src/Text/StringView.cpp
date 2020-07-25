@@ -3,6 +3,4 @@
 
 #include <limits>
 
-namespace nu {
-
-}  // namespace nu
+namespace nu {}  // namespace nu

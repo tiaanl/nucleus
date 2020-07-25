@@ -1,10 +1,10 @@
 
 #include "nucleus/Streams/OutputStream.h"
 
-#include "nucleus/MemoryDebug.h"
-
 #include <cstdio>
 #include <cstring>
+
+#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 

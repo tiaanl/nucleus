@@ -15,15 +15,13 @@ public:
     return m_keys.size();
   }
 
-  class InsertResult {
-  };
+  class InsertResult {};
 
   InsertResult insert(const KeyType& key, const ValueType& value) {
     auto hash = hashOf(key);
   }
 
-  class FindResult {
-  };
+  class FindResult {};
 
   FindResult find(const KeyType& key) const {
     auto hash = hashOf(key);

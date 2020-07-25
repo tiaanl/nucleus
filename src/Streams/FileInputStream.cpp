@@ -1,9 +1,9 @@
 
 #include "nucleus/Streams/FileInputStream.h"
 
-#include "nucleus/Logging.h"
-
 #include <algorithm>
+
+#include "nucleus/Logging.h"
 
 #if OS(POSIX)
 #include <fcntl.h>
@@ -78,8 +78,9 @@ FileInputStream::SizeType FileInputStream::read(void* destBuffer, SizeType maxBy
   DCHECK(destBuffer != nullptr);
 
   if (m_needToSeek) {
-    if (detail::setFileInputStreamPosition(m_handle, m_currentPosition) < 0)
+    if (detail::setFileInputStreamPosition(m_handle, m_currentPosition) < 0) {
       return 0;
+    }
 
     m_needToSeek = false;
   }

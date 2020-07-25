@@ -1,6 +1,6 @@
 
-#include "nucleus/Testing.h"
 #include "nucleus/Streams/ConsoleOutputStream.h"
+#include "nucleus/Testing.h"
 
 namespace nu {
 

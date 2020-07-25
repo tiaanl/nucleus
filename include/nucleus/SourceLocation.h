@@ -22,7 +22,7 @@ private:
   I32 m_line;
 };
 
-#define FROM_HERE ::nu::SourceLocation{__FILE__, __LINE__}
+#define FROM_HERE (::nu::SourceLocation{__FILE__, __LINE__})
 
 }  // namespace nu
 

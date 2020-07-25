@@ -41,8 +41,7 @@ bool equalDriveLetterCaseInsensitive(const StringView& left, const StringView& r
   auto leftLetterPos = findDriveLetter(left);
   auto rightLetterPos = findDriveLetter(right);
 
-  if (leftLetterPos == StringView::npos ||
-      rightLetterPos == StringView::npos) {
+  if (leftLetterPos == StringView::npos || rightLetterPos == StringView::npos) {
     return leftLetterPos == rightLetterPos;
   }
 
@@ -181,8 +180,7 @@ FilePath FilePath::baseName() const {
   // separator, leave it alone.
   auto lastSeparator =
       newPath.m_path.findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
-  if (lastSeparator != StringView::npos &&
-      lastSeparator < newPath.m_path.length() - 1) {
+  if (lastSeparator != StringView::npos && lastSeparator < newPath.m_path.length() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
   }
 

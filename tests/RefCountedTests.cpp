@@ -1,9 +1,8 @@
 
 #include "nucleus/Memory/ScopedRefPtr.h"
+#include "nucleus/MemoryDebug.h"
 #include "nucleus/RefCounted.h"
 #include "nucleus/Testing.h"
-
-#include "nucleus/MemoryDebug.h"
 
 namespace {
 
@@ -31,13 +30,6 @@ private:
 };
 
 }  // namespace
-
-//TEST_CASE("TestSelfAssignment") {
-//  SelfAssign* p = new SelfAssign;
-//  nu::ScopedRefPtr<SelfAssign> var(p);
-//  var = var;
-//  CHECK(p == var.get());
-//}
 
 TEST_CASE("MemberAccess") {
   CheckDerivedMemberAccess check;

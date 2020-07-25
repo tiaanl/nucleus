@@ -10,8 +10,8 @@
 // #include "nucleus/Allocators/DefaultAllocator.h"
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Logging.h"
-#include "nucleus/Types.h"
 #include "nucleus/Text/StringView.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 

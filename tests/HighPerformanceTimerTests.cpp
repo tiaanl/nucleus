@@ -1,6 +1,5 @@
 
 #include "nucleus/HighPerformanceTimer.h"
-
 #include "nucleus/Testing.h"
 
 namespace nu {

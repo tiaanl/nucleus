@@ -1,12 +1,12 @@
 #ifndef NUCLEUS_TEXT_STRING_POOL_H_
 #define NUCLEUS_TEXT_STRING_POOL_H_
 
+#include <cstring>
+
 #include "nucleus/Config.h"
 #include "nucleus/Logging.h"
 #include "nucleus/Text/StringView.h"
 #include "nucleus/Types.h"
-
-#include <cstring>
 
 namespace nu {
 

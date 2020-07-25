@@ -39,7 +39,8 @@ bool LogEntry::s_showThreadIdInLog{true};
 bool LogEntry::s_showLogLevelName{true};
 bool LogEntry::s_showFileNameInLog{false};
 
-LogEntry::LogEntry(LogLevel logLevel, const char* file, int line) : m_logLevel(logLevel), m_file(file), m_line(line) {}
+LogEntry::LogEntry(LogLevel logLevel, const char* file, int line)
+  : m_logLevel(logLevel), m_file(file), m_line(line) {}
 
 LogEntry::~LogEntry() {
   AutoLock<Lock> locker(g_loggingLock);

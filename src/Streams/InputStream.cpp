@@ -1,12 +1,11 @@
 
 #include "nucleus/Streams/InputStream.h"
 
+#include <algorithm>
+
 #include "nucleus/ByteOrder.h"
 #include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Logging.h"
-
-#include <algorithm>
-
 #include "nucleus/MemoryDebug.h"
 
 namespace nu {
@@ -46,8 +45,9 @@ I8 InputStream::readI8() {
 I16 InputStream::readI16() {
   char temp[2];
 
-  if (read(temp, 2) == 2)
+  if (read(temp, 2) == 2) {
     return static_cast<I16>(ByteOrder::littleEndianInt16(temp));
+  }
 
   return 0;
 }
@@ -55,8 +55,9 @@ I16 InputStream::readI16() {
 I32 InputStream::readI32() {
   char temp[4];
 
-  if (read(temp, 4) == 4)
+  if (read(temp, 4) == 4) {
     return static_cast<I32>(ByteOrder::littleEndianInt32(temp));
+  }
 
   return 0;
 }
@@ -67,8 +68,9 @@ I64 InputStream::readI64() {
     U64 asInt64;
   } n;
 
-  if (read(n.asBytes, 8) == 8)
+  if (read(n.asBytes, 8) == 8) {
     return static_cast<I64>(ByteOrder::swapIfBigEndian(n.asInt64));
+  }
 
   return 0;
 }

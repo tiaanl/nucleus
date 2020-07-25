@@ -1,8 +1,7 @@
 
 #include "nucleus/Logging.h"
-#include "nucleus/Testing.h"
-
 #include "nucleus/MemoryDebug.h"
+#include "nucleus/Testing.h"
 
 namespace nu {
 

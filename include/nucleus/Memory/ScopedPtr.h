@@ -45,11 +45,11 @@ public:
     return m_ptr == other;
   }
 
-  bool operator!= (const ScopedPtr& other) const {
+  bool operator!=(const ScopedPtr& other) const {
     return m_ptr != other.m_ptr;
   }
 
-  bool operator !=(const T* other) const {
+  bool operator!=(const T* other) const {
     return m_ptr != other;
   }
 

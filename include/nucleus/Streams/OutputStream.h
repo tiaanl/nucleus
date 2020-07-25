@@ -1,9 +1,9 @@
 #ifndef NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 #define NUCLEUS_STREAMS_OUTPUT_STREAM_H_
 
-#include "nucleus/Types.h"
-
 #include <cstring>
+
+#include "nucleus/Types.h"
 
 namespace nu {
 

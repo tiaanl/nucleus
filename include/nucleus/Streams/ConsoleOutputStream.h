@@ -8,7 +8,7 @@ namespace nu {
 
 class ConsoleOutputStream : public OutputStream {
 public:
-  ConsoleOutputStream() : OutputStream(OutputStream::Text) {};
+  ConsoleOutputStream() : OutputStream(OutputStream::Text) {}
   ~ConsoleOutputStream() override = default;
 
   SizeType write(void *buffer, SizeType size) override;

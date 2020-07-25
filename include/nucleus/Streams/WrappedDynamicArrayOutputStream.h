@@ -9,6 +9,8 @@ namespace nu {
 
 class WrappedDynamicArrayOutputStream : public OutputStream {
 public:
+  NU_DELETE_COPY_AND_MOVE(WrappedDynamicArrayOutputStream);
+
   explicit WrappedDynamicArrayOutputStream(DynamicArray<U8>& dynamicArray)
     : OutputStream{OutputStreamMode::Binary}, m_dynamicArray{dynamicArray} {}
 
@@ -21,8 +23,6 @@ private:
   }
 
 private:
-  DELETE_COPY_AND_MOVE(WrappedDynamicArrayOutputStream);
-
   DynamicArray<U8>& m_dynamicArray;
 };
 

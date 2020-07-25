@@ -2,15 +2,15 @@
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
-#include "nucleus/Logging.h"
-#include "nucleus/Types.h"
-
 #include <algorithm>
 #include <cstring>
 #include <functional>
 #include <new>
 #include <type_traits>
 #include <utility>
+
+#include "nucleus/Logging.h"
+#include "nucleus/Types.h"
 
 #undef free
 

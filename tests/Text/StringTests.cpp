@@ -1,6 +1,6 @@
 
-#include "nucleus/Text/String.h"
 #include "nucleus/Testing.h"
+#include "nucleus/Text/String.h"
 
 namespace nu {
 

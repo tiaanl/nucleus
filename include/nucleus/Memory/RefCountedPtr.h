@@ -11,7 +11,7 @@ namespace detail {
 template <typename T>
 struct DeletingRefCountedTraits {
   static void destruct(const T* ptr) {
-      delete ptr;
+    delete ptr;
   }
 };
 

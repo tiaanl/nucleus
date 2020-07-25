@@ -2,14 +2,14 @@
 #ifndef NUCLEUS_TEXT_STRING_VIEW_H_
 #define NUCLEUS_TEXT_STRING_VIEW_H_
 
-#include "nucleus/Streams/OutputStream.h"
-#include "nucleus/Text/CharTraits.h"
-#include "nucleus/Types.h"
-
 #include <algorithm>
 #include <cstring>
 #include <ostream>
 #include <utility>
+
+#include "nucleus/Streams/OutputStream.h"
+#include "nucleus/Text/CharTraits.h"
+#include "nucleus/Types.h"
 
 namespace nu {
 

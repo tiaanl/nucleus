@@ -2,10 +2,10 @@
 #ifndef NUCLEUS_STREAMS_INPUT_STREAM_H_
 #define NUCLEUS_STREAMS_INPUT_STREAM_H_
 
+#include <string>
+
 #include "nucleus/Macros.h"
 #include "nucleus/Types.h"
-
-#include <string>
 
 namespace nu {
 
@@ -84,7 +84,7 @@ public:
 
   // Read some data from the stream into the destination, stopping when `bytesToRead` have been read
   // or the predicate byte has been reached.
-  SizeType readUntil(void* destination, SizeType bytesToRead,U8 predicate);
+  SizeType readUntil(void* destination, SizeType bytesToRead, U8 predicate);
 
 protected:
   InputStream();

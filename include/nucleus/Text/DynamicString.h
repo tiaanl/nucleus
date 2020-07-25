@@ -20,8 +20,7 @@ public:
     m_length = length;
   }
 
-  explicit DynamicString(const StringView& text)
-    : DynamicString{text.data(), text.length()} {}
+  explicit DynamicString(const StringView& text) : DynamicString{text.data(), text.length()} {}
 
   DynamicString(const DynamicString& other) : DynamicString{other.m_text, other.m_length} {}
 

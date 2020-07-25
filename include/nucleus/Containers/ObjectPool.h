@@ -1,10 +1,10 @@
 #ifndef NUCLEUS_CONTAINERS_OBJECT_POOL_H_
 #define NUCLEUS_CONTAINERS_OBJECT_POOL_H_
 
+#include <algorithm>
+
 #include "nucleus/Logging.h"
 #include "nucleus/Types.h"
-
-#include <algorithm>
 
 namespace nu {
 

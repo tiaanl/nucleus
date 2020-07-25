@@ -1,5 +1,4 @@
 #include "needle/Needle.h"
-
 #include "nucleus/Containers/ObjectPool.h"
 
 namespace nu {
