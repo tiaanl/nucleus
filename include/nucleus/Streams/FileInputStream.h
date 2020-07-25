@@ -14,6 +14,8 @@ namespace nu {
 
 class FileInputStream : public InputStream {
 public:
+  NU_DELETE_COPY_AND_MOVE(FileInputStream);
+
 #if OS(WIN)
   typedef HANDLE HandleType;
 #elif OS(POSIX)
@@ -47,8 +49,6 @@ public:
   SizeType read(void* destBuffer, SizeType bytesToRead) override;
 
 private:
-  DELETE_COPY_AND_MOVE(FileInputStream);
-
   // Represents an invalid state for the internal handle.
   static HandleType kInvalidHandle;
 

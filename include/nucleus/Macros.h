@@ -5,18 +5,18 @@
 #include "nucleus/Config.h"
 #include "nucleus/Types.h"
 
-#define DELETE_COPY(ClassName)                                                                     \
+#define NU_DELETE_COPY(ClassName)                                                                  \
   ClassName(const ClassName&) = delete;                                                            \
   ClassName& operator=(const ClassName&) = delete
 
-#define DELETE_MOVE(ClassName)                                                                     \
+#define NU_DELETE_MOVE(ClassName)                                                                  \
   ClassName(ClassName&&) = delete;                                                                 \
   ClassName& operator=(ClassName&&) = delete
 
-#define DELETE_COPY_AND_MOVE(ClassName)                                                            \
-private:                                                                                           \
-  DELETE_COPY(ClassName);                                                                          \
-  DELETE_MOVE(ClassName)
+#define NU_DELETE_COPY_AND_MOVE(ClassName)                                                         \
+public:                                                                                            \
+  NU_DELETE_COPY(ClassName);                                                                       \
+  NU_DELETE_MOVE(ClassName)
 
 // ARRAY_SIZE
 
@@ -28,14 +28,14 @@ template <typename T, MemSize N>
 char (&ArraySizeHelper(const T (&array)[N]))[N];
 #endif  // COMPILER(MSVC)
 
-#define ARRAY_SIZE(array) (sizeof(ArraySizeHelper(array)))
+#define NU_ARRAY_SIZE(array) (sizeof(ArraySizeHelper(array)))
 
 // IS_BIT_SET
 
-#define IS_BIT_SET(Value, Bit) ((Value & Bit) == Bit)
+#define NU_BIT_IS_SET(Value, Bit) ((Value & Bit) == Bit)
 
 // UNUSED
 
-#define UNUSED(x)
+#define NU_UNUSED(x)
 
 #endif  // NUCLEUS_MACROS_H_

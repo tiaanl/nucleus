@@ -11,7 +11,7 @@ namespace nu {
 template <typename T>
 class ScopedPtr {
 public:
-  DELETE_COPY(ScopedPtr);
+  NU_DELETE_COPY(ScopedPtr);
 
   ScopedPtr() : m_ptr(nullptr) {}
 

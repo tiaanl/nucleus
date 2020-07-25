@@ -10,7 +10,7 @@
 namespace nu {
 
 class InputStream {
-  DELETE_COPY_AND_MOVE(InputStream);
+  NU_DELETE_COPY_AND_MOVE(InputStream);
 
 public:
   using SizeType = MemSize;

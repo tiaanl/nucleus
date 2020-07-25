@@ -13,12 +13,6 @@ option(NUCLEUS_BUILD_BENCHMARKS "Build nucleus benchmarks" OFF)
 add_subdirectory(external)
 
 set(nucleus_HEADER_FILES
-    include/nucleus/Allocators/Allocator.h
-    include/nucleus/Allocators/DebugAllocator.h
-    include/nucleus/Allocators/DefaultAllocator.h
-    include/nucleus/Allocators/GlobalAllocator.h
-    include/nucleus/Allocators/LinearAllocator.h
-    include/nucleus/Allocators/TestAllocator.h
     include/nucleus/ByteOrder.h
     include/nucleus/Config.h
     include/nucleus/Containers/Array.h
@@ -64,10 +58,6 @@ set(nucleus_HEADER_FILES
     )
 
 set(nucleus_SOURCE_FILES
-    src/Allocators/DebugAllocator.cpp
-    src/Allocators/DefaultAllocator.cpp
-    src/Allocators/GlobalAllocator.cpp
-    src/Allocators/LinearAllocator.cpp
     src/Debugger.cpp
     src/FilePath.cpp
     src/HighPerformanceTimer.cpp
@@ -91,8 +81,6 @@ set(nucleus_SOURCE_FILES
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 set(nucleusTests_SOURCE_FILES
-    tests/Allocators/AllocatorTests.cpp
-    tests/Allocators/DebugAllocatorTests.cpp
     tests/Containers/ArrayTests.cpp
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp

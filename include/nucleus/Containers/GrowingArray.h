@@ -1,16 +1,18 @@
 #ifndef NUCLEUS_CONTAINERS_GROWING_ARRAY_H_
 #define NUCLEUS_CONTAINERS_GROWING_ARRAY_H_
 
+#include <functional>
+
 #include "nucleus/Logging.h"
 #include "nucleus/Macros.h"
-
-#include <functional>
 
 namespace nu {
 
 template <typename T, MemSize BlockSize = 64>
 class GrowingArray {
 public:
+  NU_DELETE_COPY_AND_MOVE(GrowingArray);
+
   struct Block {
     T items[BlockSize];
     MemSize size = 0;
@@ -143,8 +145,6 @@ public:
   }
 
 private:
-  DELETE_COPY_AND_MOVE(GrowingArray);
-
   // Make sure there is enough space to append one more item.
   void ensureSpace() {
     if (!m_firstBlock) {

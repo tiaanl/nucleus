@@ -1,5 +1,4 @@
 
-#include "nucleus/Allocators/DebugAllocator.h"
 #include "nucleus/FilePath.h"
 #include "nucleus/Macros.h"
 #include "nucleus/Testing.h"
@@ -183,7 +182,7 @@ TEST_CASE("BaseName") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
+  for (size_t i = 0; i < NU_ARRAY_SIZE(cases); ++i) {
     FilePath input{cases[i].input};
     FilePath observed = input.baseName();
     CHECK(observed.getPath() == StringView{cases[i].expected});
@@ -265,7 +264,7 @@ TEST_CASE("Append") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (size_t i = 0; i < ARRAY_SIZE(cases); ++i) {
+  for (size_t i = 0; i < NU_ARRAY_SIZE(cases); ++i) {
     FilePath root{cases[i].inputs[0]};
     FilePath leaf{cases[i].inputs[1]};
 

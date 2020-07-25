@@ -10,6 +10,8 @@ namespace nu {
 // MemoryInputStream, that does not make a copy of the data passed to it.
 class WrappedMemoryInputStream : public InputStream {
 public:
+  NU_DELETE_COPY_AND_MOVE(WrappedMemoryInputStream);
+
   // Construct the stream with the specified data and size.
   WrappedMemoryInputStream(const void* data, MemSize size);
 
@@ -47,8 +49,6 @@ private:
   MemSize m_currentPosition{0};
 
   WrappedMemoryInputStream() = delete;
-
-  DELETE_COPY_AND_MOVE(WrappedMemoryInputStream);
 };
 
 }  // namespace nu

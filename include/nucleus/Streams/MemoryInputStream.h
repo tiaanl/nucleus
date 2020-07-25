@@ -9,6 +9,8 @@ namespace nu {
 
 class MemoryInputStream : public InputStream {
 public:
+  NU_DELETE_COPY_AND_MOVE(MemoryInputStream);
+
   MemoryInputStream(void* src, MemSize srcDataSize);
   explicit MemoryInputStream(nu::DynamicArray<U8> data);
 
@@ -36,8 +38,6 @@ private:
 
   nu::DynamicArray<U8> m_buffer;
   MemSize m_currentPosition;
-
-  DELETE_COPY_AND_MOVE(MemoryInputStream);
 };
 
 }  // namespace nu

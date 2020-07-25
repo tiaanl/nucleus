@@ -86,7 +86,7 @@ static const char kExtensionSeparator = '.';
 
 // static
 bool FilePath::isSeparator(Char ch) {
-  for (MemSize i = 0; i < ARRAY_SIZE(kSeparators) - 1; ++i) {
+  for (MemSize i = 0; i < NU_ARRAY_SIZE(kSeparators) - 1; ++i) {
     if (ch == kSeparators[i]) {
       return true;
     }
@@ -142,7 +142,7 @@ FilePath FilePath::dirName() const {
   auto letter = findDriveLetter(newPath.m_path);
 
   auto lastSeparator =
-      newPath.m_path.findLastOfAny(StringView{kSeparators, ARRAY_SIZE(kSeparators) - 1});
+      newPath.m_path.findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
 
   if (lastSeparator == StringView::npos) {
     // m_path is in the current directory.
@@ -161,7 +161,7 @@ FilePath FilePath::dirName() const {
 
   newPath.stripTrailingSeparators();
   if (newPath.m_path.empty()) {
-    newPath.m_path = StringView{kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1};
+    newPath.m_path = StringView{kCurrentDirectory, NU_ARRAY_SIZE(kCurrentDirectory) - 1};
   }
 
   return newPath;
@@ -180,7 +180,7 @@ FilePath FilePath::baseName() const {
   // Keep everything after the final separator, but if the pathname is only one character and it's a
   // separator, leave it alone.
   auto lastSeparator =
-      newPath.m_path.findLastOfAny(StringView{kSeparators, ARRAY_SIZE(kSeparators) - 1});
+      newPath.m_path.findLastOfAny(StringView{kSeparators, NU_ARRAY_SIZE(kSeparators) - 1});
   if (lastSeparator != StringView::npos &&
       lastSeparator < newPath.m_path.length() - 1) {
     newPath.m_path.erase(0, lastSeparator + 1);
@@ -199,7 +199,7 @@ FilePath FilePath::append(const FilePath& component) const {
 #endif  // 0
 
 #if 0
-  if (m_path.compare(String(kCurrentDirectory, ARRAY_SIZE(kCurrentDirectory) - 1)) == 0 &&
+  if (m_path.compare(String(kCurrentDirectory, NU_ARRAY_SIZE(kCurrentDirectory) - 1)) == 0 &&
       !component.isEmpty()) {
     // Append normally doesn't do any normalization, but as a special case, when appending to
     // `kCurrentDirectory`, just return a new path for the `component` argument.  Appending
