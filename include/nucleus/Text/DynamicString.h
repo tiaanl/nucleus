@@ -6,6 +6,8 @@
 #include "nucleus/Text/CharTraits.h"
 #include "nucleus/Text/StringView.h"
 
+#undef free
+
 namespace nu {
 
 class DynamicString {
@@ -33,7 +35,7 @@ public:
   }
 
   ~DynamicString() {
-    delete[] m_data;
+    free();
   }
 
   DynamicString& operator=(const DynamicString& other) {
@@ -139,7 +141,8 @@ public:
   }
 
 private:
-  void ensureAllocated(MemSize sizeRequired, bool keepOld);
+  auto ensureAllocated(MemSize sizeRequired, bool keepOld) -> void;
+  auto free() -> void;
 
   Char* m_data;
   StringLength m_length;
