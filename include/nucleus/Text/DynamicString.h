@@ -12,20 +12,19 @@ namespace nu {
 
 class DynamicString {
 public:
-  constexpr DynamicString() : m_data{nullptr}, m_length{0}, m_capacity{0} {}
+  constexpr DynamicString() = default;
 
-  DynamicString(const char* text)
-    : DynamicString{text, CharTraits<Char>::calculateZeroTerminatedLength(text)} {}
-
-  DynamicString(const char* text, std::size_t length)
-    : m_data{nullptr}, m_length{length}, m_capacity{0} {
-    ensureAllocated(length, false);
-    std::memcpy(m_data, text, length);
+  DynamicString(StringView text) {
+    ensureAllocated(text.length(), false);
+    std::memcpy(m_data, text.data(), text.length());
+    m_length = text.length();
   }
 
-  explicit DynamicString(const StringView& text) : DynamicString{text.data(), text.length()} {}
-
-  DynamicString(const DynamicString& other) : DynamicString{other.m_data, other.m_length} {}
+  DynamicString(const DynamicString& other) {
+    ensureAllocated(other.length(), false);
+    std::memcpy(m_data, other.data(), other.length());
+    m_length = other.length();
+  }
 
   DynamicString(DynamicString&& other)
     : m_data{other.m_data}, m_length{other.m_length}, m_capacity{other.m_capacity} {
@@ -39,9 +38,8 @@ public:
   }
 
   DynamicString& operator=(const DynamicString& other) {
-    ensureAllocated(other.m_length + 1, false);
+    ensureAllocated(other.m_length, false);
     std::memcpy(m_data, other.m_data, other.m_length);
-    m_data[other.m_length] = '\0';
     m_length = other.m_length;
 
     return *this;
@@ -58,11 +56,10 @@ public:
     return *this;
   }
 
-  DynamicString& operator=(const StringView& other) {
-    auto otherLength = other.length();
-    ensureAllocated(otherLength, false);
-    std::memcpy(m_data, other.data(), otherLength);
-    m_length = otherLength;
+  DynamicString& operator=(StringView text) {
+    ensureAllocated(text.length(), false);
+    std::memcpy(m_data, text.data(), text.length());
+    m_length = text.length();
 
     return *this;
   }
@@ -144,9 +141,9 @@ private:
   auto ensureAllocated(MemSize sizeRequired, bool keepOld) -> void;
   auto free() -> void;
 
-  Char* m_data;
-  StringLength m_length;
-  MemSize m_capacity;
+  Char* m_data = nullptr;
+  StringLength m_length = 0;
+  MemSize m_capacity = 0;
 };
 
 }  // namespace nu

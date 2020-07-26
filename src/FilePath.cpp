@@ -22,7 +22,7 @@ namespace {
 // Windows, when a pathname begins with a letter followed by a colon.  On other platforms, this
 // always returns npos.
 #if OS(WIN)
-StringLength findDriveLetter(const StringView& path) {
+StringLength findDriveLetter(StringView path) {
   if (path.length() >= 2 && path[1] == ':' &&
       ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))) {
     return 1;
@@ -31,13 +31,13 @@ StringLength findDriveLetter(const StringView& path) {
   return StringView::npos;
 }
 #else
-StringLength findDriveLetter(const StringView&) {
+StringLength findDriveLetter(StringView) {
   return StringView::npos;
 }
 #endif
 
 #if OS(WIN)
-bool equalDriveLetterCaseInsensitive(const StringView& left, const StringView& right) {
+bool equalDriveLetterCaseInsensitive(StringView left, StringView right) {
   auto leftLetterPos = findDriveLetter(left);
   auto rightLetterPos = findDriveLetter(right);
 
@@ -95,7 +95,7 @@ bool FilePath::isSeparator(Char ch) {
 }
 
 // static
-FilePath FilePath::normalizeSeparators(const StringView& path) {
+FilePath FilePath::normalizeSeparators(StringView path) {
   FilePath result{path};
 
   for (StringLength i = 0; i < result.m_path.length(); ++i) {
@@ -109,7 +109,7 @@ FilePath FilePath::normalizeSeparators(const StringView& path) {
 
 FilePath::FilePath() = default;
 
-FilePath::FilePath(const StringView& path) : m_path{path.data(), path.length()} {}
+FilePath::FilePath(StringView path) : m_path{path} {}
 
 FilePath::FilePath(const FilePath& other) = default;
 
@@ -187,7 +187,7 @@ FilePath FilePath::baseName() const {
   return newPath;
 }
 
-FilePath FilePath::append(const StringView& component) const {
+FilePath FilePath::append(StringView component) const {
   return append(FilePath{component});
 }
 

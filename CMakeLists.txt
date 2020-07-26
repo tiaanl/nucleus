@@ -45,6 +45,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Text/StaticString.h
     include/nucleus/Text/StringPool.h
     include/nucleus/Text/StringView.h
+    include/nucleus/Text/Utils.h
     include/nucleus/Types.h
     include/nucleus/Win/WindowsMixin.h
     )
@@ -68,6 +69,7 @@ set(nucleus_SOURCE_FILES
     src/Synchronization/Lock.cpp
     src/Text/DynamicString.cpp
     src/Text/StringView.cpp
+    src/Text/Utils.cpp
     )
 
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
@@ -93,6 +95,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/StaticStringTests.cpp
     tests/Text/StringPoolTests.cpp
     tests/Text/StringViewTests.cpp
+    tests/Text/UtilsTests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})

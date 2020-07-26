@@ -23,10 +23,10 @@ public:
   static bool isSeparator(Char ch);
 
   // Normalize separators to all be the default separator for the platform.
-  static FilePath normalizeSeparators(const StringView& path);
+  static FilePath normalizeSeparators(StringView path);
 
   FilePath();
-  explicit FilePath(const StringView& path);
+  FilePath(StringView path);
   FilePath(const FilePath& other);
 
   FilePath& operator=(const FilePath& other);
@@ -51,7 +51,7 @@ public:
   FilePath baseName() const;
 
   // Returns a FilePath by appending a separator (if needed) and the supplied path component.
-  FilePath append(const StringView& component) const;
+  FilePath append(StringView component) const;
   FilePath append(const FilePath& component) const;
 
 private:
@@ -62,7 +62,7 @@ private:
   DynamicString m_path;
 };
 
-inline FilePath operator/(const FilePath& left, const StringView& right) {
+inline FilePath operator/(const FilePath& left, StringView right) {
   return left.append(right);
 }
 

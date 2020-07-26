@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "nucleus/Logging.h"
+#include "nucleus/Text/Utils.h"
 
 #if OS(POSIX)
 #include <fcntl.h>
@@ -114,17 +115,19 @@ bool FileInputStream::setPosition(SizeType newPosition) {
 }
 
 void FileInputStream::openHandle() {
+  auto zt = zeroTerminated(m_path.getPath());
+
 #if OS(WIN)
-  HANDLE h = ::CreateFileA(m_path.getPath().data(), GENERIC_READ,
-                           FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
-                           FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+  HANDLE h =
+      ::CreateFileA(zt.data(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   } else {
     m_status = false;
   }
 #elif OS(POSIX)
-  int f = open(m_path.getPath().data(), O_RDONLY, 00644);
+  int f = open(zt.data(), O_RDONLY, 00644);
   if (f != -1) {
     m_handle = f;
   } else {
