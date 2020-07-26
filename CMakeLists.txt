@@ -51,7 +51,6 @@ set(nucleus_HEADER_FILES
     include/nucleus/Text/CharTraits.h
     include/nucleus/Text/DynamicString.h
     include/nucleus/Text/StaticString.h
-    include/nucleus/Text/String.h
     include/nucleus/Text/StringPool.h
     include/nucleus/Text/StringView.h
     include/nucleus/Types.h
@@ -82,7 +81,6 @@ set(nucleus_SOURCE_FILES
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 set(nucleusTests_SOURCE_FILES
-    tests/Containers/ArrayTests.cpp
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/GrowingArrayTests.cpp
@@ -99,29 +97,8 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/DynamicStringTests.cpp
     tests/Text/StaticStringTests.cpp
     tests/Text/StringPoolTests.cpp
-    tests/Text/StringTests.cpp
     tests/Text/StringViewTests.cpp
-
-    # tests/Parser/TokenizerTests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
 target_link_libraries(nucleusTests nucleus testing)
-
-#set(nucleusTestsNeedle_SOURCE_FILES
-#    tests/Containers/HashMapTests.cpp
-#    tests/Containers/ObjectPoolTests.cpp
-#    tests/ProfilingTests.cpp
-#    )
-
-#nucleus_add_executable(nucleusTestsNeedle ${nucleusTestsNeedle_SOURCE_FILES})
-#target_link_libraries(nucleusTestsNeedle nucleus needleMain)
-
-if (NUCLEUS_BUILD_BENCHMARKS)
-    set(nucleusBenchmarks_SOURCE_FILES
-        src/Allocators/AllocatorBenchmarks.cpp
-        )
-
-    nucleus_add_executable(nucleusBenchmarks ${nucleusBenchmarks_SOURCE_FILES})
-    target_link_libraries(nucleusBenchmarks nucleus benchmarks)
-endif ()
