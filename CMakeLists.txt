@@ -35,6 +35,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Parser/Tokenizer.h
     include/nucleus/Profiling.h
     include/nucleus/RefCounted.h
+    include/nucleus/SourceLocation.h
     include/nucleus/Streams/ConsoleOutputStream.h
     include/nucleus/Streams/FileInputStream.h
     include/nucleus/Streams/FileOutputStream.h

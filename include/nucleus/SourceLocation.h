@@ -9,7 +9,7 @@ class SourceLocation {
 public:
   SourceLocation(nu::StringView file, I32 line) : m_file{file}, m_line{line} {}
 
-  const StringView& file() const {
+  StringView file() const {
     return m_file;
   }
 
