@@ -13,24 +13,23 @@ class ScopedPtr {
 public:
   NU_DELETE_COPY(ScopedPtr);
 
-  ScopedPtr() : m_ptr(nullptr) {}
+  constexpr ScopedPtr() : m_ptr{nullptr} {}
 
-  explicit ScopedPtr(T* other) : m_ptr(other) {}
+  constexpr explicit ScopedPtr(T* other) : m_ptr{other} {}
 
-  ScopedPtr(ScopedPtr&& other) noexcept : m_ptr(other.m_ptr) {
+  ScopedPtr(ScopedPtr&& other) noexcept : m_ptr{other.m_ptr} {
     other.m_ptr = nullptr;
   }
 
   template <typename U>
-  ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr(other.release()) {}
+  explicit ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr{other.release()} {}
 
   ~ScopedPtr() {
-    if (m_ptr) {
-      delete m_ptr;
-    }
+    // No need to check for `nullptr` before `delete`.
+    delete m_ptr;
   }
 
-  ScopedPtr& operator=(ScopedPtr&& other) {
+  ScopedPtr& operator=(ScopedPtr&& other) noexcept {
     m_ptr = other.m_ptr;
     other.m_ptr = nullptr;
 
@@ -70,10 +69,8 @@ public:
   }
 
   void reset(T* p = nullptr) {
-    if (m_ptr) {
-      delete m_ptr;
-    }
-
+    // No need to check for `nullptr` before `delete`.
+    delete m_ptr;
     m_ptr = p;
   }
 
