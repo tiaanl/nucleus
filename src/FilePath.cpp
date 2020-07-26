@@ -123,7 +123,7 @@ bool FilePath::operator==(const FilePath& other) const {
 #if OS(WIN)
   return equalDriveLetterCaseInsensitive(m_path.view(), other.m_path.view());
 #else
-  return m_path == other.m_path;
+  return m_path.view() == other.m_path.view();
 #endif
 }
 

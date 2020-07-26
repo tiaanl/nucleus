@@ -1,5 +1,6 @@
 
-#include "nucleus/Testing.h"
+#include <catch2/catch.hpp>
+
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
@@ -10,7 +11,7 @@ const char* kTestString = "This is a test string!";
 
 }  // namespace
 
-TEST_CASE("Construct a StringView") {
+TEST_CASE("Construct a StringView", "[StringView]") {
   const char* text = "test";
 
   auto s1 = StringView{text};

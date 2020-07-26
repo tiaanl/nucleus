@@ -1,7 +1,8 @@
 
+#include <catch2/catch.hpp>
+
 #include "nucleus/Logging.h"
 #include "nucleus/MemoryDebug.h"
-#include "nucleus/Testing.h"
 
 namespace nu {
 

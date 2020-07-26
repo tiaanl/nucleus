@@ -1,16 +1,8 @@
 cmake_minimum_required(VERSION 3.7.2)
 
-if (TARGET nucleus)
-    return()
-endif ()
-
 project(nucleus)
 
 include(cmake/Utils.cmake)
-
-option(NUCLEUS_BUILD_BENCHMARKS "Build nucleus benchmarks" OFF)
-
-add_subdirectory(external)
 
 set(nucleus_HEADER_FILES
     include/nucleus/ByteOrder.h
@@ -80,6 +72,8 @@ set(nucleus_SOURCE_FILES
 
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
+find_package(Catch2 CONFIG REQUIRED)
+
 set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
@@ -89,6 +83,7 @@ set(nucleusTests_SOURCE_FILES
     tests/HighPerformanceTimerTests.cpp
     tests/LoggingTests.cpp
     tests/LoggingTests.cpp
+    tests/Main.cpp
     tests/Memory/ScopedPtrTests.cpp
     tests/Memory/ScopedRefPtrTests.cpp
     tests/RefCountedTests.cpp
@@ -101,4 +96,4 @@ set(nucleusTests_SOURCE_FILES
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
-target_link_libraries(nucleusTests nucleus testing)
+target_link_libraries(nucleusTests PRIVATE nucleus Catch2::Catch2)

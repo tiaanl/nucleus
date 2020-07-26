@@ -1,6 +1,7 @@
 
+#include <catch2/catch.hpp>
+
 #include "nucleus/Memory/ScopedPtr.h"
-#include "nucleus/Testing.h"
 
 namespace nu {
 

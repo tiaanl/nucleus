@@ -1,8 +1,6 @@
 
 #include "nucleus/Parser/Tokenizer.h"
-#include "nucleus/Testing.h"
-
-namespace nu {
+#include <catch2.hpp>namespace nu {
 
 TEST_CASE("Detect end of source") {
   Tokenizer t = Tokenizer("asdf");

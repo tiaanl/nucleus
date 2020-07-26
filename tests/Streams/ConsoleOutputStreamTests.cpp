@@ -1,6 +1,7 @@
 
+#include <catch2/catch.hpp>
+
 #include "nucleus/Streams/ConsoleOutputStream.h"
-#include "nucleus/Testing.h"
 
 namespace nu {
 

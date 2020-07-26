@@ -1,12 +1,13 @@
 
+#include <catch2/catch.hpp>
+
 #include "nucleus/FilePath.h"
 #include "nucleus/Macros.h"
 #include "nucleus/MemoryDebug.h"
-#include "nucleus/Testing.h"
 
 namespace nu {
 
-TEST_CASE("DirName") {
+TEST_CASE("Directory name of a file path is calculated correctly.", "[FilePath]") {
   const struct {
     const char* input;
     const char* expected;
@@ -92,14 +93,14 @@ TEST_CASE("DirName") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (auto& i : cases) {
-    FilePath input{i.input};
+  for (auto& c : cases) {
+    FilePath input{c.input};
     FilePath observed = input.dirName();
-    CHECK(observed.getPath() == StringView{i.expected});
+    CHECK(observed.getPath() == StringView{c.expected});
   }
 }
 
-TEST_CASE("BaseName") {
+TEST_CASE("Base name of a file path is calculated correctly.", "[FilePath]") {
   const struct {
     const char* input;
     const char* expected;
@@ -181,14 +182,14 @@ TEST_CASE("BaseName") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (size_t i = 0; i < NU_ARRAY_SIZE(cases); ++i) {
-    FilePath input{cases[i].input};
+  for (auto& c : cases) {
+    FilePath input{c.input};
     FilePath observed = input.baseName();
-    CHECK(observed.getPath() == StringView{cases[i].expected});
+    CHECK(observed.getPath() == c.expected);
   }
 }
 
-TEST_CASE("Append") {
+TEST_CASE("Can append more components to a file path.", "[FilePath]") {
   const struct {
     const char* inputs[2];
     const char* expected;
@@ -263,40 +264,16 @@ TEST_CASE("Append") {
 #endif  // defined(FILE_PATH_USES_WIN_SEPARATORS)
   };
 
-  for (size_t i = 0; i < NU_ARRAY_SIZE(cases); ++i) {
-    FilePath root{cases[i].inputs[0]};
-    FilePath leaf{cases[i].inputs[1]};
+  for (auto& c : cases) {
+    FilePath root{c.inputs[0]};
+    FilePath leaf{c.inputs[1]};
 
     FilePath observedStr = root.append(leaf);
-    CHECK(observedStr.getPath() == StringView{cases[i].expected});
-    // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
+    CHECK(observedStr.getPath() == c.expected);
 
     FilePath observedPath = root.append(FilePath(leaf));
-    CHECK(observedPath.getPath() == StringView{cases[i].expected});
-    // << "i: " << i << ", root: " << root.getPath() << ", leaf: " << leaf;
-
-#if 0
-#if defined(OS_WIN)
-    std::string ascii = WideToUTF8(leaf);
-#elif defined(OS_POSIX)
-    std::string ascii = leaf;
-#endif
-    observed_str = root.AppendASCII(ascii);
-    EXPECT_EQ(FilePath::StringType(cases[i].expected), observed_str.value()) <<
-              "i: " << i << ", root: " << root.value() << ", leaf: " << leaf;
-#endif  // 0
+    CHECK(observedPath.getPath() == c.expected);
   }
-}
-
-TEST_CASE("print some general uses of FilePath") {
-  FilePath resources{"resources"};
-  FilePath root = getCurrentWorkingDirectory() / resources / "default.png";
-  FilePath dirName = root.dirName();
-  FilePath baseName = root.baseName();
-
-  LOG(Info) << "Path: " << root.getPath();
-  LOG(Info) << "Dir name: " << dirName.getPath();
-  LOG(Info) << "Base name: " << baseName.getPath();
 }
 
 }  // namespace nu

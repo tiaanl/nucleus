@@ -1,6 +1,6 @@
 
 #include "nucleus/Parser/XMLParser.h"
-#include "nucleus/Testing.h"
+#include <catch2.hpp>
 
 namespace nu {
 

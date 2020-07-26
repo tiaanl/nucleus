@@ -1,7 +1,7 @@
 
+#include <catch2/catch.hpp>
+
 #include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Testing.h"
-#include "nucleus/Types.h"
 
 namespace nu {
 
