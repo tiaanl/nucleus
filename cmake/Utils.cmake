@@ -24,7 +24,7 @@ macro(nucleus_set_properties target)
 endmacro(nucleus_set_properties)
 
 function(nucleus_add_library name)
-    add_library(${name} ${ARGN})
+    add_library(${name} STATIC ${ARGN})
 
     target_include_directories(${name} PUBLIC include)
 

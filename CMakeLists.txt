@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.7.2)
 
+if (TARGET nucleus)
+    return()
+endif ()
+
 project(nucleus)
 
 include(cmake/Utils.cmake)
 
 set(nucleus_HEADER_FILES
     include/nucleus/ByteOrder.h
+    include/nucleus/Callbacks/Callback.h
     include/nucleus/Config.h
     include/nucleus/Containers/Array.h
     include/nucleus/Containers/BitSet.h
@@ -77,6 +82,7 @@ nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 find_package(Catch2 CONFIG REQUIRED)
 
 set(nucleusTests_SOURCE_FILES
+    tests/Callbacks/CallbackTests.cpp
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/GrowingArrayTests.cpp
