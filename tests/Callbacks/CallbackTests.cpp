@@ -1,22 +1,19 @@
 #include <catch2/catch.hpp>
 
 #include "nucleus/Callbacks/Callback.h"
-#include "nucleus/Types.h"
+#include "nucleus/Text/StringView.h"
 
 namespace nu {
 
-U32 counter = 0;
-
-auto doSomething() -> void {
-  LOG(Info) << "Something was done.";
-  ++counter;
+void addFive(I32 x) {
+  LOG(Info) << "addFive(" << x << ")";
 }
 
 TEST_CASE("callback can be empty") {
-  counter = 0;
-  auto bound = bind(&doSomething);
-  bound.invoke(1);
-  CHECK(counter == 1);
+  // auto boundState1 = BoundState::create(&addFive, 10);
+
+  auto p = bind(&addFive);
+  p.run(10);
 }
 
 }  // namespace nu

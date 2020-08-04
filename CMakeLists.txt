@@ -11,6 +11,11 @@ include(cmake/Utils.cmake)
 set(nucleus_HEADER_FILES
     include/nucleus/ByteOrder.h
     include/nucleus/Callbacks/Callback.h
+    include/nucleus/Callbacks/detail/BoundState.h
+    include/nucleus/Callbacks/detail/FunctorTraits.h
+    include/nucleus/Callbacks/detail/Invoker.h
+    include/nucleus/Callbacks/detail/TypeHelpers.h
+    include/nucleus/Callbacks/detail/TypeList.h
     include/nucleus/Config.h
     include/nucleus/Containers/Array.h
     include/nucleus/Containers/BitSet.h
