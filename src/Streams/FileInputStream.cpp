@@ -54,7 +54,7 @@ bool FileInputStream::openedOk() const {
 
 FileInputStream::SizeType FileInputStream::getSize() {
 #if OS(WIN)
-  SizeType fileSize = 0;
+  SizeType fileSize;
   DWORD lowSize = ::GetFileSize(static_cast<HANDLE>(m_handle), nullptr);
   fileSize = lowSize;
   return fileSize;

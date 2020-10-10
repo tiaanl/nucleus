@@ -6,8 +6,6 @@
 #include <unistd.h>
 #endif
 
-#include "nucleus/MemoryDebug.h"
-
 namespace nu {
 
 FileOutputStream::FileOutputStream(const FilePath& path)

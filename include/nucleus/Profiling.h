@@ -1,7 +1,7 @@
 #ifndef NUCLEUS_PROFILING_H_
 #define NUCLEUS_PROFILING_H_
 
-#include "nucleus/Containers/ObjectPool.h"
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/Text/StaticString.h"
 #include "nucleus/Text/StringView.h"
@@ -49,9 +49,7 @@ private:
   Block m_root;
   Block* m_current;
 
-  ObjectPool<Block> m_blocks;
-
-  // DynamicArray<Block*> m_blocks;
+  DynamicArray<Block*> m_blocks;
 };
 
 ProfileMetrics* getCurrentProfileMetrics();

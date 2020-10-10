@@ -72,7 +72,7 @@ StringView readWhitespace(const StringView& source) {
 }
 
 StringView readNumber(const StringView& text) {
-  StringLength length = 0;
+  StringLength length;
 
   // Check the first character.
   if (isNumber(text[0]) || (text[0] == '-' && isNumber(text[1]))) {

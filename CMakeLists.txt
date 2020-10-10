@@ -7,12 +7,8 @@ include(cmake/Utils.cmake)
 set(nucleus_HEADER_FILES
     include/nucleus/ByteOrder.h
     include/nucleus/Config.h
-    include/nucleus/Containers/Array.h
     include/nucleus/Containers/BitSet.h
     include/nucleus/Containers/DynamicArray.h
-    include/nucleus/Containers/GrowingArray.h
-    include/nucleus/Containers/HashMap.h
-    include/nucleus/Containers/ObjectPool.h
     include/nucleus/Containers/StaticArray.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
@@ -23,7 +19,6 @@ set(nucleus_HEADER_FILES
     include/nucleus/Memory/RefCountedPtr.h
     include/nucleus/Memory/ScopedPtr.h
     include/nucleus/Memory/ScopedRefPtr.h
-    include/nucleus/MemoryDebug.h
     include/nucleus/Parser/Tokenizer.h
     include/nucleus/Profiling.h
     include/nucleus/RefCounted.h
@@ -79,7 +74,6 @@ find_package(Catch2 CONFIG REQUIRED)
 set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
-    tests/Containers/GrowingArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
     tests/FilePathTests.cpp
     tests/HighPerformanceTimerTests.cpp

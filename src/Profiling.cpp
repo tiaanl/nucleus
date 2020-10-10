@@ -17,7 +17,7 @@ ProfileMetrics::ProfileMetrics() noexcept
   : m_root{nu::StringView{"root"}, nullptr, nullptr, 0}, m_current{&m_root} {}
 
 auto ProfileMetrics::reset() -> void {
-  m_blocks.releaseAll();
+  m_blocks.clear();
 
   m_current = &m_root;
   m_root.children = nullptr;
@@ -29,6 +29,7 @@ auto ProfileMetrics::startBlock(const StringView& name) -> void {
     return;
   }
 
+#if 0
   if (m_current->children) {
     // Find the last child.
     auto lastChild = m_current->children;
@@ -47,6 +48,7 @@ auto ProfileMetrics::startBlock(const StringView& name) -> void {
     m_current->children = newBlock;
     m_current = newBlock;
   }
+#endif  // 0
 }
 
 auto ProfileMetrics::stopBlock() -> void {
