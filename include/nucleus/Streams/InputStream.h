@@ -36,6 +36,10 @@ public:
   // Read some data from the stream into a memory buffer.
   virtual SizeType read(void* destination, SizeType bytesToRead) = 0;
 
+  // Read some data from the stream into the destination, stopping when `bytesToRead` have been read
+  // or the predicate byte has been found.
+  SizeType readUntil(void* destination, SizeType bytesToRead, U8 predicate);
+
   // Read and discard a number of bytes from the stream.
   virtual void skip(SizeType numberOfBytesToSkip);
 
@@ -72,7 +76,7 @@ public:
 
   // Read eight bytes from the stream as a little-endian unsigned 64-bit value.  If the stream is
   // exhausted, then 0 will be returned.
-  U32 read64();
+  U64 readU64();
 
   // Read four bytes as a little-endian  32-bit floating point value.  If the stream is exhausted,
   // then 0.0f will be returned.
@@ -82,13 +86,28 @@ public:
   // then 0.0 will be returned.
   F64 readF64();
 
-  // Read some data from the stream into the destination, stopping when `bytesToRead` have been read
-  // or the predicate byte has been reached.
-  SizeType readUntil(void* destination, SizeType bytesToRead, U8 predicate);
-
 protected:
   InputStream();
 };
+
+#define DECLARE_OPERATOR(Type)                                                                     \
+  inline InputStream& operator<<(InputStream& inputStream, Type& out) {                            \
+    out = inputStream.read##Type();                                                                \
+    return inputStream;                                                                            \
+  }
+
+DECLARE_OPERATOR(U8)
+DECLARE_OPERATOR(U16)
+DECLARE_OPERATOR(U32)
+DECLARE_OPERATOR(U64)
+DECLARE_OPERATOR(I8)
+DECLARE_OPERATOR(I16)
+DECLARE_OPERATOR(I32)
+DECLARE_OPERATOR(I64)
+DECLARE_OPERATOR(F32)
+DECLARE_OPERATOR(F64)
+
+#undef DECLARE_OPERATOR
 
 }  // namespace nu
 

@@ -5,7 +5,7 @@
 
 namespace nu {
 
-OutputStream::SizeType ConsoleOutputStream::write(void* buffer, OutputStream::SizeType size) {
+OutputStream::SizeType ConsoleOutputStream::write(const void *buffer, OutputStream::SizeType size) {
   std::fwrite(buffer, 1, size, stdout);
   return size;
 }

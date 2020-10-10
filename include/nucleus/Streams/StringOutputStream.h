@@ -16,7 +16,7 @@ public:
     return m_text;
   }
 
-  SizeType write(void* buffer, SizeType size) override;
+  SizeType write(const void* buffer, SizeType size) override;
 
 private:
   DynamicString m_text;

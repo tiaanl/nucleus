@@ -11,7 +11,7 @@ public:
   ConsoleOutputStream() : OutputStream(OutputStream::Text) {}
   ~ConsoleOutputStream() override = default;
 
-  SizeType write(void *buffer, SizeType size) override;
+  SizeType write(const void *buffer, SizeType size) override;
 };
 
 }  // namespace nu

@@ -15,7 +15,7 @@ public:
     : OutputStream{OutputStreamMode::Binary}, m_dynamicArray{dynamicArray} {}
 
 private:
-  SizeType write(void* buffer, SizeType size) override {
+  SizeType write(const void* buffer, SizeType size) override {
     U8* start = static_cast<U8*>(buffer);
     U8* end = start + size;
     m_dynamicArray.pushBack(start, end);

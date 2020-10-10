@@ -2,9 +2,6 @@
 #include "nucleus/Streams/OutputStream.h"
 
 #include <cstdio>
-#include <cstring>
-
-#include "nucleus/MemoryDebug.h"
 
 namespace nu {
 
@@ -39,115 +36,115 @@ MemSize writeFloatToBuffer(I8* buffer, MemSize, F64 value) {
 
 }  // namespace
 
-void OutputStream::writeBool(bool data) {
+void OutputStream::writeBool(bool value) {
   if (m_mode == Text) {
-    if (data) {
+    if (value) {
       write((void*)"true", 4);
     } else {
       write((void*)"false", 5);
     }
   } else {
-    writeU8(data ? 1 : 0);
+    writeU8(value ? 1 : 0);
   }
 }
 
-void OutputStream::writeU8(U8 data) {
+void OutputStream::writeU8(U8 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeU16(U16 data) {
+void OutputStream::writeU16(U16 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeU32(U32 data) {
+void OutputStream::writeU32(U32 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeU64(U64 data) {
+void OutputStream::writeU64(U64 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeUnsignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeI8(I8 data) {
+void OutputStream::writeI8(I8 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeI16(I16 data) {
+void OutputStream::writeI16(I16 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeI32(I32 data) {
+void OutputStream::writeI32(I32 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeI64(I64 data) {
+void OutputStream::writeI64(I64 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeSignedNumberToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeF32(F32 data) {
+void OutputStream::writeF32(F32 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeFloatToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeFloatToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 
-void OutputStream::writeF64(F64 data) {
+void OutputStream::writeF64(F64 value) {
   if (m_mode == Text) {
     I8 buffer[32];
-    auto bytesWritten = writeFloatToBuffer(buffer, sizeof(buffer), data);
+    auto bytesWritten = writeFloatToBuffer(buffer, sizeof(buffer), value);
     write(buffer, bytesWritten);
   } else {
-    write(&data, sizeof(data));
+    write(&value, sizeof(value));
   }
 }
 

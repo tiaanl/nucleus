@@ -3,8 +3,8 @@
 
 namespace nu {
 
-StringOutputStream::SizeType StringOutputStream::write(void* buffer, SizeType size) {
-  m_text.append(static_cast<Char*>(buffer), size);
+StringOutputStream::SizeType StringOutputStream::write(const void *buffer, SizeType size) {
+  m_text.append(reinterpret_cast<const char*>(buffer), size);
   return size;
 }
 

@@ -5,6 +5,7 @@
 #include <ostream>
 
 #include "nucleus/Config.h"
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Text/DynamicString.h"
 
 #if OS(WIN)
@@ -28,8 +29,10 @@ public:
   FilePath();
   FilePath(StringView path);
   FilePath(const FilePath& other);
+  FilePath(FilePath&&) = default;
 
   FilePath& operator=(const FilePath& other);
+  FilePath& operator=(FilePath&&) = default;
 
   bool operator==(const FilePath& other) const;
   bool operator!=(const FilePath& other) const;
@@ -72,6 +75,7 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
 
 FilePath getCurrentWorkingDirectory();
 bool exists(const FilePath& path);
+DynamicArray<FilePath> getFilesInDirectory(const FilePath& start);
 
 }  // namespace nu
 

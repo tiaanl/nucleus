@@ -24,7 +24,7 @@ public:
     return m_path;
   }
 
-  SizeType write(void* buffer, SizeType size) override;
+  SizeType write(const void* buffer, SizeType size) override;
 
 private:
   void openHandle();

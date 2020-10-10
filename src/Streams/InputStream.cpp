@@ -75,6 +75,22 @@ I64 InputStream::readI64() {
   return 0;
 }
 
+U8 InputStream::readU8() {
+  U8 temp = 0;
+  read(&temp, 1);
+  return temp;
+}
+
+U16 InputStream::readU16() {
+  U8 temp[2];
+
+  if (read(temp, 2) == 2) {
+    return static_cast<U16>(ByteOrder::littleEndianInt16(temp));
+  }
+
+  return 0;
+}
+
 U32 InputStream::readU32() {
   union {
     U8 asBytes[4];
@@ -88,9 +104,22 @@ U32 InputStream::readU32() {
   return 0;
 }
 
+U64 InputStream::readU64() {
+  union {
+    U8 asBytes[8];
+    U64 asU64;
+  } n;
+
+  if (read(n.asBytes, sizeof(n)) == sizeof(n)) {
+    return static_cast<U64>(ByteOrder::swapIfBigEndian(n.asU64));
+  }
+
+  return 0;
+}
+
 F32 InputStream::readF32() {
   static_assert(sizeof(I32) == sizeof(float),
-                "Size of int32 and float must match for the union to work.");
+                "Size of I32 and float must match for the union to work.");
 
   union {
     I32 asInt;
@@ -103,7 +132,7 @@ F32 InputStream::readF32() {
 
 F64 InputStream::readF64() {
   static_assert(sizeof(I64) == sizeof(double),
-                "Size of int64 and float must match for the union to work.");
+                "Size of I64 and float must match for the union to work.");
 
   union {
     I64 asInt;

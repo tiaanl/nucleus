@@ -334,7 +334,7 @@ private:
     // then we copy the old data to the new data first.
     if (m_data) {
       if (keepOld == KeepOldData) {
-        std::move(m_data, m_data + m_size, newData);
+        std::move(m_data, m_data + m_capacity, newData);
       }
 
       // Free the old data.

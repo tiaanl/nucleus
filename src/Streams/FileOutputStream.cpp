@@ -49,7 +49,7 @@ void FileOutputStream::closeHandle() {
 }
 
 #if OS(WIN)
-FileOutputStream::SizeType FileOutputStream::write(void* buffer, SizeType size) {
+FileOutputStream::SizeType FileOutputStream::write(const void* buffer, SizeType size) {
   // static_assert(sizeof(DWORD) == sizeof(SizeType), "Sizes must match");
 
   DWORD bytesWritten = 0;

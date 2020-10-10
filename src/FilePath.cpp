@@ -2,6 +2,7 @@
 #include "nucleus/FilePath.h"
 
 #include "nucleus/Macros.h"
+#include "nucleus/Text/Utils.h"
 #if OS(POSIX)
 #include <unistd.h>
 #if OS(LINUX)
@@ -266,5 +267,33 @@ bool exists(const FilePath& path) {
   return fileAttributes != INVALID_FILE_ATTRIBUTES;
 #endif
 }
+
+#if OS(WIN)
+DynamicArray<FilePath> getFilesInDirectory(const FilePath& start) {
+  DynamicArray<FilePath> result;
+
+  WIN32_FIND_DATA findFileData;
+  auto startWithWildcards = start / "*.*";
+  LOG(Info) << "List files in directory: " << startWithWildcards.getPath();
+  HANDLE find = FindFirstFileA(zeroTerminated(startWithWildcards.getPath()).data(), &findFileData);
+  if (find == INVALID_HANDLE_VALUE) {
+    LOG(Warning) << "Could not list files in directory: " << start.getPath();
+    return result;
+  }
+
+  for (; FindNextFileA(find, &findFileData);) {
+    // Skip `.` and `..`.
+    if (findFileData.cFileName[0] == '.') {
+      continue;
+    }
+
+    result.emplaceBack(start / FilePath{findFileData.cFileName});
+  }
+
+  FindClose(find);
+
+  return result;
+}
+#endif  // OS(WIN)
 
 }  // namespace nu
