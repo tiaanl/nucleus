@@ -245,6 +245,11 @@ void FilePath::stripTrailingSeparators() {
   }
 }
 
+std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
+  os << filePath.getPath();
+  return os;
+}
+
 FilePath getCurrentWorkingDirectory() {
 #if OS(POSIX)
   char buf[PATH_MAX] = {0};
@@ -267,12 +272,13 @@ bool exists(const FilePath& path) {
 }
 
 #if OS(WIN)
-DynamicArray<FilePath> getFilesInDirectory(const FilePath& start) {
+DynamicArray<FilePath> findAllFilesIn(const FilePath& start) {
+  LOG(Info) << "List files in directory: " << start;
+
   DynamicArray<FilePath> result;
 
   WIN32_FIND_DATA findFileData;
   auto startWithWildcards = start / "*.*";
-  LOG(Info) << "List files in directory: " << startWithWildcards.getPath();
   HANDLE find = FindFirstFileA(zeroTerminated(startWithWildcards.getPath()).data(), &findFileData);
   if (find == INVALID_HANDLE_VALUE) {
     LOG(Warning) << "Could not list files in directory: " << start.getPath();

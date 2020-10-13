@@ -86,9 +86,8 @@ public:
 
 private:
   auto initFrom(const Char* text, StringLength length) -> void {
-    auto minLength = std::min(Size, length);
-    std::memcpy(m_data, text, minLength);
-    m_length = minLength;
+    m_length = std::min(Size, std::min(length, std::strlen(text)));
+    std::memcpy(m_data, text, m_length);
   }
 
   Char m_data[Size];

@@ -15,7 +15,7 @@ public:
   NU_DELETE_COPY_AND_MOVE(RefCountedBase);
 
   bool hasOneRef() const {
-    return m_refCount.load(std::memory_order_relaxed) == 1;
+    return m_refCount.loadEntries(std::memory_order_relaxed) == 1;
   }
 
   void addRef() const {

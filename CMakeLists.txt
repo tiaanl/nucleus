@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
+if (TARGET nucleus)
+    return()
+endif ()
+
 project(nucleus)
 
 include(cmake/Utils.cmake)
@@ -12,6 +16,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/StaticArray.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
+    include/nucleus/Filter.h
     include/nucleus/HighPerformanceTimer.h
     include/nucleus/Logging.h
     include/nucleus/Macros.h

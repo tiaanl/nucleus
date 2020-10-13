@@ -16,8 +16,8 @@ public:
 
 private:
   SizeType write(const void* buffer, SizeType size) override {
-    U8* start = static_cast<U8*>(buffer);
-    U8* end = start + size;
+    const U8* start = static_cast<const U8*>(buffer);
+    const U8* end = start + size;
     m_dynamicArray.pushBack(start, end);
     return 0;
   }

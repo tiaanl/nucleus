@@ -120,6 +120,16 @@ public:
     return npos;
   }
 
+  bool contains(StringView needle) {
+    for (StringLength i = 0; i < m_length - needle.m_length; ++i) {
+      if (std::strncmp(m_text + i, needle.m_text, needle.m_length) == 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 protected:
   template <MemSize Size>
   friend class StaticString;

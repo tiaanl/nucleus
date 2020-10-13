@@ -16,10 +16,6 @@
 
 namespace nu {
 
-struct P {
-  I32 p;
-};
-
 template <typename T>
 class DynamicArray {
 public:
@@ -76,7 +72,7 @@ public:
   }
 
   ~DynamicArray() {
-    free();
+    DynamicArray::free();
   }
 
   // Operators
@@ -186,7 +182,7 @@ public:
   }
 
   // Push back a range of elements.
-  void pushBack(Iterator begin, Iterator end) {
+  void pushBack(ConstIterator begin, ConstIterator end) {
     ensureAllocated(m_size + end - begin, KeepOldData);
 
     m_size += end - begin;
@@ -371,5 +367,20 @@ private:
 };
 
 }  // namespace nu
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const nu::DynamicArray<T>& value) {
+  os << '[';
+  auto size = value.size();
+  for (auto it = value.begin(), eit = value.end(); it != eit; ++it) {
+    os << *it;
+    if (size-- != 1) {
+      os << ", ";
+    }
+  }
+  os << ']';
+
+  return os;
+}
 
 #endif  // NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_

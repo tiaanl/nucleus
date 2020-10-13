@@ -65,6 +65,8 @@ private:
   DynamicString m_path;
 };
 
+std::ostream& operator<<(std::ostream& os, const nu::FilePath& filePath);
+
 inline FilePath operator/(const FilePath& left, StringView right) {
   return left.append(right);
 }
@@ -75,7 +77,7 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
 
 FilePath getCurrentWorkingDirectory();
 bool exists(const FilePath& path);
-DynamicArray<FilePath> getFilesInDirectory(const FilePath& start);
+DynamicArray<FilePath> findAllFilesIn(const FilePath& start);
 
 }  // namespace nu
 
