@@ -11,6 +11,7 @@ include(cmake/Utils.cmake)
 set(nucleus_HEADER_FILES
     include/nucleus/ByteOrder.h
     include/nucleus/Config.h
+    include/nucleus/Containers/ArrayView.h
     include/nucleus/Containers/BitSet.h
     include/nucleus/Containers/DynamicArray.h
     include/nucleus/Containers/StaticArray.h
@@ -28,6 +29,8 @@ set(nucleus_HEADER_FILES
     include/nucleus/RefCounted.h
     include/nucleus/SourceLocation.h
     include/nucleus/Streams/ConsoleOutputStream.h
+    include/nucleus/Streams/ArrayInputStream.h
+    include/nucleus/Streams/DynamicBufferOutputStream.h
     include/nucleus/Streams/FileInputStream.h
     include/nucleus/Streams/FileOutputStream.h
     include/nucleus/Streams/InputStream.h
@@ -35,8 +38,6 @@ set(nucleus_HEADER_FILES
     include/nucleus/Streams/OutputStream.h
     include/nucleus/Streams/StringOutputStream.h
     include/nucleus/Streams/Utils.h
-    include/nucleus/Streams/WrappedDynamicArrayOutputStream.h
-    include/nucleus/Streams/WrappedMemoryInputStream.h
     include/nucleus/Synchronization/AutoLock.h
     include/nucleus/Synchronization/Lock.h
     include/nucleus/Text/CharTraits.h
@@ -57,6 +58,8 @@ set(nucleus_SOURCE_FILES
     src/Parser/Tokenizer.cpp
     src/Profiling.cpp
     src/Streams/ConsoleOutputStream.cpp
+    src/Streams/ArrayInputStream.cpp
+    src/Streams/DynamicBufferOutputStream.cpp
     src/Streams/FileInputStream.cpp
     src/Streams/FileOutputStream.cpp
     src/Streams/InputStream.cpp
@@ -64,7 +67,6 @@ set(nucleus_SOURCE_FILES
     src/Streams/OutputStream.cpp
     src/Streams/StringOutputStream.cpp
     src/Streams/Utils.cpp
-    src/Streams/WrappedMemoryInputStream.cpp
     src/Synchronization/Lock.cpp
     src/Text/DynamicString.cpp
     src/Text/StringView.cpp
