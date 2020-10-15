@@ -60,6 +60,10 @@ public:
     return m_ptr;
   }
 
+  const T& operator*() const {
+    return *m_ptr;
+  }
+
   const T* get() const {
     return m_ptr;
   }

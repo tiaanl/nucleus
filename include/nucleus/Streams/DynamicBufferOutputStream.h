@@ -15,11 +15,15 @@ public:
 
   DynamicBufferOutputStream();
 
+  const BufferType& buffer() const {
+    return m_buffer;
+  }
+
 private:
   SizeType write(const void* buffer, SizeType size) override;
 
 private:
-  BufferType m_sink;
+  BufferType m_buffer;
   BufferType::SizeType m_currentPosition = 0;
 };
 

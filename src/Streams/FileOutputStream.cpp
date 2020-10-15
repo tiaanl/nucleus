@@ -1,6 +1,8 @@
 
 #include "nucleus/Streams/FileOutputStream.h"
 
+#include <nucleus/Text/Utils.h>
+
 #if OS(POSIX)
 #include <fcntl.h>
 #include <unistd.h>
@@ -18,15 +20,16 @@ FileOutputStream::~FileOutputStream() {
 }
 
 void FileOutputStream::openHandle() {
+  auto path = nu::zeroTerminated(m_path.getPath());
+
 #if OS(WIN)
-  HANDLE h =
-      ::CreateFileW((LPCWSTR)m_path.getPath().data(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr,
-                    CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+  HANDLE h = ::CreateFileA(path.data(), GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS,
+                           FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   }
 #elif OS(POSIX)
-  int f = open(m_path.getPath().data(), O_WRONLY, 00644);
+  int f = open(path.data(), O_WRONLY, 00644);
   if (f != -1) {
     m_handle = f;
   } else {
@@ -52,7 +55,9 @@ FileOutputStream::SizeType FileOutputStream::write(const void* buffer, SizeType 
 
   DWORD bytesWritten = 0;
   if (m_handle) {
-    ::WriteFile(m_handle, buffer, static_cast<DWORD>(size), &bytesWritten, nullptr);
+    if (!::WriteFile(m_handle, buffer, static_cast<DWORD>(size), &bytesWritten, nullptr)) {
+      LOG(Error) << "Could not write to file.";
+    }
   }
 
   return static_cast<SizeType>(bytesWritten);

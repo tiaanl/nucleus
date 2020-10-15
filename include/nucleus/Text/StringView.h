@@ -121,7 +121,7 @@ public:
   }
 
   bool contains(StringView needle) {
-    for (StringLength i = 0; i < m_length - needle.m_length; ++i) {
+    for (StringLength i = 0; i < m_length - needle.length() + 1; ++i) {
       if (std::strncmp(m_text + i, needle.m_text, needle.m_length) == 0) {
         return true;
       }
