@@ -22,7 +22,7 @@ public:
   typedef int HandleType;
 #endif
 
-  explicit FileInputStream(const FilePath& fileName);
+  explicit FileInputStream(FilePath path);
   ~FileInputStream() override;
 
   // Returns the file path that this stream is pointing to.

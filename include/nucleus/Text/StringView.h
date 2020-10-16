@@ -145,7 +145,7 @@ inline OutputStream& operator<<(OutputStream& stream, const nu::StringView& valu
 
 inline std::ostream& operator<<(std::ostream& os, const StringView& value) {
   for (StringLength i = 0; i < value.length(); ++i) {
-    os << static_cast<I8>(value[i]);
+    os.rdbuf()->sputc(value[i]);
   }
   return os;
 }

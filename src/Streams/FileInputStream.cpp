@@ -40,7 +40,7 @@ FileInputStream::HandleType FileInputStream::kInvalidHandle = INVALID_HANDLE_VAL
 FileInputStream::HandleType FileInputStream::kInvalidHandle = 0;
 #endif
 
-FileInputStream::FileInputStream(const FilePath& path) : m_path(path) {
+FileInputStream::FileInputStream(FilePath path) : m_path{std::move(path)} {
   openHandle();
 }
 
@@ -124,6 +124,7 @@ void FileInputStream::openHandle() {
   if (h != INVALID_HANDLE_VALUE) {
     m_handle = (void*)h;
   } else {
+    LOG(Error) << "Could not open path. " << zt;
     m_status = false;
   }
 #elif OS(POSIX)

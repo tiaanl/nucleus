@@ -9,17 +9,18 @@ namespace nu {
 
 class StringOutputStream : public OutputStream {
 public:
-  StringOutputStream() : OutputStream{Text} {}
+  StringOutputStream() : OutputStream{Text}, m_position{0} {}
   ~StringOutputStream() override = default;
 
-  const nu::DynamicString& getString() const {
-    return m_text;
+  nu::StringView data() const {
+    return m_data.view();
   }
 
   SizeType write(const void* buffer, SizeType size) override;
 
 private:
-  DynamicString m_text;
+  DynamicString m_data;
+  MemSize m_position;
 };
 
 }  // namespace nu

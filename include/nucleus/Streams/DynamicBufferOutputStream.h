@@ -22,7 +22,6 @@ public:
 private:
   SizeType write(const void* buffer, SizeType size) override;
 
-private:
   BufferType m_buffer;
   BufferType::SizeType m_currentPosition = 0;
 };

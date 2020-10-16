@@ -62,6 +62,10 @@ public:
     return Size;
   }
 
+  constexpr bool empty() const {
+    return m_length == 0;
+  }
+
   StringView view() const {
     return {m_data, m_length};
   }

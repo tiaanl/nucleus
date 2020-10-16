@@ -146,6 +146,11 @@ private:
   MemSize m_capacity = 0;
 };
 
+inline std::ostream& operator<<(std::ostream& os, const DynamicString& value) {
+  os.rdbuf()->sputn(value.data(), value.length());
+  return os;
+}
+
 }  // namespace nu
 
 #endif  // NUCLEUS_TEXT_DYNAMIC_STRING_H_

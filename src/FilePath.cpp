@@ -245,8 +245,8 @@ void FilePath::stripTrailingSeparators() {
   }
 }
 
-std::ostream& operator<<(std::ostream& os, const FilePath& filePath) {
-  os << filePath.getPath();
+std::ostream& operator<<(std::ostream& os, const FilePath& value) {
+  os.rdbuf()->sputn(value.getPath().data(), value.getPath().length());
   return os;
 }
 
