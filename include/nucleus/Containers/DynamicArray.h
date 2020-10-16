@@ -1,4 +1,3 @@
-
 #ifndef NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 #define NUCLEUS_CONTAINERS_DYNAMIC_ARRAY_H_
 
@@ -9,6 +8,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "nucleus/Containers/ArrayView.h"
 #include "nucleus/Logging.h"
 #include "nucleus/Types.h"
 
@@ -113,6 +113,10 @@ public:
   }
 
   // Get
+
+  ArrayView<ElementType> view() const {
+    return ArrayView<T>{m_data, m_size};
+  }
 
   ElementType* data() {
     return m_data;
