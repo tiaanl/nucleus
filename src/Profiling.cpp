@@ -23,7 +23,7 @@ auto ProfileMetrics::reset() -> void {
   m_root.children = nullptr;
 }
 
-auto ProfileMetrics::startBlock(const StringView& name) -> void {
+auto ProfileMetrics::startBlock(StringView) -> void {
   if (!g_globalProfileMetrics) {
     LOG(Fatal) << "No profile metrics defined. Create a Profiling object on the stack.";
     return;

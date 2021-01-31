@@ -1,6 +1,8 @@
 
 #include "nucleus/Streams/ArrayInputStream.h"
 
+#include <cstring>
+
 namespace nu {
 
 ArrayInputStream::ArrayInputStream(ArrayView<U8> buffer) : m_buffer{buffer} {}

@@ -2,6 +2,7 @@
 #ifndef NUCLEUS_TEXT_STATIC_STRING_H_
 #define NUCLEUS_TEXT_STATIC_STRING_H_
 
+#include "nucleus/Logging.h"
 #include "nucleus/Macros.h"
 #include "nucleus/Text/StringView.h"
 
@@ -90,7 +91,7 @@ public:
 
 private:
   auto initFrom(const Char* text, StringLength length) -> void {
-    m_length = std::min(Size, std::min(length, std::strlen(text)));
+    m_length = std::min(Size, std::min<StringLength>(length, std::strlen(text)));
     std::memcpy(m_data, text, m_length);
   }
 

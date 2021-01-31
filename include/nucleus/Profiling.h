@@ -38,7 +38,7 @@ public:
 
   auto reset() -> void;
 
-  auto startBlock(const StringView& name) -> void;
+  auto startBlock(StringView name) -> void;
   auto stopBlock() -> void;
 
   auto root() -> Block* {

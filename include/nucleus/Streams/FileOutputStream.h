@@ -5,7 +5,10 @@
 #include "nucleus/Config.h"
 #include "nucleus/FilePath.h"
 #include "nucleus/Streams/OutputStream.h"
+
+#if OS(WIN32)
 #include "nucleus/Win/WindowsMixin.h"
+#endif
 
 namespace nu {
 

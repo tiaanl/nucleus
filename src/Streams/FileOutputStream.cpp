@@ -63,7 +63,7 @@ FileOutputStream::SizeType FileOutputStream::write(const void* buffer, SizeType 
   return static_cast<SizeType>(bytesWritten);
 }
 #elif OS(POSIX)
-FileOutputStream::SizeType FileOutputStream::write(void*, SizeType) {
+FileOutputStream::SizeType FileOutputStream::write(const void*, SizeType) {
   //#error "Not implemented!"
   return 0;
 }

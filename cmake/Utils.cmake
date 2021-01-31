@@ -8,7 +8,7 @@ macro(nucleus_set_flags target)
         target_compile_definitions(${target} PUBLIC "-D_CRTDBG_MAP_ALLOC")
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
         # Enable warnings.
-        target_compile_options(${target} PUBLIC -Wall -Wextra -pedantic -Werror)
+        target_compile_options(${target} PUBLIC -Wall -Wextra -pedantic)  # -Werror
     endif ()
 endmacro(nucleus_set_flags)
 
