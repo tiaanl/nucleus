@@ -38,4 +38,6 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 
 #define NU_UNUSED(x)
 
+#define NU_NO_DISCARD [[nodiscard]]
+
 #endif  // NUCLEUS_MACROS_H_
