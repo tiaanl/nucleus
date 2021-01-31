@@ -8,12 +8,8 @@
 #elif OS(MACOSX)
 #include <mach/mach_time.h>
 #elif OS(POSIX)
-#include <time.h>
-#ifdef CLOCK_MONOTONIC
-#define CLOCKID CLOCK_MONOTONIC
-#else
-#define CLOCKID CLOCK_REALTIME
-#endif
+#include <ctime>
+#define CLOCK_ID CLOCK_MONOTONIC
 #else
 #error Operating system not supported
 #endif
@@ -35,9 +31,6 @@ struct FrequencyStorage {
     mach_timebase_info(&rate);
     ticksPerSecond = static_cast<F64>(rate.numer) * 1000.0 / static_cast<F64>(rate.denom);
 #elif OS(POSIX)
-    struct timespec rate;
-    clock_getres(CLOCKID, &rate);
-    ticksPerSecond = static_cast<F64>(rate.tv_nsec) * 1000.0;
 #else
 #error Operating system not supported
 #endif
@@ -57,9 +50,9 @@ F64 getCurrentHighPerformanceTick() {
   auto time = mach_absolute_time();
   return static_cast<F64>(time) / s_frequencyStorage.ticksPerSecond;
 #elif OS(POSIX)
-  struct timespec time;
-  clock_gettime(CLOCKID, &time);
-  return static_cast<F64>(time.tv_sec) * 1000000.0 + static_cast<F64>(time.tv_nsec);
+  timespec time = {};
+  clock_gettime(CLOCK_ID, &time);
+  return static_cast<F64>(time.tv_sec * 1.0e9 + time.tv_nsec) / 1000.0;
 #else
 #error Operating system not supported
 #endif

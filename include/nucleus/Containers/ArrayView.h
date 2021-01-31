@@ -10,10 +10,11 @@ class ArrayView {
 public:
   constexpr ArrayView() : m_data{nullptr}, m_size{0} {}
 
-  constexpr ArrayView(T* data, MemSize size) : m_data{data}, m_size{size} {}
+  constexpr ArrayView(const T* data, MemSize size) : m_data{data}, m_size{size} {}
 
   template <typename ContainerType>
-  constexpr ArrayView(const ContainerType& container) : m_data(container.data()), m_size(container.size()) {}
+  constexpr ArrayView(const ContainerType& container)
+    : m_data(container.data()), m_size(container.size()) {}
 
   constexpr const T* data() const {
     return m_data;
