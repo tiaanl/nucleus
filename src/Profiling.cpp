@@ -1,6 +1,6 @@
 #include "nucleus/Profiling.h"
 
-#include "nucleus/HighPerformanceTimer.h"
+#include "nucleus/HighResolutionTimer.h"
 #include "nucleus/Logging.h"
 
 namespace nu {
@@ -52,7 +52,7 @@ auto ProfileMetrics::startBlock(StringView) -> void {
 }
 
 auto ProfileMetrics::stopBlock() -> void {
-  m_current->stopTime = nu::getCurrentHighPerformanceTick();
+  m_current->stopTime = nu::getTimeInMicroseconds();
 
   if (m_current->prev) {
     m_current = m_current->prev;

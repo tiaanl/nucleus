@@ -1,4 +1,4 @@
-#include "nucleus/HighPerformanceTimer.h"
+#include "nucleus/HighResolutionTimer.h"
 
 #include "nucleus/Config.h"
 #include "nucleus/Logging.h"
@@ -41,7 +41,7 @@ FrequencyStorage s_frequencyStorage;
 
 }  // namespace
 
-F64 getCurrentHighPerformanceTick() {
+F64 getTimeInMicroseconds() {
 #if OS(WIN)
   LARGE_INTEGER counter;
   QueryPerformanceCounter(&counter);

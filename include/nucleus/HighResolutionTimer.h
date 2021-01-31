@@ -6,8 +6,8 @@
 
 namespace nu {
 
-// Return the current CPU tick in microseconds.
-F64 getCurrentHighPerformanceTick();
+// Return a time since an unspecified time in microseconds.
+F64 getTimeInMicroseconds();
 
 }  // namespace nu
 

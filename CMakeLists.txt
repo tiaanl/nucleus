@@ -18,7 +18,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Filter.h
-    include/nucleus/HighPerformanceTimer.h
+        include/nucleus/HighResolutionTimer.h
     include/nucleus/Logging.h
     include/nucleus/Macros.h
     include/nucleus/Memory/RefCountedPtr.h
@@ -53,7 +53,7 @@ set(nucleus_HEADER_FILES
 set(nucleus_SOURCE_FILES
     src/Debugger.cpp
     src/FilePath.cpp
-    src/HighPerformanceTimer.cpp
+        src/HighResolutionTimer.cpp
     src/Logging.cpp
     src/Parser/Tokenizer.cpp
     src/Profiling.cpp
@@ -82,7 +82,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
     tests/FilePathTests.cpp
-    tests/HighPerformanceTimerTests.cpp
+        tests/HighResolutionTimerTests.cpp
     tests/LoggingTests.cpp
     tests/LoggingTests.cpp
     tests/Main.cpp
