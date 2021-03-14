@@ -84,6 +84,7 @@ LogEntry::~LogEntry() {
 #elif OS(MACOSX)
     asm("int3");
 #endif
+    exit(1);
   }
 }
 
