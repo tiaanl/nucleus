@@ -101,4 +101,10 @@ private:
 
 }  // namespace nu
 
+template <MemSize Size>
+std::ostream& operator<<(std::ostream& os, const nu::StaticString<Size>& value) {
+  os << value.view();
+  return os;
+}
+
 #endif  // NUCLEUS_TEXT_STATIC_STRING_H_
