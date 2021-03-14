@@ -174,13 +174,32 @@ public:
     swap(left.deleted_count_, right.deleted_count_);
   }
 
+  class SetResult {
+  public:
+    NU_NO_DISCARD bool is_new() const {
+      return is_new_;
+    }
+
+    T& item() const {
+      return *item_;
+    }
+
+  private:
+    friend HashTable;
+
+    SetResult(bool is_new, T* item) : is_new_{is_new}, item_{item} {}
+
+    bool is_new_;
+    T* item_;
+  };
+
   // Returns true if a new item was inserted.
   template <typename U = T>
-  bool set(U&& item) {
+  SetResult set(U&& item) {
     auto& bucket = lookup_for_writing(item);
     if (bucket.used) {
       (*bucket.slot()) = std::forward<U>(item);
-      return false;
+      return {false, bucket.slot()};
     }
 
     new (bucket.slot()) T(std::forward<U>(item));
@@ -190,7 +209,7 @@ public:
       --deleted_count_;
     }
     ++size_;
-    return true;
+    return {true, bucket.slot()};
   }
 
   template <typename Finder>

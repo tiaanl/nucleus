@@ -43,8 +43,35 @@ public:
     return items_.capacity();
   }
 
-  bool set(KeyType key, ValueType value) {
-    return items_.set({std::move(key), std::move(value)});
+  class SetResult {
+  public:
+    NU_NO_DISCARD bool is_new() const {
+      return is_new_;
+    }
+
+    KeyType& key() {
+      return *key_;
+    }
+
+    ValueType& value() {
+      return *value_;
+    }
+
+  private:
+    friend HashMap;
+
+    SetResult(bool is_new, KeyType* key, ValueType* value)
+      : is_new_{is_new}, key_{key}, value_{value} {}
+
+    bool is_new_;
+    KeyType* key_;
+    ValueType* value_;
+  };
+
+  SetResult set(const KeyType& key, ValueType value) {
+    auto result = items_.set({std::move(key), std::move(value)});
+
+    return {result.is_new(), &result.item().key, &result.item().value};
   }
 
   bool contains_key(const KeyType& key) const {
@@ -61,7 +88,7 @@ public:
 
   Iterator find(const KeyType& key) {
     auto hash = Hash<KeyType>::hashed(key);
-    return items_.find(hash, [&](auto& entry) {
+    return items_.find(hash, [&](const auto& entry) {
       return key == entry.key;
     });
   }

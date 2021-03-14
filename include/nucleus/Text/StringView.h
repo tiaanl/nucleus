@@ -1,6 +1,4 @@
-
-#ifndef NUCLEUS_TEXT_STRING_VIEW_H_
-#define NUCLEUS_TEXT_STRING_VIEW_H_
+#pragma once
 
 #include <algorithm>
 #include <cstring>
@@ -10,6 +8,7 @@
 #include "nucleus/Streams/OutputStream.h"
 #include "nucleus/Text/CharTraits.h"
 #include "nucleus/Types.h"
+#include "nucleus/hash.h"
 
 namespace nu {
 
@@ -150,12 +149,10 @@ inline std::ostream& operator<<(std::ostream& os, const StringView& value) {
   return os;
 }
 
-}  // namespace nu
-
 template <>
-struct std::hash<nu::StringView> {
-  std::size_t operator()(const nu::StringView& value) const {
-    std::size_t hash = 7;
+struct Hash<StringView> {
+  static HashedValue hashed(const StringView& value) {
+    HashedValue hash = 7;
     for (StringLength i = 0; i < value.length(); ++i) {
       hash = hash * 31 + value[i];
     }
@@ -163,4 +160,4 @@ struct std::hash<nu::StringView> {
   }
 };
 
-#endif  // NUCLEUS_TEXT_STRING_VIEW_H_
+}  // namespace nu

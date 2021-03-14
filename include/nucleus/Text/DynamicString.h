@@ -37,6 +37,14 @@ public:
     free();
   }
 
+  friend bool operator==(const DynamicString& left, const DynamicString& right) {
+    return left.view() == right.view();
+  }
+
+  friend bool operator!=(const DynamicString& left, const DynamicString& right) {
+    return left.view() != right.view();
+  }
+
   DynamicString& operator=(const DynamicString& other) {
     ensureAllocated(other.m_length, false);
     std::memcpy(m_data, other.m_data, other.m_length);
@@ -150,6 +158,13 @@ inline std::ostream& operator<<(std::ostream& os, const DynamicString& value) {
   os.rdbuf()->sputn(value.data(), value.length());
   return os;
 }
+
+template <>
+struct Hash<DynamicString> {
+  static HashedValue hashed(const DynamicString& value) {
+    return Hash<decltype(value.view())>::hashed(value.view());
+  }
+};
 
 }  // namespace nu
 
