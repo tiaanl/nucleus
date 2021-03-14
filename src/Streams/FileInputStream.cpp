@@ -60,8 +60,9 @@ FileInputStream::SizeType FileInputStream::getSize() {
   return fileSize;
 #elif OS(POSIX)
   long size = 0;
-  FILE* fp = fopen(m_path.getPath().data(), "rb");
-  if (fp != 0) {
+  auto zt = zeroTerminated(m_path.getPath());
+  FILE* fp = fopen(zt.data(), "rb");
+  if (fp != nullptr) {
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
     fclose(fp);
@@ -132,6 +133,7 @@ void FileInputStream::openHandle() {
   if (f != -1) {
     m_handle = f;
   } else {
+    LOG(Error) << "Could not open path. " << zt;
     m_status = false;
   }
 #endif
