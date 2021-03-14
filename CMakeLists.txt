@@ -15,6 +15,8 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/BitSet.h
     include/nucleus/Containers/DynamicArray.h
     include/nucleus/Containers/StaticArray.h
+    include/nucleus/Containers/hash_map.h
+    include/nucleus/Containers/hash_table.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Filter.h
@@ -48,6 +50,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Text/Utils.h
     include/nucleus/Types.h
     include/nucleus/Win/WindowsMixin.h
+    include/nucleus/hash.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -84,6 +87,8 @@ set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
+    tests/Containers/hash_map_tests.cpp
+    tests/Containers/hash_table_tests.cpp
     tests/FilePathTests.cpp
     tests/HighResolutionTimerTests.cpp
     tests/LoggingTests.cpp
@@ -98,6 +103,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/StringPoolTests.cpp
     tests/Text/StringViewTests.cpp
     tests/Text/UtilsTests.cpp
+    tests/hash_tests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
