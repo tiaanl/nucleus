@@ -18,7 +18,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Filter.h
-        include/nucleus/HighResolutionTimer.h
+    include/nucleus/HighResolutionTimer.h
     include/nucleus/Logging.h
     include/nucleus/Macros.h
     include/nucleus/Memory/RefCountedPtr.h
@@ -28,8 +28,8 @@ set(nucleus_HEADER_FILES
     include/nucleus/Profiling.h
     include/nucleus/RefCounted.h
     include/nucleus/SourceLocation.h
-    include/nucleus/Streams/ConsoleOutputStream.h
     include/nucleus/Streams/ArrayInputStream.h
+    include/nucleus/Streams/ConsoleOutputStream.h
     include/nucleus/Streams/DynamicBufferOutputStream.h
     include/nucleus/Streams/FileInputStream.h
     include/nucleus/Streams/FileOutputStream.h
@@ -53,12 +53,12 @@ set(nucleus_HEADER_FILES
 set(nucleus_SOURCE_FILES
     src/Debugger.cpp
     src/FilePath.cpp
-        src/HighResolutionTimer.cpp
+    src/HighResolutionTimer.cpp
     src/Logging.cpp
     src/Parser/Tokenizer.cpp
     src/Profiling.cpp
-    src/Streams/ConsoleOutputStream.cpp
     src/Streams/ArrayInputStream.cpp
+    src/Streams/ConsoleOutputStream.cpp
     src/Streams/DynamicBufferOutputStream.cpp
     src/Streams/FileInputStream.cpp
     src/Streams/FileOutputStream.cpp
@@ -77,15 +77,17 @@ nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 find_package(Catch2 CONFIG REQUIRED)
 
+add_library(testsMain tests/TestsMain.cpp)
+target_link_libraries(testsMain PUBLIC Catch2::Catch2)
+
 set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
     tests/FilePathTests.cpp
-        tests/HighResolutionTimerTests.cpp
+    tests/HighResolutionTimerTests.cpp
     tests/LoggingTests.cpp
     tests/LoggingTests.cpp
-    tests/Main.cpp
     tests/Memory/ScopedPtrTests.cpp
     tests/Memory/ScopedRefPtrTests.cpp
     tests/RefCountedTests.cpp
@@ -99,4 +101,4 @@ set(nucleusTests_SOURCE_FILES
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
-target_link_libraries(nucleusTests PRIVATE nucleus Catch2::Catch2)
+target_link_libraries(nucleusTests nucleus testsMain)
