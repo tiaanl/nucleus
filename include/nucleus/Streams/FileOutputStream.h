@@ -6,7 +6,7 @@
 #include "nucleus/FilePath.h"
 #include "nucleus/Streams/OutputStream.h"
 
-#if OS(WIN32)
+#if OS(WIN)
 #include "nucleus/Win/WindowsMixin.h"
 #endif
 
