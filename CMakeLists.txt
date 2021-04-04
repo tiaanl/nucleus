@@ -51,6 +51,8 @@ set(nucleus_HEADER_FILES
     include/nucleus/Types.h
     include/nucleus/Win/WindowsMixin.h
     include/nucleus/hash.h
+    include/nucleus/message_loop/message_loop.h
+    include/nucleus/message_loop/task.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -74,6 +76,7 @@ set(nucleus_SOURCE_FILES
     src/Text/DynamicString.cpp
     src/Text/StringView.cpp
     src/Text/Utils.cpp
+    src/message_loop/message_loop.cpp
     )
 
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
@@ -104,6 +107,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/StringViewTests.cpp
     tests/Text/UtilsTests.cpp
     tests/hash_tests.cpp
+    tests/message_loop/message_loop_tests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})

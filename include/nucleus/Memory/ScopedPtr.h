@@ -22,7 +22,7 @@ public:
   }
 
   template <typename U>
-  explicit ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr{other.release()} {}
+  ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr{other.release()} {}
 
   ~ScopedPtr() {
     // No need to check for `nullptr` before `delete`.
