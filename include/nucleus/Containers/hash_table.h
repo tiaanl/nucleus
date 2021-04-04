@@ -72,7 +72,7 @@ private:
   };
 
 public:
-  static constexpr MemSize k_min_capacity = 4;
+  static constexpr MemSize MIN_CAPACITY = 4;
 
   using Iterator = HashTableIterator<HashTable, T, Bucket>;
   using ConstIterator = HashTableIterator<const HashTable, const T, const Bucket>;
@@ -342,7 +342,7 @@ private:
   }
 
   void rehash(MemSize new_capacity) {
-    new_capacity = std::max(new_capacity, k_min_capacity);
+    new_capacity = std::max(new_capacity, MIN_CAPACITY);
 
     Bucket* old_buckets = buckets_;
     MemSize old_capacity = capacity_;
