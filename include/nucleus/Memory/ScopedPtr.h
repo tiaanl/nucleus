@@ -15,7 +15,7 @@ public:
 
   constexpr ScopedPtr() : m_ptr{nullptr} {}
 
-  constexpr explicit ScopedPtr(T* other) : m_ptr{other} {}
+  constexpr ScopedPtr(T* other) : m_ptr{other} {}
 
   ScopedPtr(ScopedPtr&& other) noexcept : m_ptr{other.m_ptr} {
     other.m_ptr = nullptr;
@@ -34,6 +34,10 @@ public:
     other.m_ptr = nullptr;
 
     return *this;
+  }
+
+  explicit operator bool() const {
+    return m_ptr != nullptr;
   }
 
   bool operator==(const ScopedPtr& other) const {

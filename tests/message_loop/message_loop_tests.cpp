@@ -42,7 +42,8 @@ TEST_CASE("MessageLoop") {
       NU_DELETE_COPY_AND_MOVE(Task2);
 
     public:
-      explicit Task2(MessageLoop* message_loop, U32* value) : message_loop_{message_loop}, value_{value} {}
+      explicit Task2(MessageLoop* message_loop, U32* value)
+        : message_loop_{message_loop}, value_{value} {}
 
       void execute() override {
         *value_ = 2;

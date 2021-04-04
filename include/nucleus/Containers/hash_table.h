@@ -193,7 +193,6 @@ public:
     T* item_;
   };
 
-  // Returns true if a new item was inserted.
   template <typename U = T>
   SetResult set(U&& item) {
     auto& bucket = lookup_for_writing(item);

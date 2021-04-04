@@ -52,7 +52,10 @@ set(nucleus_HEADER_FILES
     include/nucleus/Win/WindowsMixin.h
     include/nucleus/hash.h
     include/nucleus/message_loop/message_loop.h
-    include/nucleus/message_loop/task.h
+    include/nucleus/message_loop/message_pump.h
+    include/nucleus/task.h
+    include/nucleus/scoped_thread_local_ptr.h
+    include/nucleus/threading/thread.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -77,6 +80,8 @@ set(nucleus_SOURCE_FILES
     src/Text/StringView.cpp
     src/Text/Utils.cpp
     src/message_loop/message_loop.cpp
+    src/message_loop/message_pump.cpp
+    src/threading/thread.cpp
     )
 
 nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
@@ -85,6 +90,9 @@ find_package(Catch2 CONFIG REQUIRED)
 
 add_library(testsMain tests/TestsMain.cpp)
 target_link_libraries(testsMain PUBLIC Catch2::Catch2)
+
+# TODO: Only if posix
+target_link_libraries(nucleus PRIVATE pthread)
 
 set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
@@ -108,6 +116,8 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/UtilsTests.cpp
     tests/hash_tests.cpp
     tests/message_loop/message_loop_tests.cpp
+    tests/thread_local_tests.cpp
+    tests/threading/thread_tests.cpp
     )
 
 nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})

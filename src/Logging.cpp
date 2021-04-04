@@ -5,6 +5,7 @@
 
 #include "nucleus/Synchronization/AutoLock.h"
 #include "nucleus/Synchronization/Lock.h"
+#include "nucleus/threading/thread.h"
 
 #if OS(WIN)
 #include "nucleus/Win/WindowsMixin.h"
@@ -50,7 +51,7 @@ LogEntry::~LogEntry() {
     outStr << '[';
     outStr.fill('0');
     outStr.width(4);
-    //        outStr << std::hex << std::this_thread::get_id();
+    outStr << current_thread::id();
     outStr << "] ";
   }
 
