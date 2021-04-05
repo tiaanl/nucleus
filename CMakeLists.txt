@@ -53,9 +53,10 @@ set(nucleus_HEADER_FILES
     include/nucleus/hash.h
     include/nucleus/message_loop/message_loop.h
     include/nucleus/message_loop/message_pump.h
+    include/nucleus/threading/scoped_thread_local_ptr.h
     include/nucleus/task.h
-    include/nucleus/scoped_thread_local_ptr.h
     include/nucleus/threading/thread.h
+    include/nucleus/threading/thread_local.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -92,7 +93,10 @@ add_library(testsMain tests/TestsMain.cpp)
 target_link_libraries(testsMain PUBLIC Catch2::Catch2)
 
 # TODO: Only if posix
-target_link_libraries(nucleus PRIVATE pthread)
+if (WIN32)
+else ()
+    target_link_libraries(nucleus PRIVATE pthread)
+endif ()
 
 set(nucleusTests_SOURCE_FILES
     tests/Containers/BitSetTests.cpp
@@ -116,7 +120,8 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/UtilsTests.cpp
     tests/hash_tests.cpp
     tests/message_loop/message_loop_tests.cpp
-    tests/thread_local_tests.cpp
+    tests/threading/scoped_thread_local_ptr_tests.cpp
+    tests/threading/thread_local_tests.cpp
     tests/threading/thread_tests.cpp
     )
 

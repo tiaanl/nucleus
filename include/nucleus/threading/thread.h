@@ -5,13 +5,18 @@
 #include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/task.h"
 
-#if OS(POSIX)
+#if OS(WIN)
+#include "nucleus/Win/WindowsMixin.h"
+#elif OS(POSIX)
 #include <pthread.h>
 #endif
 
 namespace nu {
 
-#if OS(POSIX)
+#if OS(WIN)
+using ThreadId = DWORD;
+using ThreadHandle = HANDLE;
+#elif OS(POSIX)
 using ThreadId = pid_t;
 using ThreadHandle = pthread_t;
 #endif
@@ -27,11 +32,27 @@ class JoinHandle {
 
 public:
   explicit JoinHandle(ThreadHandle handle) : handle_{handle} {}
-  ~JoinHandle();
+
+  JoinHandle(JoinHandle&& other) noexcept : handle_{other.handle_} {
+    other.handle_ = INVALID_THREAD_HANDLE;
+  }
+
+  ~JoinHandle() {
+    join();
+  }
+
+  JoinHandle& operator=(JoinHandle&& other) noexcept {
+    handle_ = other.handle_;
+    other.handle_ = INVALID_THREAD_HANDLE;
+
+    return *this;
+  }
 
   void join();
 
 private:
+  static constexpr ThreadHandle INVALID_THREAD_HANDLE = std::numeric_limits<ThreadHandle>::max();
+
   ThreadHandle handle_;
 };
 

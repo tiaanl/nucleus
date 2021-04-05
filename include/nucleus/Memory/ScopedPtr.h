@@ -13,7 +13,7 @@ class ScopedPtr {
 public:
   NU_DELETE_COPY(ScopedPtr);
 
-  constexpr ScopedPtr() : m_ptr{nullptr} {}
+  constexpr ScopedPtr() noexcept : m_ptr{nullptr} {}
 
   constexpr ScopedPtr(T* other) : m_ptr{other} {}
 
