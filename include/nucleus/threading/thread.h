@@ -1,9 +1,10 @@
 #pragma once
 
+#include <limits>
+
 #include "nucleus/Config.h"
 #include "nucleus/Macros.h"
-#include "nucleus/Memory/ScopedPtr.h"
-#include "nucleus/task.h"
+#include "nucleus/function.h"
 
 #if OS(WIN)
 #include "nucleus/Win/WindowsMixin.h"
@@ -56,6 +57,6 @@ private:
   ThreadHandle handle_;
 };
 
-NU_NO_DISCARD JoinHandle spawn_thread(ScopedPtr<Task> task);
+NU_NO_DISCARD JoinHandle spawn_thread(Function<void()> function);
 
 }  // namespace nu

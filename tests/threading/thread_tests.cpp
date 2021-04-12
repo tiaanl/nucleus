@@ -6,21 +6,18 @@
 namespace nu {
 
 TEST_CASE("Thread") {
-  class SetNewValueTask : public Task {
-  public:
-    void execute() override {
-      LOG(Info) << "In thread";
-    }
-  };
-
   SECTION("basic") {
     LOG(Info) << "main thread";
-    auto handle = spawn_thread(new SetNewValueTask);
+    auto handle = spawn_thread([]() {
+      LOG(Info) << "In thread";
+    });
     LOG(Info) << "After thread";
   }
 
   SECTION("can join non running thread") {
-    auto handle = spawn_thread(new SetNewValueTask);
+    auto handle = spawn_thread([]() {
+      LOG(Info) << "In thread";
+    });
     handle.join();
     LOG(Info) << "After thread";
   }

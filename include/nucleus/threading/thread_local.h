@@ -36,26 +36,26 @@ inline void* get_storage(StorageId id) {
 }
 
 #elif OS(POSIX)
-using StorageId = pthread_id_t;
+using StorageId = pthread_key_t;
 
 inline StorageId create_storage() {
   StorageId id;
   // TODO: Check for error.
-  pthread_id_create(&id, nullptr);
+  pthread_key_create(&id, nullptr);
   return id;
 }
 
 inline StorageId create_storage(void* value) {
   StorageId id;
   // TODO: Check for error.
-  pthread_id_create(&id, nullptr);
+  pthread_key_create(&id, nullptr);
   pthread_setspecific(id, value);
   return id;
 }
 
 inline void delete_storage(StorageId id) {
   // TODO: Check for error.
-  pthread_id_delete(id);
+  pthread_key_delete(id);
 }
 
 inline void set_storage(StorageId id, void* value) {

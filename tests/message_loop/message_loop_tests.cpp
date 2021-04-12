@@ -4,18 +4,6 @@
 
 namespace nu {
 
-class AddOneTask : public Task {
-public:
-  explicit AddOneTask(U32* value) : value_{value} {}
-
-  void execute() override {
-    *value_ += 1;
-  }
-
-private:
-  U32* value_;
-};
-
 TEST_CASE("MessageLoop") {
   MessageLoop ml;
 
@@ -32,47 +20,22 @@ TEST_CASE("MessageLoop") {
 
   SECTION("executes tasks") {
     U32 value = 10;
-    ml.post_task(makeScopedPtr<AddOneTask>(&value));
+    ml.post_task([&value]() {
+      value += 1;
+    });
     ml.run_until_idle();
     REQUIRE(value == 11);
   }
 
   SECTION("executes chain until it quits") {
-    class Task2 : public Task {
-      NU_DELETE_COPY_AND_MOVE(Task2);
-
-    public:
-      explicit Task2(MessageLoop* message_loop, U32* value)
-        : message_loop_{message_loop}, value_{value} {}
-
-      void execute() override {
-        *value_ = 2;
-        message_loop_->post_quit();
-      }
-
-    private:
-      MessageLoop* message_loop_;
-      U32* value_;
-    };
-
-    class Task1 : public Task {
-      NU_DELETE_COPY_AND_MOVE(Task1);
-
-    public:
-      Task1(MessageLoop* message_loop, U32* value) : message_loop_{message_loop}, value_{value} {}
-
-      void execute() override {
-        *value_ = 1;
-        message_loop_->post_task(makeScopedPtr<Task2>(message_loop_, value_));
-      }
-
-    private:
-      MessageLoop* message_loop_;
-      U32* value_;
-    };
-
     U32 value = 0;
-    ml.post_task(makeScopedPtr<Task1>(&ml, &value));
+    ml.post_task([p = &ml, v = &value]() {
+      *v = 1;
+      p->post_task([p, v]() {
+        *v = 2;
+        p->post_quit();
+      });
+    });
     ml.run();
     REQUIRE(value == 2);
   }

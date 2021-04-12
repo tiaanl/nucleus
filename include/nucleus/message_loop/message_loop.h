@@ -4,8 +4,8 @@
 
 #include "nucleus/Macros.h"
 #include "nucleus/Memory/ScopedPtr.h"
+#include "nucleus/function.h"
 #include "nucleus/message_loop/message_pump.h"
-#include "nucleus/task.h"
 
 namespace nu {
 
@@ -16,10 +16,10 @@ public:
   explicit MessageLoop(ScopedPtr<MessagePump> pump = {});
 
   // Post a task to the queue to be executed.
-  void post_task(ScopedPtr<Task> task);
+  void post_task(Function<void()> task);
 
-  // Post a task to the queue, that when execute, will notify the `MessageLoop` to quit when it is
-  // idle.
+  // Post a task to the queue, that when execute, will notify the `MessageLoop` to quit when it
+  // is idle.
   void post_quit();
 
   // Continue executing tasks until the queue is empty.
@@ -29,20 +29,6 @@ public:
   void run();
 
 private:
-  class QuitTask : public Task {
-    NU_DELETE_COPY_AND_MOVE(QuitTask);
-
-  public:
-    explicit QuitTask(MessageLoop* message_loop) : message_loop_{message_loop} {}
-
-    void execute() override {
-      message_loop_->quit_on_idle_ = true;
-    }
-
-  private:
-    MessageLoop* message_loop_;
-  };
-
   // Override: MessageLoopDelegate
   bool run_task() override;
 
@@ -50,7 +36,7 @@ private:
 
   ScopedPtr<MessagePump> pump_;
   bool quit_on_idle_ = false;
-  std::deque<ScopedPtr<Task>> queue_;
+  std::deque<Function<void()>> queue_;
 };
 
 }  // namespace nu

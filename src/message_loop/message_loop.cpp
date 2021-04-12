@@ -8,15 +8,17 @@ MessageLoop::MessageLoop(ScopedPtr<MessagePump> pump) : pump_{std::move(pump)} {
   }
 }
 
-void MessageLoop::post_task(ScopedPtr<Task> task) {
-  queue_.emplace_back(std::move(task));
+void MessageLoop::post_task(Function<void()> function) {
+  queue_.emplace_back(std::move(function));
 
   // Notify the pump that we have tasks to execute.
   pump_->schedule_task();
 }
 
 void MessageLoop::post_quit() {
-  post_task(makeScopedPtr<QuitTask>(this));
+  post_task([this]() {
+    quit_on_idle_ = true;
+  });
 }
 
 void MessageLoop::run_until_idle() {
@@ -33,7 +35,7 @@ bool MessageLoop::run_task() {
     auto task_to_execute = std::move(queue_.front());
     queue_.pop_front();
 
-    task_to_execute->execute();
+    task_to_execute();
   }
 
   if (quit_on_idle_ && queue_.empty()) {

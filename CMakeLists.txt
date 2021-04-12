@@ -57,6 +57,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/task.h
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
+    include/nucleus/function.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -118,6 +119,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Text/StringPoolTests.cpp
     tests/Text/StringViewTests.cpp
     tests/Text/UtilsTests.cpp
+    tests/function_tests.cpp
     tests/hash_tests.cpp
     tests/message_loop/message_loop_tests.cpp
     tests/threading/scoped_thread_local_ptr_tests.cpp

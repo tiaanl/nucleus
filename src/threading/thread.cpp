@@ -10,7 +10,7 @@ namespace nu {
 namespace {
 
 struct ThreadContext {
-  ScopedPtr<Task> task;
+  Function<void()> function;
 };
 
 // static
@@ -20,8 +20,8 @@ DWORD WINAPI thread_main(void* c) {
 void* thread_main(void* c) {
 #endif
   auto thread = reinterpret_cast<ThreadContext*>(c);
-  thread->task->execute();
-  thread->task.reset();
+  thread->function();
+  thread->function = nullptr;
 #if OS(WIN)
   return 0;
 #elif OS(POSIX)
@@ -56,8 +56,8 @@ void JoinHandle::join() {
 #endif
 }
 
-JoinHandle spawn_thread(ScopedPtr<Task> task) {
-  auto c = makeScopedPtr<ThreadContext>(std::move(task));
+JoinHandle spawn_thread(Function<void()> function) {
+  auto c = makeScopedPtr<ThreadContext>(std::move(function));
   ThreadHandle handle;
 #if OS(WIN)
   handle = CreateThread(nullptr, 0, &thread_main, c.release(), 0, nullptr);
