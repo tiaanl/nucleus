@@ -9,7 +9,8 @@ MessageLoop::MessageLoop(ScopedPtr<MessagePump> pump) : pump_{std::move(pump)} {
 }
 
 void MessageLoop::post_task(Function<void()> function) {
-  queue_.emplace_back(std::move(function));
+  std::lock_guard<std::mutex> locker(incoming_tasks_lock_);
+  incoming_tasks_.emplace_back(std::move(function));
 
   // Notify the pump that we have tasks to execute.
   pump_->schedule_task();
@@ -30,16 +31,21 @@ void MessageLoop::run() {
   run_internal();
 }
 
-bool MessageLoop::run_task() {
-  if (!queue_.empty()) {
-    auto task_to_execute = std::move(queue_.front());
-    queue_.pop_front();
+bool MessageLoop::progress() {
+  std::vector<Function<void()>> tasks_to_run;
 
-    task_to_execute();
+  {
+    std::lock_guard<std::mutex> locker{incoming_tasks_lock_};
+    incoming_tasks_.swap(tasks_to_run);
   }
 
-  if (quit_on_idle_ && queue_.empty()) {
+  // If we fetched the tasks from the incoming queue and it's empty, then we are idle.
+  if (quit_on_idle_ && tasks_to_run.empty()) {
     return false;
+  }
+
+  for (const auto& task : tasks_to_run) {
+    task();
   }
 
   return true;

@@ -54,6 +54,9 @@ void JoinHandle::join() {
   void* r;
   pthread_join(handle_, &r);
 #endif
+
+  // When the thread exit's, the thread handle is not valid any more.
+  handle_ = INVALID_THREAD_HANDLE;
 }
 
 JoinHandle spawn_thread(Function<void()> function) {

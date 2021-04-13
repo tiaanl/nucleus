@@ -1,6 +1,7 @@
 #pragma once
 
-#include <deque>
+#include <mutex>
+#include <vector>
 
 #include "nucleus/Macros.h"
 #include "nucleus/Memory/ScopedPtr.h"
@@ -30,13 +31,15 @@ public:
 
 private:
   // Override: MessageLoopDelegate
-  bool run_task() override;
+  bool progress() override;
 
   void run_internal();
 
   ScopedPtr<MessagePump> pump_;
   bool quit_on_idle_ = false;
-  std::deque<Function<void()>> queue_;
+
+  std::mutex incoming_tasks_lock_;
+  std::vector<Function<void()>> incoming_tasks_;
 };
 
 }  // namespace nu

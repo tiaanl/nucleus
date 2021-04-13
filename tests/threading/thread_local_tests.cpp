@@ -8,16 +8,17 @@ namespace nu {
 
 TEST_CASE("ThreadLocal") {
   SECTION("basic") {
-    auto id = current_thread::create_storage(nullptr);
-    DynamicArray<JoinHandle> handles;
-    for (auto i = 0; i < 20; ++i) {
-      auto handle = spawn_thread([id]() {
-        current_thread::set_storage(id, (void*)&id);
-        LOG(Info) << (void*)&id;
-        REQUIRE(current_thread::get_storage(id) == (void*)&id);
-      });
-      handles.emplaceBack(std::move(handle));
+    auto id = current_thread::create_storage();
+
+    nu::DynamicArray<JoinHandle> handles;
+    for (int i = 0; i < 30; ++i) {
+      handles.emplaceBack(spawn_thread([id, i]() {
+        auto value = (const void*)(MemSize)i;
+        current_thread::set_storage(id, value);
+        REQUIRE(current_thread::get_storage(id) == value);
+      }));
     }
+
     for (auto& handle : handles) {
       handle.join();
     }

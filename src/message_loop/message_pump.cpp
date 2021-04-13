@@ -6,7 +6,7 @@ void MessagePumpDefault::schedule_task() {}
 
 void MessagePumpDefault::run(Delegate* delegate) {
   for (;;) {
-    bool has_more_work = delegate->run_task();
+    bool has_more_work = delegate->progress();
 
     if (!has_more_work) {
       break;

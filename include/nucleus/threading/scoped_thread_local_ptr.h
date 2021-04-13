@@ -12,7 +12,9 @@ class ScopedThreadLocalPtr {
 public:
   ScopedThreadLocalPtr() : key_{current_thread::create_storage()} {}
 
-  ScopedThreadLocalPtr(T* ptr) : key_{current_thread::create_storage(ptr)} {}
+  ScopedThreadLocalPtr(T* ptr) : key_{current_thread::create_storage()} {
+    current_thread::set_storage(key_, ptr);
+  }
 
   ~ScopedThreadLocalPtr() {
     const T* value = get();

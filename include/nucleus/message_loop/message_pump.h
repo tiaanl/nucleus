@@ -11,7 +11,7 @@ public:
     virtual ~Delegate() = default;
 
     // Returns true if there are more tasks to be run.
-    virtual bool run_task() = 0;
+    virtual bool progress() = 0;
   };
 
   virtual ~MessagePump() = default;
