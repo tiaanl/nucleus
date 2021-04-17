@@ -14,7 +14,7 @@ class MessageLoop : public MessagePump::Delegate {
   NU_DELETE_COPY_AND_MOVE(MessageLoop);
 
 public:
-  explicit MessageLoop(ScopedPtr<MessagePump> pump = {});
+  explicit MessageLoop(MessagePump* pump);
 
   // Post a task to the queue to be executed.
   void post_task(Function<void()> task);
@@ -35,7 +35,7 @@ private:
 
   void run_internal();
 
-  ScopedPtr<MessagePump> pump_;
+  MessagePump* pump_;
   bool quit_on_idle_ = false;
 
   std::mutex incoming_tasks_lock_;

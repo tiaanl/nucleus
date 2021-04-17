@@ -76,6 +76,7 @@ inline FilePath operator/(const FilePath& left, const FilePath& right) {
 }
 
 FilePath getCurrentWorkingDirectory();
+FilePath getExecutablePath();
 bool exists(const FilePath& path);
 DynamicArray<FilePath> findAllFilesIn(const FilePath& start);
 

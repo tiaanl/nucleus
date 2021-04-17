@@ -262,6 +262,17 @@ FilePath getCurrentWorkingDirectory() {
 #endif
 }
 
+FilePath getExecutablePath() {
+#if OS(POSIX)
+  char buf[PATH_MAX] = {0};
+  auto length = readlink("/proc/self/exe", buf, sizeof(buf));
+  buf[length] = '\0';
+  return FilePath{buf};
+#else
+#error Unknown OS
+#endif
+}
+
 bool exists(const FilePath& path) {
 #if OS(POSIX)
   return access(path.getPath().data(), F_OK) != -1;

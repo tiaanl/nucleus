@@ -2,11 +2,7 @@
 
 namespace nu {
 
-MessageLoop::MessageLoop(ScopedPtr<MessagePump> pump) : pump_{std::move(pump)} {
-  if (!pump_) {
-    pump_ = makeScopedPtr<MessagePumpDefault>();
-  }
-}
+MessageLoop::MessageLoop(MessagePump* pump) : pump_{pump} {}
 
 void MessageLoop::post_task(Function<void()> function) {
   std::lock_guard<std::mutex> locker(incoming_tasks_lock_);
@@ -28,6 +24,7 @@ void MessageLoop::run_until_idle() {
 }
 
 void MessageLoop::run() {
+  DCHECK(pump_) << "Can't run a message loop without a pump.";
   run_internal();
 }
 
