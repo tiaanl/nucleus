@@ -283,6 +283,14 @@ public:
     m_size = newSize;
   }
 
+  void swap(DynamicArray& other) {
+    using std::swap;
+
+    swap(m_data, other.m_data);
+    swap(m_size, other.m_size);
+    swap(m_capacity, other.m_capacity);
+  }
+
   void clear() {
     free();
   }

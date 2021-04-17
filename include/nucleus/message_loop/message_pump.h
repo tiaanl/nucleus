@@ -10,14 +10,13 @@ public:
   public:
     virtual ~Delegate() = default;
 
-    // Returns true if there are more tasks to be run.
+    // Returns true if the pump should continue working.
     virtual bool progress() = 0;
   };
 
   virtual ~MessagePump() = default;
 
   virtual void schedule_task() = 0;
-
   virtual void run(Delegate* delegate) = 0;
 };
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <mutex>
-#include <vector>
 
+#include "nucleus/Containers/DynamicArray.h"
 #include "nucleus/Macros.h"
 #include "nucleus/Memory/ScopedPtr.h"
 #include "nucleus/function.h"
@@ -39,7 +39,7 @@ private:
   bool quit_on_idle_ = false;
 
   std::mutex incoming_tasks_lock_;
-  std::vector<Function<void()>> incoming_tasks_;
+  DynamicArray<Function<void()>> incoming_tasks_;
 };
 
 }  // namespace nu
