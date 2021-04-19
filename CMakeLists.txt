@@ -90,7 +90,7 @@ nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
 
 find_package(Catch2 CONFIG REQUIRED)
 
-add_library(testsMain tests/TestsMain.cpp)
+nucleus_add_library(testsMain tests/TestsMain.cpp)
 target_link_libraries(testsMain PUBLIC Catch2::Catch2)
 
 # TODO: Only if posix

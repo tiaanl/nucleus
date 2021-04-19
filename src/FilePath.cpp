@@ -268,8 +268,14 @@ FilePath getExecutablePath() {
   auto length = readlink("/proc/self/exe", buf, sizeof(buf));
   buf[length] = '\0';
   return FilePath{buf};
+#elif OS(WIN)
+  char buf[MAX_PATH] = {0};
+  auto length = GetModuleFileNameA(GetModuleHandle(nullptr), buf, sizeof(buf));
+  DCHECK(length > 0) << "Could not get application executable name.";
+  buf[length] = '\0';
+  return FilePath{buf};
 #else
-#error Unknown OS
+#error Unsupported operating system.
 #endif
 }
 

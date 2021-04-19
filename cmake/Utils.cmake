@@ -17,6 +17,7 @@ macro(nucleus_set_properties target)
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
         CXX_EXTENSIONS OFF
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
         FOLDER ${CMAKE_PROJECT_NAME}
         )
 

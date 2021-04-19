@@ -6,54 +6,70 @@
 
 namespace nu {
 
-template <typename Signature>
+template <typename>
 class Function;
 
 template <typename Ret, typename... Args>
 class Function<Ret(Args...)> {
+  NU_DELETE_COPY(Function);
+
 public:
   Function() = default;
 
-  template <typename Functor>
-  Function(Functor&& functor)
-    : wrapper_{makeScopedPtr<Wrapper<Functor>>(std::forward<Functor>(functor))} {}
+  Function(Function&& other) : wrapper_{other.wrapper_} {
+    other.wrapper_ = nullptr;
+  }
+
+  template <typename Callable,
+            typename = std::void_t<decltype(std::declval<Callable>()(std::declval<Args>()...))>>
+  Function(Callable&& callable)
+    : wrapper_{new Wrapper<Callable>(std::forward<Callable>(callable))} {}
+
+  ~Function() {
+    reset();
+  }
+
+  Function& operator=(Function&& other) {
+    wrapper_ = other.wrapper_;
+    other.wrapper_ = nullptr;
+
+    return *this;
+  }
+
+  void reset() {
+    delete wrapper_;
+    wrapper_ = nullptr;
+  }
+
+  NU_NO_DISCARD bool empty() const {
+    return wrapper_;
+  }
 
   Ret operator()(Args... args) const {
-    DCHECK(wrapper_);
-    return wrapper_->invoke(std::forward<Args>(args)...);
+    return wrapper_->invoker(wrapper_, std::forward<Args>(args)...);
   }
 
 private:
-  class WrapperBase {
-  public:
-    virtual ~WrapperBase() = default;
-    virtual Ret invoke(Args...) const = 0;
+  struct WrapperBase {
+    Ret (*invoker)(WrapperBase*, Args...);
   };
 
-  template <typename Functor>
-  class Wrapper final : public WrapperBase {
-    NU_DELETE_COPY(Wrapper);
+  template <typename Callable>
+  struct Wrapper : WrapperBase {
+    std::decay_t<Callable> callable;
 
-  public:
-    explicit Wrapper(Functor&& functor) : functor_{std::move(functor)} {}
-
-    Ret invoke(Args... args) const final {
-      if constexpr (requires { functor_(std::forward<Args>(args)...); }) {
-        return functor_(std::forward<Args>(args)...);
-      } else if constexpr (requires { functor_(); }) {
-        return functor_();
-      } else if constexpr (std::is_same_v<void, Ret>) {
-        return;
-      } else {
-        return {};
-      }
+    static Ret invoker(WrapperBase* wrapper, Args... args) {
+      return static_cast<Wrapper*>(wrapper)->callable(std::forward<Args>(args)...);
     }
 
+    template <typename T>
+    Wrapper(T&& callable) : WrapperBase{&invoker}, callable{std::forward<T>(callable)} {}
+
   private:
-    Functor functor_;
+    NU_DELETE_COPY(Wrapper);
   };
 
-  ScopedPtr<WrapperBase> wrapper_;
+  WrapperBase* wrapper_ = nullptr;
 };
 
 }  // namespace nu

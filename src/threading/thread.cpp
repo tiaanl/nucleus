@@ -21,7 +21,7 @@ void* thread_main(void* c) {
 #endif
   auto thread = reinterpret_cast<ThreadContext*>(c);
   thread->function();
-  thread->function = nullptr;
+  thread->function.reset();
 #if OS(WIN)
   return 0;
 #elif OS(POSIX)

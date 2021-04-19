@@ -5,7 +5,8 @@
 namespace nu {
 
 TEST_CASE("MessageLoop") {
-  MessageLoop ml;
+  MessagePumpDefault pump;
+  MessageLoop ml{&pump};
 
   SECTION("run until idle") {
     // This run loop should not hang!!
