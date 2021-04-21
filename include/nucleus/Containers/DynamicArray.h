@@ -255,6 +255,15 @@ public:
     m_size -= numberOfElementsToRemove;
   }
 
+  void remove(const ElementType& element) {
+    for (auto it = m_data; it != m_data + m_size; ++it) {
+      if (*it == element) {
+        remove(it);
+        return;
+      }
+    }
+  }
+
   // Remove all the elements from the array, but keep the current capacity.
   auto removeAll() -> void {
     for (Iterator it = m_data; it != m_data + m_size; ++it) {
@@ -342,7 +351,9 @@ private:
     // then we copy the old data to the new data first.
     if (m_data) {
       if (keepOld == KeepOldData) {
-        std::move(m_data, m_data + m_capacity, newData);
+        for (MemSize i = 0; i < m_capacity; ++i) {
+          newData[i] = std::move(m_data[i]);
+        }
       }
 
       // Free the old data.
