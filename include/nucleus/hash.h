@@ -65,7 +65,7 @@ struct Hash<I64> {
 
 template <>
 struct Hash<U64> {
-  static HashedValue hashed(I64 value) {
+  static HashedValue hashed(U64 value) {
     return hash_qword(value);
   }
 };

@@ -5,6 +5,7 @@
 
 namespace nu {
 
+#if 0
 TEST_CASE("HashMap") {
   SECTION("basic") {
     HashMap<I32, DynamicString> t;
@@ -24,5 +25,6 @@ TEST_CASE("HashMap") {
     CHECK(t.find(10)->value.view() == StringView{"Another"});
   }
 }
+#endif  // 0
 
 }  // namespace nu

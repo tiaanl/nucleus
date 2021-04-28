@@ -4,6 +4,8 @@
 
 namespace nu {
 
+#if 0
+
 template <typename KeyType, typename ValueType>
 struct HashMapItem {
   KeyType key;
@@ -69,7 +71,7 @@ public:
   };
 
   SetResult set(const KeyType& key, ValueType value) {
-    auto result = items_.set({std::move(key), std::move(value)});
+    auto result = items_.insert({std::move(key), std::move(value)});
 
     return {result.is_new(), &result.item().key, &result.item().value};
   }
@@ -121,5 +123,7 @@ public:
 private:
   HashTable<HashMapItem<KeyType, ValueType>> items_;
 };
+
+#endif  // 0
 
 }  // namespace nu
