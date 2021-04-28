@@ -50,13 +50,14 @@ set(nucleus_HEADER_FILES
     include/nucleus/Text/Utils.h
     include/nucleus/Types.h
     include/nucleus/Win/WindowsMixin.h
+    include/nucleus/function.h
     include/nucleus/hash.h
     include/nucleus/message_loop/message_loop.h
     include/nucleus/message_loop/message_pump.h
+    include/nucleus/testing/lifetime_tracker.h
     include/nucleus/threading/scoped_thread_local_ptr.h
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
-    include/nucleus/function.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -82,6 +83,7 @@ set(nucleus_SOURCE_FILES
     src/Text/Utils.cpp
     src/message_loop/message_loop.cpp
     src/message_loop/message_pump.cpp
+    src/testing/lifetime_tracker.cpp
     src/threading/thread.cpp
     src/threading/thread_local.cpp
     )

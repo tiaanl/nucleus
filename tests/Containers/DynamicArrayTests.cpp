@@ -2,8 +2,11 @@
 #include <catch2/catch.hpp>
 
 #include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/testing/lifetime_tracker.h"
 
 namespace nu {
+
+using testing::LifetimeTracker;
 
 TEST_CASE("DynamicArray construct") {
   SECTION("default") {
@@ -108,148 +111,68 @@ TEST_CASE("move assignment") {
   REQUIRE(buffer2[1] == 20);
 }
 
-class LifetimeType {
-public:
-  static I32 creates;
-  static I32 destroys;
-  static I32 copies;
-  static I32 moves;
-
-  static void reset() {
-    LifetimeType::creates = 0;
-    LifetimeType::destroys = 0;
-    LifetimeType::copies = 0;
-    LifetimeType::moves = 0;
-  }
-
-  LifetimeType(I32 a, I32 b) : m_a(a), m_b(b) {
-    creates++;
-  }
-
-  LifetimeType(const LifetimeType& other) : m_a(other.m_a), m_b(other.m_b) {
-    copies++;
-  }
-
-  LifetimeType(LifetimeType&& other) : m_a(other.m_a), m_b(other.m_b) {
-    other.m_a = 0;
-    other.m_b = 0;
-
-    moves++;
-  }
-
-  ~LifetimeType() {
-    destroys++;
-  }
-
-  LifetimeType& operator=(const LifetimeType& other) {
-    m_a = other.m_a;
-    m_b = other.m_b;
-
-    copies++;
-
-    return *this;
-  }
-
-  LifetimeType& operator=(LifetimeType&& other) {
-    m_a = other.m_a;
-    m_b = other.m_b;
-
-    other.m_a = 0;
-    other.m_b = 0;
-
-    moves++;
-
-    return *this;
-  }
-
-  auto operator==(const LifetimeType& other) const -> bool {
-    return m_a == other.m_a && m_b == other.m_b;
-  }
-
-  auto operator!=(const LifetimeType& other) const -> bool {
-    return !operator==(other);
-  }
-
-  I32 getA() const {
-    return m_a;
-  }
-
-  I32 getB() const {
-    return m_b;
-  }
-
-private:
-  I32 m_a;
-  I32 m_b;
-};
-
-I32 LifetimeType::creates = 0;
-I32 LifetimeType::destroys = 0;
-I32 LifetimeType::copies = 0;
-I32 LifetimeType::moves = 0;
-
 TEST_CASE("emplace back") {
-  nu::DynamicArray<LifetimeType> buffer;
-  buffer.pushBack(LifetimeType{1, 2});
+  nu::DynamicArray<LifetimeTracker> buffer;
+  buffer.pushBack(LifetimeTracker{1, 2});
   buffer.emplaceBack(3, 4);
 
   REQUIRE(buffer.size() == 2);
-  REQUIRE(buffer[0].getA() == 1);
-  REQUIRE(buffer[0].getB() == 2);
-  REQUIRE(buffer[1].getA() == 3);
-  REQUIRE(buffer[1].getB() == 4);
+  REQUIRE(buffer[0].a() == 1);
+  REQUIRE(buffer[0].b() == 2);
+  REQUIRE(buffer[1].a() == 3);
+  REQUIRE(buffer[1].b() == 4);
 }
 
 TEST_CASE("create and destroy elements") {
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
   {
-    nu::DynamicArray<LifetimeType> buffer;
-    buffer.pushBack(LifetimeType{1, 2});
+    nu::DynamicArray<LifetimeTracker> buffer;
+    buffer.pushBack(LifetimeTracker{1, 2});
   }
 
-  REQUIRE(LifetimeType::creates == 1);
-  REQUIRE(LifetimeType::destroys == 2);
-  REQUIRE(LifetimeType::copies == 0);
-  REQUIRE(LifetimeType::moves == 1);
+  REQUIRE(LifetimeTracker::creates == 1);
+  REQUIRE(LifetimeTracker::destroys == 2);
+  REQUIRE(LifetimeTracker::copies == 0);
+  REQUIRE(LifetimeTracker::moves == 1);
 
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
   {
-    nu::DynamicArray<LifetimeType> buffer;
-    LifetimeType l{1, 2};
+    nu::DynamicArray<LifetimeTracker> buffer;
+    LifetimeTracker l{1, 2};
     buffer.pushBack(l);
   }
 
-  REQUIRE(LifetimeType::creates == 1);
-  REQUIRE(LifetimeType::destroys == 2);
-  REQUIRE(LifetimeType::copies == 1);
-  REQUIRE(LifetimeType::moves == 0);
+  REQUIRE(LifetimeTracker::creates == 1);
+  REQUIRE(LifetimeTracker::destroys == 2);
+  REQUIRE(LifetimeTracker::copies == 1);
+  REQUIRE(LifetimeTracker::moves == 0);
 
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
   {
-    nu::DynamicArray<LifetimeType> buffer;
-    LifetimeType l{1, 2};
+    nu::DynamicArray<LifetimeTracker> buffer;
+    LifetimeTracker l{1, 2};
     buffer.pushBack(std::move(l));
   }
 
-  REQUIRE(LifetimeType::creates == 1);
-  REQUIRE(LifetimeType::destroys == 2);
-  REQUIRE(LifetimeType::copies == 0);
-  REQUIRE(LifetimeType::moves == 1);
+  REQUIRE(LifetimeTracker::creates == 1);
+  REQUIRE(LifetimeTracker::destroys == 2);
+  REQUIRE(LifetimeTracker::copies == 0);
+  REQUIRE(LifetimeTracker::moves == 1);
 
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
   {
-    nu::DynamicArray<LifetimeType> buffer;
+    nu::DynamicArray<LifetimeTracker> buffer;
     buffer.emplaceBack(3, 4);
   }
 
-  REQUIRE(LifetimeType::creates == 1);
-  REQUIRE(LifetimeType::destroys == 1);
-  REQUIRE(LifetimeType::copies == 0);
-  REQUIRE(LifetimeType::moves == 0);
+  REQUIRE(LifetimeTracker::creates == 1);
+  REQUIRE(LifetimeTracker::destroys == 1);
+  REQUIRE(LifetimeTracker::copies == 0);
+  REQUIRE(LifetimeTracker::moves == 0);
 }
 
 void dynamicArrayWithoutConst(nu::DynamicArray<U64>& buffer) {
@@ -275,7 +198,7 @@ TEST_CASE("can use range-based for loops") {
 }
 
 TEST_CASE("remove single element") {
-  DynamicArray<LifetimeType> buffer;
+  DynamicArray<LifetimeTracker> buffer;
   buffer.emplaceBack(10, 20);
   buffer.emplaceBack(30, 40);
   buffer.emplaceBack(50, 60);
@@ -285,9 +208,9 @@ TEST_CASE("remove single element") {
     buffer.remove(buffer.begin());
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == LifetimeType{30, 40});
-    REQUIRE(buffer[1] == LifetimeType{50, 60});
-    REQUIRE(buffer[2] == LifetimeType{70, 80});
+    REQUIRE(buffer[0] == LifetimeTracker{30, 40});
+    REQUIRE(buffer[1] == LifetimeTracker{50, 60});
+    REQUIRE(buffer[2] == LifetimeTracker{70, 80});
     REQUIRE(&buffer[3] == buffer.end());
   }
 
@@ -295,9 +218,9 @@ TEST_CASE("remove single element") {
     buffer.remove(buffer.begin() + 1);
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == LifetimeType{10, 20});
-    REQUIRE(buffer[1] == LifetimeType{50, 60});
-    REQUIRE(buffer[2] == LifetimeType{70, 80});
+    REQUIRE(buffer[0] == LifetimeTracker{10, 20});
+    REQUIRE(buffer[1] == LifetimeTracker{50, 60});
+    REQUIRE(buffer[2] == LifetimeTracker{70, 80});
     REQUIRE(&buffer[3] == buffer.end());
   }
 
@@ -305,17 +228,17 @@ TEST_CASE("remove single element") {
     buffer.remove(buffer.end() - 1);
 
     REQUIRE(buffer.size() == 3);
-    REQUIRE(buffer[0] == LifetimeType{10, 20});
-    REQUIRE(buffer[1] == LifetimeType{30, 40});
-    REQUIRE(buffer[2] == LifetimeType{50, 60});
+    REQUIRE(buffer[0] == LifetimeTracker{10, 20});
+    REQUIRE(buffer[1] == LifetimeTracker{30, 40});
+    REQUIRE(buffer[2] == LifetimeTracker{50, 60});
     REQUIRE(&buffer[3] == buffer.end());
   }
 }
 
 TEST_CASE("remove calls desctructor") {
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
-  nu::DynamicArray<LifetimeType> buffer;
+  nu::DynamicArray<LifetimeTracker> buffer;
   buffer.emplaceBack(1, 2);
   buffer.emplaceBack(3, 4);
   buffer.emplaceBack(5, 6);
@@ -323,9 +246,9 @@ TEST_CASE("remove calls desctructor") {
 
   buffer.remove(buffer.begin() + 1);
 
-  REQUIRE(LifetimeType::creates == 4);
-  REQUIRE(LifetimeType::destroys == 1);
-  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeTracker::creates == 4);
+  REQUIRE(LifetimeTracker::destroys == 1);
+  REQUIRE(LifetimeTracker::copies == 0);
 }
 
 TEST_CASE("remove range of elements") {
@@ -405,9 +328,9 @@ TEST_CASE("remove range of elements") {
 }
 
 TEST_CASE("remove range calls destructors") {
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
-  nu::DynamicArray<LifetimeType> buffer;
+  nu::DynamicArray<LifetimeTracker> buffer;
   buffer.emplaceBack(1, 2);
   buffer.emplaceBack(3, 4);
   buffer.emplaceBack(5, 6);
@@ -415,15 +338,15 @@ TEST_CASE("remove range calls destructors") {
 
   buffer.remove(buffer.begin() + 1, buffer.begin() + 3);
 
-  REQUIRE(LifetimeType::creates == 4);
-  REQUIRE(LifetimeType::destroys == 2);
-  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeTracker::creates == 4);
+  REQUIRE(LifetimeTracker::destroys == 2);
+  REQUIRE(LifetimeTracker::copies == 0);
 }
 
 TEST_CASE("clears elements and calls destructors") {
-  LifetimeType::reset();
+  LifetimeTracker::reset();
 
-  nu::DynamicArray<LifetimeType> buffer;
+  nu::DynamicArray<LifetimeTracker> buffer;
   buffer.emplaceBack(1, 2);
   buffer.emplaceBack(3, 4);
   buffer.emplaceBack(5, 6);
@@ -435,9 +358,9 @@ TEST_CASE("clears elements and calls destructors") {
 
   REQUIRE(buffer.size() == 0);
 
-  REQUIRE(LifetimeType::creates == 4);
-  REQUIRE(LifetimeType::destroys == 4);
-  REQUIRE(LifetimeType::copies == 0);
+  REQUIRE(LifetimeTracker::creates == 4);
+  REQUIRE(LifetimeTracker::destroys == 4);
+  REQUIRE(LifetimeTracker::copies == 0);
 }
 
 }  // namespace nu
