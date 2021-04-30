@@ -5,6 +5,7 @@
 #include "nucleus/Logging.h"
 #include "nucleus/Text/CharTraits.h"
 #include "nucleus/Text/StringView.h"
+#include "nucleus/hash.h"
 
 #undef free
 
