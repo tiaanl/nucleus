@@ -17,7 +17,7 @@ public:
 
   ~HashTable() {
     for (MemSize i = 0; i < size_; ++i) {
-      buckets_[i].pointer()->~T();
+      buckets_[i].reference().~T();
     }
     std::free(buckets_);
   }
@@ -67,14 +67,23 @@ public:
   private:
     friend class HashTable<T>;
 
-    Iterator(HashTable<T>* hash_table, MemSize index) : hash_table_{hash_table}, index_{index} {}
+    Iterator(const HashTable<T>* hash_table, MemSize index)
+      : hash_table_{hash_table}, index_{index} {}
 
-    HashTable<T>* hash_table_;
+    const HashTable<T>* hash_table_;
     MemSize index_;
   };
 
+  Iterator begin() const {
+    return Iterator{this, index_of_first_used_bucket_from(0)};
+  }
+
   Iterator begin() {
     return Iterator{this, index_of_first_used_bucket_from(0)};
+  }
+
+  Iterator end() const {
+    return Iterator{this, capacity_};
   }
 
   Iterator end() {
@@ -82,7 +91,51 @@ public:
   }
 
   bool contains(const T& item) const {
-    return find_bucket_for_reading(item) != nullptr;
+    auto hash = Hash<T>::hashed(item);
+    return find_bucket_for_reading(hash, [&](T& t) {
+             return item == t;
+           }) != nullptr;
+  }
+
+  class FindResult {
+  public:
+    bool was_found() const {
+      return found_;
+    }
+
+    T& item() {
+      DCHECK(item_ != nullptr);
+      return *item_;
+    }
+
+  private:
+    friend class HashTable<T>;
+
+    FindResult(bool found, T* item) : found_{found}, item_{item} {}
+
+    bool found_;
+    T* item_;
+  };
+
+  FindResult find(const T& item) {
+    auto* bucket = find_bucket_for_reading(Hash<T>::hashed(item), [&](T& t) {
+      return t == item;
+    });
+    if (bucket) {
+      return {true, bucket->pointer()};
+    }
+
+    return {false, nullptr};
+  }
+
+  template <typename Predicate>
+  FindResult find(HashedValue hash, Predicate predicate) {
+    auto* bucket = find_bucket_for_reading(hash, predicate);
+    if (bucket) {
+      return {true, bucket->pointer()};
+    }
+
+    return {false, nullptr};
   }
 
   class InsertResult {
@@ -105,54 +158,93 @@ public:
   };
 
   InsertResult insert(T&& item) {
-    auto* bucket = find_bucket_for_writing(item);
+    auto hash = Hash<T>::hashed(item);
+    auto* bucket = find_bucket_for_writing(hash, [&](T& t) {
+      return item == t;
+    });
     DCHECK(bucket) << "Could not find a bucket for writing.";
 
-    bool is_new = !bucket->used;
+    bool is_new = !bucket->is_used();
 
-    new (bucket->pointer()) T{std::forward<T>(item)};
-    bucket->used = 1;
+    bucket->set(std::forward<T>(item));
 
-    ++size_;
+    if (is_new) {
+      ++size_;
+    }
 
     return {is_new, bucket->pointer()};
   }
 
-  bool remove(const T& NU_UNUSED(item)) {
-    return false;
+  // Returns true if the item was found and removed from the table.
+  bool remove(const T& item) {
+    auto hash = Hash<T>::hashed(item);
+    auto* bucket = find_bucket_for_reading(hash, [&](T& t) {
+      return item == t;
+    });
+    if (!bucket) {
+      return false;
+    }
+
+    bucket->clear();
+
+    --size_;
+
+    return true;
   }
 
 private:
   struct Bucket {
-    U8 data[sizeof(T)];
-    U8 used;
+    bool is_used() const {
+      return used_ == 1;
+    }
+
+    bool is_deleted() const {
+      return deleted_;
+    }
+
+    void set(T&& item) {
+      new (data_) T{std::forward<T>(item)};
+      used_ = 1;
+      deleted_ = 0;
+    }
+
+    void clear() {
+      reference().~T();
+      used_ = 0;
+      deleted_ = 1;
+    }
 
     T* pointer() {
-      return reinterpret_cast<T*>(&data);
+      return reinterpret_cast<T*>(&data_);
     }
 
     T& reference() {
-      return reinterpret_cast<T&>(*reinterpret_cast<T*>(&data));
+      return reinterpret_cast<T&>(*reinterpret_cast<T*>(&data_));
     }
+
+  private:
+    U8 data_[sizeof(T)];
+    U8 used_;
+    U8 deleted_;
   };
 
   static_assert(std::is_trivially_constructible_v<Bucket>);
 
   static constexpr MemSize MIN_SIZE = 4;
 
-  Bucket* find_bucket_for_reading(const T& item) const {
-    auto hash = Hash<T>::hashed(item);
+  template <typename Predicate>
+  Bucket* find_bucket_for_reading(HashedValue hash, Predicate predicate) const {
     MemSize index = hash % capacity_;
     MemSize start_index = index;
 
     for (;;) {
       Bucket* bucket = &buckets_[index];
 
-      if (!bucket->used) {
+      if (!bucket->is_used() && !bucket->is_deleted()) {
         return nullptr;
       }
 
-      if (bucket->reference() == item) {
+      if (!bucket->is_deleted() && predicate(bucket->reference())) {
         return bucket;
       }
 
@@ -184,32 +276,36 @@ private:
 
     if (old_buckets) {
       for (MemSize i = 0; i < old_capacity; ++i) {
-        if (old_buckets[i].used) {
-          Bucket* new_bucket = find_bucket_for_writing(old_buckets[i].reference());
-          new (new_bucket->pointer()) T(std::move(old_buckets[i].reference()));
-          new_bucket->used = 1;
+        if (old_buckets[i].is_used()) {
+          auto old_hash = Hash<T>::hashed(old_buckets[i].reference());
+          Bucket* new_bucket = find_bucket_for_writing(old_hash, [&](T& t) {
+            return t == old_buckets[i].reference();
+          });
+          new_bucket->set(std::move(old_buckets[i].reference()));
 
           old_buckets[i].pointer()->~T();
         }
       }
+
+      std::free(old_buckets);
     }
   }
 
-  Bucket* find_bucket_for_writing(const T& item) {
+  template <typename Predicate>
+  Bucket* find_bucket_for_writing(HashedValue hash, Predicate predicate) {
     ensure_capacity(size_ + 1);
 
-    auto hash = Hash<T>::hashed(item);
     MemSize index = hash % capacity_;
     MemSize start_index = index;
 
     for (;;) {
       Bucket* bucket = &buckets_[index];
 
-      if (bucket->used && bucket->reference() == item) {
+      if (bucket->is_used() && predicate(bucket->reference())) {
         return bucket;
       }
 
-      if (!bucket->used) {
+      if (!bucket->is_used()) {
         return bucket;
       }
 
@@ -224,13 +320,13 @@ private:
     return nullptr;
   }
 
-  MemSize index_of_first_used_bucket_from(MemSize start) {
+  NU_NO_DISCARD MemSize index_of_first_used_bucket_from(MemSize start) const {
     for (;;) {
       if (start == capacity_) {
         break;
       }
 
-      if (buckets_[start].used) {
+      if (buckets_[start].is_used()) {
         break;
       }
 
@@ -244,5 +340,19 @@ private:
   MemSize capacity_;
   Bucket* buckets_;
 };
+
+template <typename T>
+inline std::ostream& operator<<(std::ostream& os, const HashTable<T>& hash_table) {
+  os << '[';
+  MemSize i = 1;
+  for (const auto& item : hash_table) {
+    os << item;
+    if (i++ < hash_table.size()) {
+      os << ", ";
+    }
+  }
+  os << ']';
+  return os;
+}
 
 }  // namespace nu

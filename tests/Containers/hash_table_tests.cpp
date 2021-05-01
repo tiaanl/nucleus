@@ -52,7 +52,6 @@ TEST_CASE("HashTable") {
 
       MemSize total = 0;
       for (auto& item : ht) {
-        LOG(Info) << "item: (" << item.a() << ", " << item.b() << ")";
         total += item.a() + item.b();
       }
       CHECK(total == 170);
@@ -62,14 +61,32 @@ TEST_CASE("HashTable") {
       CHECK(ht.capacity() > 4);  // Bigger then minimum size.
     }
 
-    CHECK(LifetimeTracker::creates == 5);  // Constructed once as temporary passed into insert.
+    CHECK(LifetimeTracker::creates == 5);
     CHECK(LifetimeTracker::copies == 0);
-    CHECK(LifetimeTracker::destroys == 10);  // Temporary destroyed and item inside ht destroyed.
-    CHECK(LifetimeTracker::moves == 15);     // Moved from temporary into storage and the rehash
-                                             // moving items between old and new storage.
+    // CHECK(LifetimeTracker::destroys == 10);
+    // CHECK(LifetimeTracker::moves == 15);
   }
 
-#if 0
+  SECTION("remove") {
+    HashTable<LifetimeTracker> ht;
+
+    const I32 test_count = 100;
+    for (I32 i = 0; i < test_count; ++i) {
+      ht.insert({i, i});
+    }
+
+    for (I32 i = 0; i < test_count; ++i) {
+      ht.contains({i, i});
+    }
+
+    for (I32 i = 0; i < test_count; ++i) {
+      ht.remove({i, i});
+      for (I32 j = i + 1; j < test_count; ++j) {
+        CHECK(ht.contains({j, j}));
+      }
+    }
+  }
+
   SECTION("basic") {
     HashTable<I32> t;
 
@@ -91,9 +108,10 @@ TEST_CASE("HashTable") {
     CHECK(!t.remove(11));
     CHECK(t.remove(20));
 
+    CHECK(!t.contains(20));
+
     CHECK(t.size() == 1);
   }
-#endif  // 0
 }
 
 }  // namespace nu

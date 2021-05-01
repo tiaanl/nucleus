@@ -4,32 +4,29 @@
 
 namespace nu {
 
-#if 0
-
 template <typename KeyType, typename ValueType>
 struct HashMapItem {
   KeyType key;
   ValueType value;
-};
 
-template <typename KeyType, typename ValueType>
-struct Hash<HashMapItem<KeyType, ValueType>> {
-  static HashedValue hashed(const auto& value) {
-    return Hash<KeyType>::hashed(value.key);
+  friend bool operator==(const HashMapItem& left, const HashMapItem& right) {
+    return left.key == right.key;
   }
 };
 
 template <typename KeyType, typename ValueType>
-inline bool operator==(const HashMapItem<KeyType, ValueType>& left,
-                       const HashMapItem<KeyType, ValueType>& right) {
-  return left.key == right.key;
-}
+struct Hash<HashMapItem<KeyType, ValueType>> {
+  static HashedValue hashed(const HashMapItem<KeyType, ValueType>& item) {
+    return Hash<KeyType>::hashed(item.key);
+  }
+};
 
 template <typename KeyType, typename ValueType>
 class HashMap {
 public:
-  using Iterator = typename HashTable<HashMapItem<KeyType, ValueType>>::Iterator;
-  using ConstIterator = typename HashTable<HashMapItem<KeyType, ValueType>>::ConstIterator;
+  using ItemType = HashMapItem<KeyType, ValueType>;
+  using Iterator = typename HashTable<ItemType>::Iterator;
+  using ConstIterator = typename HashTable<ItemType>::Iterator;
 
   HashMap() = default;
 
@@ -45,7 +42,7 @@ public:
     return items_.capacity();
   }
 
-  class SetResult {
+  class InsertResult {
   public:
     NU_NO_DISCARD bool is_new() const {
       return is_new_;
@@ -62,7 +59,7 @@ public:
   private:
     friend HashMap;
 
-    SetResult(bool is_new, KeyType* key, ValueType* value)
+    InsertResult(bool is_new, KeyType* key, ValueType* value)
       : is_new_{is_new}, key_{key}, value_{value} {}
 
     bool is_new_;
@@ -70,7 +67,7 @@ public:
     ValueType* value_;
   };
 
-  SetResult set(const KeyType& key, ValueType value) {
+  InsertResult insert(const KeyType& key, ValueType value) {
     auto result = items_.insert({std::move(key), std::move(value)});
 
     return {result.is_new(), &result.item().key, &result.item().value};
@@ -88,16 +85,42 @@ public:
     return items_.end();
   }
 
-  Iterator find(const KeyType& key) {
-    auto hash = Hash<KeyType>::hashed(key);
-    return items_.find(hash, [&](const auto& entry) {
-      return key == entry.key;
-    });
-  }
+  class FindResult {
+  public:
+    bool was_found() const {
+      return was_found_;
+    }
 
-  template <typename Finder>
-  Iterator find(unsigned hash, Finder finder) {
-    return items_.find(hash, finder);
+    const KeyType& key() const {
+      DCHECK(key_);
+      return *key_;
+    }
+
+    ValueType& value() const {
+      DCHECK(value_);
+      return *value_;
+    }
+
+  private:
+    friend class HashMap<KeyType, ValueType>;
+
+    FindResult(bool was_found, KeyType* key, ValueType* value)
+      : was_found_{was_found}, key_{key}, value_{value} {}
+
+    bool was_found_;
+    KeyType* key_;
+    ValueType* value_;
+  };
+
+  FindResult find(const KeyType& key) {
+    auto result = items_.find(Hash<KeyType>::hashed(key), [&](ItemType& item) {
+      return key == item.key;
+    });
+    if (result.was_found()) {
+      return {true, &result.item().key, &result.item().value};
+    }
+
+    return {false, nullptr, nullptr};
   }
 
   ConstIterator begin() const {
@@ -121,9 +144,7 @@ public:
   }
 
 private:
-  HashTable<HashMapItem<KeyType, ValueType>> items_;
+  HashTable<ItemType> items_;
 };
-
-#endif  // 0
 
 }  // namespace nu
