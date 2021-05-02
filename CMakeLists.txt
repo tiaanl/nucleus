@@ -17,6 +17,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/StaticArray.h
     include/nucleus/Containers/hash_map.h
     include/nucleus/Containers/hash_table.h
+    include/nucleus/Containers/hash_table_base.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Filter.h
@@ -106,6 +107,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
     tests/Containers/hash_map_tests.cpp
+    tests/Containers/hash_table_base_tests.cpp
     tests/Containers/hash_table_tests.cpp
     tests/FilePathTests.cpp
     tests/HighResolutionTimerTests.cpp

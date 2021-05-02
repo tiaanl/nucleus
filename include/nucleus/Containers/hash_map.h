@@ -15,32 +15,25 @@ struct HashMapItem {
 };
 
 template <typename KeyType, typename ValueType>
-struct Hash<HashMapItem<KeyType, ValueType>> {
-  static HashedValue hashed(const HashMapItem<KeyType, ValueType>& item) {
+struct HashMapItemTraits {
+  using ItemType = HashMapItem<KeyType, ValueType>;
+
+  static HashedValue hashed(const ItemType& item) {
     return Hash<KeyType>::hashed(item.key);
+  }
+
+  static bool equals(const ItemType& left, const ItemType& right) {
+    return left.key == right.key;
   }
 };
 
 template <typename KeyType, typename ValueType>
-class HashMap {
+class HashMap
+  : public HashTableBase<HashMapItem<KeyType, ValueType>, HashMapItemTraits<KeyType, ValueType>> {
 public:
   using ItemType = HashMapItem<KeyType, ValueType>;
-  using Iterator = typename HashTable<ItemType>::Iterator;
-  using ConstIterator = typename HashTable<ItemType>::Iterator;
 
   HashMap() = default;
-
-  NU_NO_DISCARD bool empty() const {
-    return items_.empty();
-  }
-
-  NU_NO_DISCARD MemSize size() const {
-    return items_.size();
-  }
-
-  NU_NO_DISCARD MemSize capacity() const {
-    return items_.capacity();
-  }
 
   class InsertResult {
   public:
@@ -67,22 +60,27 @@ public:
     ValueType* value_;
   };
 
-  InsertResult insert(const KeyType& key, ValueType value) {
-    auto result = items_.insert({std::move(key), std::move(value)});
+  InsertResult insert(KeyType key, ValueType value) {
+    auto hash = Hash<KeyType>::hashed(key);
+    auto* bucket = this->find_bucket_for_writing(hash, [&](ItemType& i) {
+      return i.key == key;
+    });
+    DCHECK(bucket) << "Could not find a bucket for writing.";
 
-    return {result.is_new(), &result.item().key, &result.item().value};
+    bool is_new = !bucket->is_used();
+
+    auto item = ItemType{std::move(key), std::move(value)};
+    bucket->set(std::move(item));
+
+    if (is_new) {
+      ++this->size_;
+    }
+
+    return {is_new, &bucket->reference().key, &bucket->reference().value};
   }
 
   bool contains_key(const KeyType& key) const {
-    return find(key) != end();
-  }
-
-  Iterator begin() {
-    return items_.begin();
-  }
-
-  Iterator end() {
-    return items_.end();
+    return find(key) != this->end();
   }
 
   class FindResult {
@@ -113,38 +111,15 @@ public:
   };
 
   FindResult find(const KeyType& key) {
-    auto result = items_.find(Hash<KeyType>::hashed(key), [&](ItemType& item) {
-      return key == item.key;
+    auto* bucket = this->find_bucket_for_reading(Hash<KeyType>::hashed(key), [&](ItemType& item) {
+      return item.key == key;
     });
-    if (result.was_found()) {
-      return {true, &result.item().key, &result.item().value};
+    if (bucket) {
+      return {true, &bucket->reference().key, &bucket->reference().value};
     }
 
     return {false, nullptr, nullptr};
   }
-
-  ConstIterator begin() const {
-    return items_.begin();
-  }
-
-  ConstIterator end() const {
-    return items_.end();
-  }
-
-  ConstIterator find(const KeyType& key) const {
-    auto hash = Hash<KeyType>::hashed(key);
-    return items_.find(hash, [&](auto& entry) {
-      return key == entry.key;
-    });
-  }
-
-  template <typename Finder>
-  ConstIterator find(unsigned hash, Finder finder) const {
-    return items_.find(hash, finder);
-  }
-
-private:
-  HashTable<ItemType> items_;
 };
 
 }  // namespace nu

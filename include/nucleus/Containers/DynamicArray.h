@@ -72,7 +72,7 @@ public:
   }
 
   ~DynamicArray() {
-    DynamicArray::free();
+    free();
   }
 
   // Operators
