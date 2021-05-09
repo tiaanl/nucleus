@@ -168,4 +168,15 @@ struct Hash<DynamicString> {
 
 }  // namespace nu
 
+namespace std {
+
+template <>
+struct hash<nu::DynamicString> {
+  std::size_t operator()(const nu::DynamicString& s) const noexcept {
+    return nu::Hash<nu::DynamicString>::hashed(s);
+  }
+};
+
+}  // namespace std
+
 #endif  // NUCLEUS_TEXT_DYNAMIC_STRING_H_

@@ -18,6 +18,14 @@ public:                                                                         
   NU_DELETE_COPY(ClassName);                                                                       \
   NU_DELETE_MOVE(ClassName)
 
+#define NU_DEFAULT_COPY(ClassName)                                                                 \
+  ClassName(const ClassName&) = default;                                                           \
+  ClassName& operator=(const ClassName&) = default
+
+#define NU_DEFAULT_MOVE(ClassName)                                                                 \
+  ClassName(ClassName&&) = default;                                                                \
+  ClassName& operator=(ClassName&&) = default
+
 // ARRAY_SIZE
 
 // Helper to figure out the item count of a static array of elements, c++ style!

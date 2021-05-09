@@ -1,6 +1,6 @@
-#ifndef NUCLEUS_CONTAINERS_ARRAY_VIEW_H_
-#define NUCLEUS_CONTAINERS_ARRAY_VIEW_H_
+#pragma once
 
+#include "nucleus/Logging.h"
 #include "nucleus/Types.h"
 
 namespace nu {
@@ -24,11 +24,39 @@ public:
     return m_size;
   }
 
+  constexpr bool empty() const {
+    return m_size == 0;
+  }
+
+  const T& operator[](MemSize index) const {
+    DCHECK(index < m_size);
+    return m_data[index];
+  };
+
+  T& operator[](MemSize index) {
+    DCHECK(index < m_size);
+    return m_data[index];
+  };
+
+  T* begin() const {
+    return m_data;
+  }
+
+  T* begin() {
+    return m_data;
+  }
+
+  T* end() {
+    return m_data + m_size;
+  }
+
+  T* end() const {
+    return m_data + m_size;
+  }
+
 private:
   const T* m_data;
   MemSize m_size;
 };
 
 }  // namespace nu
-
-#endif  // NUCLEUS_CONTAINERS_ARRAY_VIEW_H_
