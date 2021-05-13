@@ -15,8 +15,8 @@ class CheckDerivedMemberAccess : public nu::ScopedRefPtr<SelfAssign> {
 public:
   CheckDerivedMemberAccess() {
     // This shouldn't compile if we don't have access to the member variable.
-    SelfAssign** pptr = &m_ptr;
-    CHECK(m_ptr == *pptr);
+    SelfAssign** pptr = &ptr_;
+    CHECK(ptr_ == *pptr);
   }
 };
 

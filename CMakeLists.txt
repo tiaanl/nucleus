@@ -59,6 +59,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/threading/scoped_thread_local_ptr.h
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
+    include/nucleus/type_id.h
     )
 
 set(nucleus_SOURCE_FILES

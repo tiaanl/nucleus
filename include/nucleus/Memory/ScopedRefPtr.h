@@ -9,57 +9,53 @@ namespace nu {
 template <typename T>
 class ScopedRefPtr {
 public:
-  ScopedRefPtr() : m_ptr(nullptr) {}
+  constexpr ScopedRefPtr() = default;
 
-  ScopedRefPtr(T* ptr) : m_ptr(ptr) {
-    if (m_ptr) {
-      m_ptr->addRef();
+  ScopedRefPtr(T* ptr) : ptr_(ptr) {
+    if (ptr_) {
+      ptr->addRef();
     }
   }
 
-  ScopedRefPtr(const ScopedRefPtr<T>& other) : m_ptr(other.m_ptr) {
-    if (m_ptr) {
-      m_ptr->addRef();
+  ScopedRefPtr(const ScopedRefPtr& other) : ScopedRefPtr{other.ptr_} {}
+
+  ScopedRefPtr(ScopedRefPtr&& other) noexcept : ptr_{other.ptr_} {
+    other.ptr_ = nullptr;
+  }
+
+  template <typename U,
+            typename = typename std::enable_if<std::is_convertible<U*, T*>::value>::type>
+  ScopedRefPtr(const ScopedRefPtr<U>& other) : ScopedRefPtr(other.ptr_) {}
+
+  ~ScopedRefPtr() {
+    if (ptr_) {
+      ptr_->release();
     }
+  }
+
+  ScopedRefPtr& operator=(const ScopedRefPtr& other) {
+    return *this = other.ptr_;
+  }
+
+  ScopedRefPtr& operator=(ScopedRefPtr&& other) noexcept {
+    std::swap(ptr_, other.ptr_);
+
+    return *this;
   }
 
   template <typename U>
-  ScopedRefPtr(const ScopedRefPtr<U>& other) : m_ptr(other.get()) {
-    if (m_ptr) {
-      m_ptr->addRef();
-    }
+  ScopedRefPtr& operator=(const ScopedRefPtr<U>& other) {
+    return *this = other.get();
   }
 
-  ~ScopedRefPtr() {
-    if (m_ptr) {
-      m_ptr->release();
-    }
-  }
-
-  bool isEmpty() const {
-    return !m_ptr;
-  }
-
-  T* get() const {
-    return m_ptr;
-  }
-
-  operator T*() const {
-    return m_ptr;
-  }
-
-  T* operator->() const {
-    return m_ptr;
-  }
-
-  ScopedRefPtr<T>& operator=(T* ptr) {
+  ScopedRefPtr& operator=(T* ptr) {
     // addRef() first so that self assignment works.
     if (ptr) {
       ptr->addRef();
     }
 
-    T* old = m_ptr;
-    m_ptr = ptr;
+    T* old = ptr_;
+    ptr_ = ptr;
 
     if (old) {
       old->release();
@@ -68,17 +64,69 @@ public:
     return *this;
   }
 
-  ScopedRefPtr& operator=(const ScopedRefPtr& other) {
-    return *this = other.m_ptr;
+  explicit operator bool() const {
+    return !is_null();
+  }
+
+  bool is_null() const {
+    return ptr_ == nullptr;
+  }
+
+  T* get() const {
+    return ptr_;
+  }
+
+  explicit operator T*() const {
+    DCHECK(ptr_);
+    return ptr_;
+  }
+
+  T* operator->() const {
+    DCHECK(ptr_);
+    return ptr_;
+  }
+
+  //  // Unified assignment operator.
+  //  ScopedRefPtr& operator=(ScopedRefPtr other) noexcept {
+  //    swap(other);
+  //    return *this;
+  //  }
+
+  void reset() {
+    ScopedRefPtr{}.swap(*this);
+  }
+
+  NU_NO_DISCARD T* release() {
+    T* ptr = ptr_;
+    ptr_ = nullptr;
+    return ptr;
+  }
+
+  void swap(ScopedRefPtr& other) noexcept {
+    std::swap(ptr_, other.ptr_);
   }
 
   template <typename U>
-  ScopedRefPtr& operator=(const ScopedRefPtr<U>& other) {
-    return *this = other.get();
+  bool operator==(const ScopedRefPtr<U>& right) const {
+    return ptr_ == right.get();
+  }
+
+  template <typename U>
+  bool operator!=(const ScopedRefPtr<U>& right) const {
+    return !operator==(right);
+  }
+
+  template <typename U>
+  bool operator<(const ScopedRefPtr<U>& right) const {
+    return ptr_ < right.get();
   }
 
 protected:
-  T* m_ptr;
+  T* ptr_ = nullptr;
+
+private:
+  template <typename U>
+  friend class ScopedRefPtr;
 };
 
 template <typename T, typename... Args>

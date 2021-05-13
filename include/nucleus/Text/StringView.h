@@ -119,6 +119,16 @@ public:
     return npos;
   }
 
+  // Return the position of the last instance of the given character.
+  StringLength find_last_of(Char ch) {
+    for (StringLength i = m_length - 1; i >= 0; --i) {
+      if (m_text[i] == ch) {
+        return i;
+      }
+    }
+    return npos;
+  }
+
   bool contains(StringView needle) {
     for (StringLength i = 0; i < m_length - needle.length() + 1; ++i) {
       if (std::strncmp(m_text + i, needle.m_text, needle.m_length) == 0) {

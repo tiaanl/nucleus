@@ -26,6 +26,16 @@ public:                                                                         
   ClassName(ClassName&&) = default;                                                                \
   ClassName& operator=(ClassName&&) = default
 
+// INLINE
+
+#if COMPILER(GCC)
+#define NU_NEVER_INLINE [[gnu::noinline]]
+#elif COMPILER(MSVC)
+#define NU_NEVER_INLINE __declspec(noinline)
+#else
+#error Unknown compiler.
+#endif
+
 // ARRAY_SIZE
 
 // Helper to figure out the item count of a static array of elements, c++ style!

@@ -60,7 +60,7 @@ public:
     ValueType* value_;
   };
 
-  InsertResult insert(KeyType key, ValueType value) {
+  InsertResult insert(const KeyType& key, ValueType value) {
     auto hash = Hash<KeyType>::hashed(key);
     auto* bucket = this->find_bucket_for_writing(hash, [&](ItemType& i) {
       return i.key == key;
@@ -69,7 +69,7 @@ public:
 
     bool is_new = !bucket->is_used();
 
-    auto item = ItemType{std::move(key), std::move(value)};
+    auto item = ItemType{key, std::move(value)};
     bucket->set(std::move(item));
 
     if (is_new) {
@@ -80,7 +80,7 @@ public:
   }
 
   bool contains_key(const KeyType& key) const {
-    return find(key) != this->end();
+    return find(key).was_found();
   }
 
   class FindResult {
@@ -110,7 +110,7 @@ public:
     ValueType* value_;
   };
 
-  FindResult find(const KeyType& key) {
+  FindResult find(const KeyType& key) const {
     auto* bucket = this->find_bucket_for_reading(Hash<KeyType>::hashed(key), [&](ItemType& item) {
       return item.key == key;
     });

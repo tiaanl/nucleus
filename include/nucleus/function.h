@@ -14,30 +14,20 @@ class Function<Ret(Args...)> {
   NU_DELETE_COPY(Function);
 
 public:
-  Function() = default;
+  NU_DEFAULT_MOVE(Function);
 
-  Function(Function&& other) : wrapper_{other.wrapper_} {
-    other.wrapper_ = nullptr;
-  }
+  Function() = default;
 
   template <typename Callable,
             typename = std::void_t<decltype(std::declval<Callable>()(std::declval<Args>()...))>>
   Function(Callable&& callable)
-    : wrapper_{new Wrapper<Callable>(std::forward<Callable>(callable))} {}
+    : wrapper_{makeScopedPtr<Wrapper<Callable>>(std::forward<Callable>(callable))} {}
 
   ~Function() {
     reset();
   }
 
-  Function& operator=(Function&& other) {
-    wrapper_ = other.wrapper_;
-    other.wrapper_ = nullptr;
-
-    return *this;
-  }
-
   void reset() {
-    delete wrapper_;
     wrapper_ = nullptr;
   }
 
@@ -46,7 +36,7 @@ public:
   }
 
   Ret operator()(Args... args) const {
-    return wrapper_->invoker(wrapper_, std::forward<Args>(args)...);
+    return wrapper_->invoker(const_cast<WrapperBase*>(wrapper_.get()), std::forward<Args>(args)...);
   }
 
 private:
@@ -69,7 +59,7 @@ private:
     NU_DELETE_COPY(Wrapper);
   };
 
-  WrapperBase* wrapper_ = nullptr;
+  ScopedPtr<WrapperBase> wrapper_;
 };
 
 }  // namespace nu

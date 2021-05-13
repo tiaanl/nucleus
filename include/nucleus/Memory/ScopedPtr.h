@@ -37,7 +37,7 @@ public:
   }
 
   explicit operator bool() const {
-    return m_ptr != nullptr;
+    return !is_null();
   }
 
   bool operator==(const ScopedPtr& other) const {
@@ -68,12 +68,26 @@ public:
     return *m_ptr;
   }
 
+  bool is_null() const {
+    return m_ptr == nullptr;
+  }
+
   const T* get() const {
     return m_ptr;
   }
 
   T* get() {
     return m_ptr;
+  }
+
+  template <typename U>
+  const U* cast() const {
+    return static_cast<const U*>(m_ptr);
+  }
+
+  template <typename U>
+  U* cast() {
+    return static_cast<U*>(m_ptr);
   }
 
   void reset(T* p = nullptr) {
