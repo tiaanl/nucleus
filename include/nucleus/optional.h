@@ -8,7 +8,7 @@ namespace nu {
 template <typename T>
 class Optional {
 public:
-  Optional() = default;
+  Optional() : value_is_set_{false} {}
 
   template <typename... Args>
   Optional(Args&&... args) : value_is_set_{true} {
@@ -60,7 +60,7 @@ public:
 
   const T& value() const {
     DCHECK(value_is_set_);
-    return *reinterpret_cast<T*>(data_);
+    return *reinterpret_cast<const T*>(data_);
   }
 
   T& value() {
@@ -68,9 +68,19 @@ public:
     return *reinterpret_cast<T*>(data_);
   }
 
+  T* operator->() const {
+    DCHECK(value_is_set_);
+    return reinterpret_cast<const T*>(data_);
+  }
+
+  T* operator->() {
+    DCHECK(value_is_set_);
+    return reinterpret_cast<T*>(data_);
+  }
+
 private:
   alignas(T) U8 data_[sizeof(T)];
-  bool value_is_set_ = false;
+  bool value_is_set_;
 };
 
 }  // namespace nu
