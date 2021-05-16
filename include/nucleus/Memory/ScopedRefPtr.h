@@ -4,6 +4,8 @@
 
 #include <utility>
 
+#include "nucleus/Macros.h"
+
 namespace nu {
 
 template <typename T>
@@ -132,6 +134,16 @@ private:
 template <typename T, typename... Args>
 inline ScopedRefPtr<T> makeScopedRefPtr(Args&&... args) {
   return ScopedRefPtr<T>{new T(std::forward<Args>(args)...)};
+}
+
+template <typename T>
+bool operator==(const ScopedRefPtr<T>& left, T* right) {
+  return left.get() == right;
+}
+
+template <typename T>
+bool operator!=(const ScopedRefPtr<T>& left, T* right) {
+  return left.get() != right;
 }
 
 }  // namespace nu

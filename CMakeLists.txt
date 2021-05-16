@@ -18,6 +18,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Containers/hash_map.h
     include/nucleus/Containers/hash_table.h
     include/nucleus/Containers/hash_table_base.h
+    include/nucleus/Containers/stable_pool.h
     include/nucleus/Debugger.h
     include/nucleus/FilePath.h
     include/nucleus/Filter.h
@@ -60,6 +61,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
     include/nucleus/type_id.h
+    include/nucleus/optional.h
     )
 
 set(nucleus_SOURCE_FILES
@@ -110,6 +112,7 @@ set(nucleusTests_SOURCE_FILES
     tests/Containers/hash_map_tests.cpp
     tests/Containers/hash_table_base_tests.cpp
     tests/Containers/hash_table_tests.cpp
+    tests/Containers/stable_pool_tests.cpp
     tests/FilePathTests.cpp
     tests/HighResolutionTimerTests.cpp
     tests/LoggingTests.cpp
@@ -127,6 +130,7 @@ set(nucleusTests_SOURCE_FILES
     tests/function_tests.cpp
     tests/hash_tests.cpp
     tests/message_loop/message_loop_tests.cpp
+    tests/optional_tests.cpp
     tests/threading/scoped_thread_local_ptr_tests.cpp
     tests/threading/thread_local_tests.cpp
     tests/threading/thread_tests.cpp
