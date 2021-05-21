@@ -6,9 +6,11 @@ endif ()
 
 project(nucleus)
 
+find_package(Catch2 CONFIG REQUIRED)
+
 include(cmake/Utils.cmake)
 
-set(nucleus_HEADER_FILES
+set(HEADER_FILES
     include/nucleus/ByteOrder.h
     include/nucleus/Config.h
     include/nucleus/Containers/ArrayView.h
@@ -28,7 +30,7 @@ set(nucleus_HEADER_FILES
     include/nucleus/Memory/RefCountedPtr.h
     include/nucleus/Memory/ScopedPtr.h
     include/nucleus/Memory/ScopedRefPtr.h
-    include/nucleus/Parser/Tokenizer.h
+    include/nucleus/Parser/tokenizer.h
     include/nucleus/Profiling.h
     include/nucleus/RefCounted.h
     include/nucleus/SourceLocation.h
@@ -64,12 +66,12 @@ set(nucleus_HEADER_FILES
     include/nucleus/optional.h
     )
 
-set(nucleus_SOURCE_FILES
+set(SOURCE_FILES
     src/Debugger.cpp
     src/FilePath.cpp
     src/HighResolutionTimer.cpp
     src/Logging.cpp
-    src/Parser/Tokenizer.cpp
+    src/Parser/tokenizer.cpp
     src/Profiling.cpp
     src/Streams/ArrayInputStream.cpp
     src/Streams/ConsoleOutputStream.cpp
@@ -92,12 +94,10 @@ set(nucleus_SOURCE_FILES
     src/threading/thread_local.cpp
     )
 
-nucleus_add_library(nucleus ${nucleus_HEADER_FILES} ${nucleus_SOURCE_FILES})
-
-find_package(Catch2 CONFIG REQUIRED)
-
-nucleus_add_library(testsMain tests/TestsMain.cpp)
-target_link_libraries(testsMain PUBLIC Catch2::Catch2)
+nucleus_add_library(nucleus
+    HEADER_FILES ${HEADER_FILES}
+    SOURCE_FILES ${SOURCE_FILES}
+    )
 
 # TODO: Only if posix
 if (WIN32)
@@ -105,7 +105,12 @@ else ()
     target_link_libraries(nucleus PRIVATE pthread)
 endif ()
 
-set(nucleusTests_SOURCE_FILES
+nucleus_add_library(tests_main
+    SOURCE_FILES tests/TestsMain.cpp
+    )
+target_link_libraries(tests_main PUBLIC Catch2::Catch2)
+
+set(TEST_FILES
     tests/Containers/BitSetTests.cpp
     tests/Containers/DynamicArrayTests.cpp
     tests/Containers/StaticArrayTests.cpp
@@ -119,6 +124,7 @@ set(nucleusTests_SOURCE_FILES
     tests/LoggingTests.cpp
     tests/Memory/ScopedPtrTests.cpp
     tests/Memory/ScopedRefPtrTests.cpp
+    tests/Parser/tokenizer_tests.cpp
     tests/RefCountedTests.cpp
     tests/Streams/ConsoleOutputStreamTests.cpp
     tests/Streams/StringOutputStreamTests.cpp
@@ -136,5 +142,7 @@ set(nucleusTests_SOURCE_FILES
     tests/threading/thread_tests.cpp
     )
 
-nucleus_add_executable(nucleusTests ${nucleusTests_SOURCE_FILES})
-target_link_libraries(nucleusTests nucleus testsMain)
+nucleus_add_executable(nucleus_tests
+    SOURCE_FILES ${TEST_FILES}
+    )
+target_link_libraries(nucleus_tests PRIVATE nucleus tests_main)
