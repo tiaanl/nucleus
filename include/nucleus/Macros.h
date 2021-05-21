@@ -1,6 +1,4 @@
-
-#ifndef NUCLEUS_MACROS_H_
-#define NUCLEUS_MACROS_H_
+#pragma once
 
 #include "nucleus/Config.h"
 #include "nucleus/Types.h"
@@ -40,22 +38,21 @@ public:                                                                         
 
 // Helper to figure out the item count of a static array of elements, c++ style!
 template <typename T, MemSize N>
-char (&ArraySizeHelper(T (&array)[N]))[N];
+char (&array_size_helper(T (&array)[N]))[N];
 #if COMPILER(MSVC)
 template <typename T, MemSize N>
-char (&ArraySizeHelper(const T (&array)[N]))[N];
+char (&array_size_helper(const T (&array)[N]))[N];
 #endif  // COMPILER(MSVC)
 
-#define NU_ARRAY_SIZE(array) (sizeof(ArraySizeHelper(array)))
+#define NU_ARRAY_SIZE(array) (sizeof(array_size_helper(array)))
 
 // IS_BIT_SET
 
-#define NU_BIT_IS_SET(Value, Bit) ((Value & Bit) == Bit)
+#define NU_BIT(Bit) ((MemSize(1) << MemSize(Bit)))
+#define NU_BIT_IS_SET(Value, Bit) ((MemSize(Value) & MemSize(Bit)) == MemSize(Bit))
 
 // UNUSED
 
 #define NU_UNUSED(x)
 
 #define NU_NO_DISCARD [[nodiscard]]
-
-#endif  // NUCLEUS_MACROS_H_

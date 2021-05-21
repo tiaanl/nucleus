@@ -124,7 +124,6 @@ set(TEST_FILES
     tests/LoggingTests.cpp
     tests/Memory/ScopedPtrTests.cpp
     tests/Memory/ScopedRefPtrTests.cpp
-    tests/Parser/tokenizer_tests.cpp
     tests/RefCountedTests.cpp
     tests/Streams/ConsoleOutputStreamTests.cpp
     tests/Streams/StringOutputStreamTests.cpp

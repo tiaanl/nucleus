@@ -1,7 +1,6 @@
+#pragma once
 
-#ifndef NUCLEUS_PARSER_TOKENIZER_H_
-#define NUCLEUS_PARSER_TOKENIZER_H_
-
+#include "nucleus/Macros.h"
 #include "nucleus/Text/StringView.h"
 
 namespace nu {
@@ -55,22 +54,20 @@ struct Token {
 class Tokenizer {
 public:
   enum {
-    SkipWhitespace = 0x01u,
+    SkipWhitespace = NU_BIT(1),
   };
 
-  Tokenizer(const StringView& source);
+  explicit Tokenizer(StringView source);
 
-  Token peekNextToken(U32 options = 0);
-  Token consumeNextToken(U32 options = 0);
+  Token peek_next_token(U32 options = 0);
+  Token consume_next_token(U32 options = 0);
 
 private:
   void advance(StringLength length);
-  Token peekNextTokenInternal(const StringView& source);
+  Token peek_next_token_internal(StringView source);
 
-  StringView m_source;
-  StringView m_current;
+  StringView source_;
+  StringView current_;
 };
 
 }  // namespace nu
-
-#endif  // NUCLEUS_PARSER_TOKENIZER_H_

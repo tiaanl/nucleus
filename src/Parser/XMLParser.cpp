@@ -1,7 +1,7 @@
 
 #include "nucleus/Parser/XMLParser.h"
 
-#include "nucleus/Parser/Tokenizer.h"
+#include "nucleus/Parser/tokenizer.h"
 
 namespace nu {
 
