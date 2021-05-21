@@ -6,6 +6,8 @@ endif ()
 
 project(nucleus)
 
+option(NUCLEUS_SKIP_TESTS "Do not build tests." OFF)
+
 find_package(Catch2 CONFIG REQUIRED)
 
 include(cmake/Utils.cmake)
@@ -110,38 +112,40 @@ nucleus_add_library(tests_main
     )
 target_link_libraries(tests_main PUBLIC Catch2::Catch2)
 
-set(TEST_FILES
-    tests/Containers/BitSetTests.cpp
-    tests/Containers/DynamicArrayTests.cpp
-    tests/Containers/StaticArrayTests.cpp
-    tests/Containers/hash_map_tests.cpp
-    tests/Containers/hash_table_base_tests.cpp
-    tests/Containers/hash_table_tests.cpp
-    tests/Containers/stable_pool_tests.cpp
-    tests/FilePathTests.cpp
-    tests/HighResolutionTimerTests.cpp
-    tests/LoggingTests.cpp
-    tests/LoggingTests.cpp
-    tests/Memory/ScopedPtrTests.cpp
-    tests/Memory/ScopedRefPtrTests.cpp
-    tests/RefCountedTests.cpp
-    tests/Streams/ConsoleOutputStreamTests.cpp
-    tests/Streams/StringOutputStreamTests.cpp
-    tests/Text/DynamicStringTests.cpp
-    tests/Text/StaticStringTests.cpp
-    tests/Text/StringPoolTests.cpp
-    tests/Text/StringViewTests.cpp
-    tests/Text/UtilsTests.cpp
-    tests/function_tests.cpp
-    tests/hash_tests.cpp
-    tests/message_loop/message_loop_tests.cpp
-    tests/optional_tests.cpp
-    tests/threading/scoped_thread_local_ptr_tests.cpp
-    tests/threading/thread_local_tests.cpp
-    tests/threading/thread_tests.cpp
-    )
+if (NOT ${NUCLEUS_SKIP_TESTS})
+    set(TEST_FILES
+        tests/Containers/BitSetTests.cpp
+        tests/Containers/DynamicArrayTests.cpp
+        tests/Containers/StaticArrayTests.cpp
+        tests/Containers/hash_map_tests.cpp
+        tests/Containers/hash_table_base_tests.cpp
+        tests/Containers/hash_table_tests.cpp
+        tests/Containers/stable_pool_tests.cpp
+        tests/FilePathTests.cpp
+        tests/HighResolutionTimerTests.cpp
+        tests/LoggingTests.cpp
+        tests/LoggingTests.cpp
+        tests/Memory/ScopedPtrTests.cpp
+        tests/Memory/ScopedRefPtrTests.cpp
+        tests/RefCountedTests.cpp
+        tests/Streams/ConsoleOutputStreamTests.cpp
+        tests/Streams/StringOutputStreamTests.cpp
+        tests/Text/DynamicStringTests.cpp
+        tests/Text/StaticStringTests.cpp
+        tests/Text/StringPoolTests.cpp
+        tests/Text/StringViewTests.cpp
+        tests/Text/UtilsTests.cpp
+        tests/function_tests.cpp
+        tests/hash_tests.cpp
+        tests/message_loop/message_loop_tests.cpp
+        tests/optional_tests.cpp
+        tests/threading/scoped_thread_local_ptr_tests.cpp
+        tests/threading/thread_local_tests.cpp
+        tests/threading/thread_tests.cpp
+        )
 
-nucleus_add_executable(nucleus_tests
-    SOURCE_FILES ${TEST_FILES}
-    )
-target_link_libraries(nucleus_tests PRIVATE nucleus tests_main)
+    nucleus_add_executable(nucleus_tests
+        SOURCE_FILES ${TEST_FILES}
+        )
+    target_link_libraries(nucleus_tests PRIVATE nucleus tests_main)
+endif ()
