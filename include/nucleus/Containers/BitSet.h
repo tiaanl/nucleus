@@ -1,116 +1,114 @@
-
-#ifndef NUCLEUS_CONTAINERS_BIT_SET_H_
-#define NUCLEUS_CONTAINERS_BIT_SET_H_
+#pragma once
 
 #include "nucleus/Config.h"
+#include "nucleus/Logging.h"
+#include "nucleus/Macros.h"
 #include "nucleus/Types.h"
 
 namespace nu {
 
-template <PtrDiff BitCount>
+template <MemSize BitCount>
 class BitSet {
 public:
-  using WordType = MemSize;
-  using IndexType = PtrDiff;
+  static_assert(BitCount >= 8, "BitCount should be at least the size of a byte.");
 
-  BitSet() {
-    reset();
-  }
+  using IndexType = MemSize;
 
-  constexpr PtrDiff getBitCount() const {
+  BitSet() = default;
+
+  constexpr MemSize bit_count() const {
     return BitCount;
   }
 
-  WordType getWord(IndexType pos) const {
-    return m_data[pos];
-  }
-
   void set(IndexType index, bool value = true) {
+    DCHECK(index < BitCount);
+
+    auto i = index / bits_per_storage();
+    auto new_value = static_cast<StorageType>(1) << index;
     if (value) {
-      m_data[index / kBitsPerWord] |= static_cast<MemSize>(1) << (index % kBitsPerWord);
+      value_[i] |= new_value;
     } else {
-      m_data[index / kBitsPerWord] &= ~(static_cast<MemSize>(1) << (index % kBitsPerWord));
+      value_[i] &= ~new_value;
     }
   }
 
-  constexpr bool test(IndexType index) const {
-    return (m_data[index / kBitsPerWord] & (static_cast<MemSize>(1) << index % kBitsPerWord)) != 0;
+  bool test(IndexType index) const {
+    DCHECK(index < BitCount);
+
+    auto i = index / bits_per_storage();
+    auto test_value = static_cast<StorageType>(1) << index;
+    return (value_[i] & test_value) != 0;
   }
 
   // Set all bits to 0.
-  void reset() {
-    for (IndexType i = kWords; 0 <= i; --i) {
-      m_data[i] = static_cast<MemSize>(0);
-    }
+  constexpr void reset() {
+    value_ = {};
   }
 
   // Operators
 
   bool operator==(const BitSet& right) const {
-    for (IndexType i = kWords; 0 <= i; --i) {
-      if (m_data[i] != right.getWord(i)) {
-        return false;
-      }
-    }
-
-    return true;
+    return std::memcmp(&value_, sizeof(value_), &right.value_) == 0;
   }
 
   bool operator!=(const BitSet& right) const {
-    return !(*this == right);
+    return !operator==(right);
   }
 
   BitSet& operator&=(const BitSet& right) {
-    for (IndexType i = kWords; 0 <= i; --i) {
-      m_data[i] &= right.getWord(i);
+    for (IndexType i = 0; i < storage_array_size(); ++i) {
+      value_[i] &= right.value_[i];
     }
 
     return *this;
   }
 
   BitSet& operator|=(const BitSet& right) {
-    for (IndexType i = kWords; 0 <= i; --i) {
-      m_data[i] |= right.getWord(i);
+    for (IndexType i = 0; i < storage_array_size(); ++i) {
+      value_[i] |= right.value_[i];
     }
 
     return *this;
   }
 
   BitSet& operator^=(const BitSet& right) {
-    for (IndexType i = kWords; 0 <= i; --i) {
-      m_data[i] ^= right.getWord(i);
+    for (IndexType i = 0; i < storage_array_size(); ++i) {
+      value_[i] ^= right.value_[i];
     }
 
     return *this;
   }
 
 private:
-  enum : IndexType {
-    kBitsPerWord = static_cast<IndexType>(8 * sizeof(IndexType)),
-    kWords = static_cast<IndexType>(BitCount == 0 ? 0 : (BitCount - 1) / kBitsPerWord)
-  };
+  using StorageType = MemSize;
 
-  WordType m_data[kWords + 1];
+  constexpr static MemSize bits_per_storage() {
+    return sizeof(StorageType) * 8;
+  }
+
+  constexpr static MemSize storage_array_size() {
+    return (BitCount - 1) / bits_per_storage() + 1;
+  }
+
+  StorageType value_[storage_array_size()] = {};
 };
 
-template <PtrDiff BitCount>
+template <MemSize BitCount>
 inline BitSet<BitCount> operator&(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result &= right);
 }
 
-template <PtrDiff BitCount>
+template <MemSize BitCount>
 inline BitSet<BitCount> operator|(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result |= right);
 }
 
-template <PtrDiff BitCount>
+template <MemSize BitCount>
 inline BitSet<BitCount> operator^(const BitSet<BitCount>& left, const BitSet<BitCount>& right) {
   BitSet<BitCount> result = left;
   return (result ^= right);
 }
 
 }  // namespace nu
-
-#endif  // NUCLEUS_CONTAINERS_BIT_SET_H_
