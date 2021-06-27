@@ -13,7 +13,7 @@ find_package(Catch2 CONFIG REQUIRED)
 include(cmake/Utils.cmake)
 
 set(HEADER_FILES
-    include/nucleus/ByteOrder.h
+    include/nucleus/byte_order.h
     include/nucleus/Config.h
     include/nucleus/Containers/ArrayView.h
     include/nucleus/Containers/BitSet.h
@@ -133,6 +133,7 @@ if (NOT ${NUCLEUS_SKIP_TESTS})
         tests/Text/StringPoolTests.cpp
         tests/Text/StringViewTests.cpp
         tests/Text/UtilsTests.cpp
+        tests/byte_order_tests.cpp
         tests/function_tests.cpp
         tests/hash_tests.cpp
         tests/message_loop/message_loop_tests.cpp

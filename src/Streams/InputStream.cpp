@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
-#include "nucleus/ByteOrder.h"
 #include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/byte_order.h"
 
 namespace nu {
 
@@ -44,7 +44,7 @@ I16 InputStream::readI16() {
   char temp[2];
 
   if (read(temp, 2) == 2) {
-    return static_cast<I16>(ByteOrder::littleEndianInt16(temp));
+    return static_cast<I16>(little_endian_16(temp));
   }
 
   return 0;
@@ -54,7 +54,7 @@ I32 InputStream::readI32() {
   char temp[4];
 
   if (read(temp, 4) == 4) {
-    return static_cast<I32>(ByteOrder::littleEndianInt32(temp));
+    return static_cast<I32>(little_endian_32(temp));
   }
 
   return 0;
@@ -67,7 +67,7 @@ I64 InputStream::readI64() {
   } n;
 
   if (read(n.asBytes, 8) == 8) {
-    return static_cast<I64>(ByteOrder::swapIfBigEndian(n.asInt64));
+    return static_cast<I64>(byte_swap_if_big_endian(n.asInt64));
   }
 
   return 0;
@@ -83,7 +83,7 @@ U16 InputStream::readU16() {
   U8 temp[2];
 
   if (read(temp, 2) == 2) {
-    return static_cast<U16>(ByteOrder::littleEndianInt16(temp));
+    return static_cast<U16>(little_endian_16(temp));
   }
 
   return 0;
@@ -96,7 +96,7 @@ U32 InputStream::readU32() {
   } n;
 
   if (read(n.asBytes, sizeof(n)) == sizeof(n)) {
-    return static_cast<U32>(ByteOrder::swapIfBigEndian(n.asU32));
+    return static_cast<U32>(byte_swap_if_big_endian(n.asU32));
   }
 
   return 0;
@@ -109,7 +109,7 @@ U64 InputStream::readU64() {
   } n;
 
   if (read(n.asBytes, sizeof(n)) == sizeof(n)) {
-    return static_cast<U64>(ByteOrder::swapIfBigEndian(n.asU64));
+    return static_cast<U64>(byte_swap_if_big_endian(n.asU64));
   }
 
   return 0;
