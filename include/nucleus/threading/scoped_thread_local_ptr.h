@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nucleus/Macros.h"
+#include "nucleus/macros.h"
 #include "nucleus/threading/thread_local.h"
 
 namespace nu {

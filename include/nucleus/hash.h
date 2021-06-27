@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nucleus/Types.h"
+#include "nucleus/types.h"
 
 namespace nu {
 

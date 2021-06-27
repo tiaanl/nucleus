@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/DynamicArray.h"
+#include "nucleus/Containers/dynamic_array.h"
 #include "nucleus/threading/thread.h"
 #include "nucleus/threading/thread_local.h"
 

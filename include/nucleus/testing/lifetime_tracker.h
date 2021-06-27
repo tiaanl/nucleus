@@ -1,8 +1,8 @@
 #pragma once
 
-#include "nucleus/Macros.h"
-#include "nucleus/Types.h"
 #include "nucleus/hash.h"
+#include "nucleus/macros.h"
+#include "nucleus/types.h"
 
 namespace nu {
 

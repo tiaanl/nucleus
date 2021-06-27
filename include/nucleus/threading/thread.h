@@ -2,12 +2,12 @@
 
 #include <limits>
 
-#include "nucleus/Config.h"
-#include "nucleus/Macros.h"
+#include "nucleus/config.h"
 #include "nucleus/function.h"
+#include "nucleus/macros.h"
 
 #if OS(WIN)
-#include "nucleus/Win/WindowsMixin.h"
+#include "nucleus/Win/includes.h"
 #elif OS(POSIX)
 #include <pthread.h>
 #endif

@@ -2,8 +2,8 @@
 
 #include <ostream>
 
-#include "nucleus/Logging.h"
-#include "nucleus/Types.h"
+#include "nucleus/logging.h"
+#include "nucleus/types.h"
 
 namespace nu {
 

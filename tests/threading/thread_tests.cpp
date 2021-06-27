@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Logging.h"
+#include "nucleus/logging.h"
 #include "nucleus/threading/thread.h"
 
 namespace nu {

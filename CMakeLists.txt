@@ -10,52 +10,52 @@ option(NUCLEUS_SKIP_TESTS "Do not build tests." OFF)
 
 find_package(Catch2 CONFIG REQUIRED)
 
-include(cmake/Utils.cmake)
+include(cmake/utils.cmake)
 
 set(HEADER_FILES
     include/nucleus/byte_order.h
-    include/nucleus/Config.h
-    include/nucleus/Containers/ArrayView.h
-    include/nucleus/Containers/BitSet.h
-    include/nucleus/Containers/DynamicArray.h
-    include/nucleus/Containers/StaticArray.h
-    include/nucleus/Containers/hash_map.h
-    include/nucleus/Containers/hash_table.h
-    include/nucleus/Containers/hash_table_base.h
-    include/nucleus/Containers/stable_pool.h
-    include/nucleus/Debugger.h
-    include/nucleus/FilePath.h
-    include/nucleus/Filter.h
-    include/nucleus/HighResolutionTimer.h
-    include/nucleus/Logging.h
-    include/nucleus/Macros.h
-    include/nucleus/Memory/RefCountedPtr.h
-    include/nucleus/Memory/ScopedPtr.h
-    include/nucleus/Memory/ScopedRefPtr.h
-    include/nucleus/Parser/tokenizer.h
-    include/nucleus/Profiling.h
-    include/nucleus/RefCounted.h
-    include/nucleus/SourceLocation.h
-    include/nucleus/Streams/ArrayInputStream.h
-    include/nucleus/Streams/ConsoleOutputStream.h
-    include/nucleus/Streams/DynamicBufferOutputStream.h
-    include/nucleus/Streams/FileInputStream.h
-    include/nucleus/Streams/FileOutputStream.h
-    include/nucleus/Streams/InputStream.h
-    include/nucleus/Streams/MemoryInputStream.h
-    include/nucleus/Streams/OutputStream.h
-    include/nucleus/Streams/StringOutputStream.h
-    include/nucleus/Streams/Utils.h
-    include/nucleus/Synchronization/AutoLock.h
-    include/nucleus/Synchronization/Lock.h
-    include/nucleus/Text/CharTraits.h
-    include/nucleus/Text/DynamicString.h
-    include/nucleus/Text/StaticString.h
-    include/nucleus/Text/StringPool.h
-    include/nucleus/Text/StringView.h
-    include/nucleus/Text/Utils.h
-    include/nucleus/Types.h
-    include/nucleus/Win/WindowsMixin.h
+    include/nucleus/config.h
+    include/nucleus/containers/array_view.h
+    include/nucleus/containers/bit_set.h
+    include/nucleus/containers/dynamic_array.h
+    include/nucleus/containers/static_array.h
+    include/nucleus/containers/hash_map.h
+    include/nucleus/containers/hash_table.h
+    include/nucleus/containers/hash_table_base.h
+    include/nucleus/containers/sparse_array.h
+    include/nucleus/containers/stable_pool.h
+    include/nucleus/debugger.h
+    include/nucleus/file_path.h
+    include/nucleus/high_resolution_timer.h
+    include/nucleus/logging.h
+    include/nucleus/macros.h
+    include/nucleus/memory/ref_counted_ptr.h
+    include/nucleus/memory/scoped_ptr.h
+    include/nucleus/memory/scoped_ref_ptr.h
+    include/nucleus/parser/tokenizer.h
+    include/nucleus/profiling.h
+    include/nucleus/ref_counted.h
+    include/nucleus/source_location.h
+    include/nucleus/streams/array_input_stream.h
+    include/nucleus/streams/console_output_stream.h
+    include/nucleus/streams/dynamic_buffer_output_stream.h
+    include/nucleus/streams/file_input_stream.h
+    include/nucleus/streams/file_output_stream.h
+    include/nucleus/streams/input_stream.h
+    include/nucleus/streams/memory_input_stream.h
+    include/nucleus/streams/output_stream.h
+    include/nucleus/streams/string_output_stream.h
+    include/nucleus/streams/utils.h
+    include/nucleus/synchronization/auto_lock.h
+    include/nucleus/synchronization/lock.h
+    include/nucleus/text/char_traits.h
+    include/nucleus/text/dynamic_string.h
+    include/nucleus/text/static_string.h
+    include/nucleus/text/string_pool.h
+    include/nucleus/text/string_view.h
+    include/nucleus/text/utils.h
+    include/nucleus/types.h
+    include/nucleus/win/includes.h
     include/nucleus/function.h
     include/nucleus/hash.h
     include/nucleus/main_header.hpp
@@ -70,26 +70,26 @@ set(HEADER_FILES
     )
 
 set(SOURCE_FILES
-    src/Debugger.cpp
-    src/FilePath.cpp
-    src/HighResolutionTimer.cpp
-    src/Logging.cpp
-    src/Parser/tokenizer.cpp
-    src/Profiling.cpp
-    src/Streams/ArrayInputStream.cpp
-    src/Streams/ConsoleOutputStream.cpp
-    src/Streams/DynamicBufferOutputStream.cpp
-    src/Streams/FileInputStream.cpp
-    src/Streams/FileOutputStream.cpp
-    src/Streams/InputStream.cpp
-    src/Streams/MemoryInputStream.cpp
-    src/Streams/OutputStream.cpp
-    src/Streams/StringOutputStream.cpp
-    src/Streams/Utils.cpp
-    src/Synchronization/Lock.cpp
-    src/Text/DynamicString.cpp
-    src/Text/StringView.cpp
-    src/Text/Utils.cpp
+    src/debugger.cpp
+    src/file_path.cpp
+    src/high_resolution_timer.cpp
+    src/logging.cpp
+    src/parser/tokenizer.cpp
+    src/profiling.cpp
+    src/streams/array_input_stream.cpp
+    src/streams/console_output_stream.cpp
+    src/streams/dynamic_buffer_output_stream.cpp
+    src/streams/file_input_stream.cpp
+    src/streams/file_output_stream.cpp
+    src/streams/input_stream.cpp
+    src/streams/memory_input_stream.cpp
+    src/streams/output_stream.cpp
+    src/streams/string_output_stream.cpp
+    src/streams/Utils.cpp
+    src/synchronization/lock.cpp
+    src/text/dynamic_string.cpp
+    src/text/string_view.cpp
+    src/text/utils.cpp
     src/message_loop/message_loop.cpp
     src/message_loop/message_pump.cpp
     src/testing/lifetime_tracker.cpp
@@ -106,33 +106,34 @@ else ()
 endif ()
 
 nucleus_add_library(tests_main
-    tests/TestsMain.cpp
+    tests/tests_main.cpp
     )
 target_link_libraries(tests_main PUBLIC Catch2::Catch2)
 
 if (NOT ${NUCLEUS_SKIP_TESTS})
     set(TEST_FILES
-        tests/Containers/BitSetTests.cpp
-        tests/Containers/DynamicArrayTests.cpp
-        tests/Containers/StaticArrayTests.cpp
-        tests/Containers/hash_map_tests.cpp
-        tests/Containers/hash_table_base_tests.cpp
-        tests/Containers/hash_table_tests.cpp
-        tests/Containers/stable_pool_tests.cpp
-        tests/FilePathTests.cpp
-        tests/HighResolutionTimerTests.cpp
-        tests/LoggingTests.cpp
-        tests/LoggingTests.cpp
-        tests/Memory/ScopedPtrTests.cpp
-        tests/Memory/ScopedRefPtrTests.cpp
-        tests/RefCountedTests.cpp
-        tests/Streams/ConsoleOutputStreamTests.cpp
-        tests/Streams/StringOutputStreamTests.cpp
-        tests/Text/DynamicStringTests.cpp
-        tests/Text/StaticStringTests.cpp
-        tests/Text/StringPoolTests.cpp
-        tests/Text/StringViewTests.cpp
-        tests/Text/UtilsTests.cpp
+        tests/containers/bit_set_tests.cpp
+        tests/containers/dynamic_array_tests.cpp
+        tests/containers/static_array_tests.cpp
+        tests/containers/hash_map_tests.cpp
+        tests/containers/hash_table_base_tests.cpp
+        tests/containers/hash_table_tests.cpp
+        tests/containers/sparse_array_tests.cpp
+        tests/containers/stable_pool_tests.cpp
+        tests/file_path_tests.cpp
+        tests/high_resolution_timer_tests.cpp
+        tests/logging_tests.cpp
+        tests/logging_tests.cpp
+        "tests/memory/scoped_ptr_tests.cpp"
+        "tests/memory/scoped_ref_ptr_tests.cpp"
+        tests/ref_counted_tests.cpp
+        tests/streams/console_output_stream_tests.cpp
+        tests/streams/string_output_stream_tests.cpp
+        tests/text/dynamic_string_tests.cpp
+        tests/text/static_string_tests.cpp
+        tests/text/string_pool_tests.cpp
+        tests/text/string_view_tests.cpp
+        tests/text/utils_tests.cpp
         tests/byte_order_tests.cpp
         tests/function_tests.cpp
         tests/hash_tests.cpp

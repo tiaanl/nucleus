@@ -1,8 +1,8 @@
 #pragma once
 
-#include "nucleus/Logging.h"
-#include "nucleus/Macros.h"
-#include "nucleus/Memory/ScopedPtr.h"
+#include "nucleus/Memory/scoped_ptr.h"
+#include "nucleus/logging.h"
+#include "nucleus/macros.h"
 
 namespace nu {
 

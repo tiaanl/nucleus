@@ -2,10 +2,10 @@
 
 #include <mutex>
 
-#include "nucleus/Containers/DynamicArray.h"
-#include "nucleus/Macros.h"
-#include "nucleus/Memory/ScopedPtr.h"
+#include "nucleus/Containers/dynamic_array.h"
+#include "nucleus/Memory/scoped_ptr.h"
 #include "nucleus/function.h"
+#include "nucleus/macros.h"
 #include "nucleus/message_loop/message_pump.h"
 
 namespace nu {

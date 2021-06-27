@@ -1,7 +1,7 @@
 #pragma once
 
-#include "nucleus/Config.h"
-#include "nucleus/Types.h"
+#include "nucleus/config.h"
+#include "nucleus/types.h"
 
 #if OS(ANDROID)
 #include <byteswap.h>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "nucleus/Config.h"
+#include "nucleus/config.h"
 
 #if OS(WIN)
-#include "nucleus/Win/WindowsMixin.h"
+#include "nucleus/Win/includes.h"
 #elif OS(POSIX)
 #include <pthread.h>
 #endif  // OS(POSIX
