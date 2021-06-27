@@ -11,25 +11,25 @@ class ScopedPtr {
 public:
   NU_DELETE_COPY(ScopedPtr);
 
-  constexpr ScopedPtr() noexcept : m_ptr{nullptr} {}
+  constexpr ScopedPtr() noexcept : ptr_{nullptr} {}
 
-  constexpr ScopedPtr(T* other) : m_ptr{other} {}
+  constexpr ScopedPtr(T* other) : ptr_{other} {}
 
-  ScopedPtr(ScopedPtr&& other) noexcept : m_ptr{other.m_ptr} {
-    other.m_ptr = nullptr;
+  ScopedPtr(ScopedPtr&& other) noexcept : ptr_{other.ptr_} {
+    other.ptr_ = nullptr;
   }
 
   template <typename U>
-  ScopedPtr(ScopedPtr<U>&& other) noexcept : m_ptr{other.release()} {}
+  ScopedPtr(ScopedPtr<U>&& other) noexcept : ptr_{other.release()} {}
 
   ~ScopedPtr() {
     // No need to check for `nullptr` before `delete`.
-    delete m_ptr;
+    delete ptr_;
   }
 
   ScopedPtr& operator=(ScopedPtr&& other) noexcept {
-    m_ptr = other.m_ptr;
-    other.m_ptr = nullptr;
+    ptr_ = other.ptr_;
+    other.ptr_ = nullptr;
 
     return *this;
   }
@@ -39,79 +39,79 @@ public:
   }
 
   bool operator==(const ScopedPtr& other) const {
-    return m_ptr == other.m_ptr;
+    return ptr_ == other.ptr_;
   }
 
   bool operator==(T* other) const {
-    return m_ptr == other;
+    return ptr_ == other;
   }
 
   bool operator!=(const ScopedPtr& other) const {
-    return m_ptr != other.m_ptr;
+    return ptr_ != other.ptr_;
   }
 
   bool operator!=(const T* other) const {
-    return m_ptr != other;
+    return ptr_ != other;
   }
 
   const T* operator->() const {
-    return m_ptr;
+    return ptr_;
   }
 
   T* operator->() {
-    return m_ptr;
+    return ptr_;
   }
 
   const T& operator*() const {
-    DCHECK(m_ptr);
-    return *m_ptr;
+    DCHECK(ptr_);
+    return *ptr_;
   }
 
   T& operator*() {
-    DCHECK(m_ptr);
-    return *m_ptr;
+    DCHECK(ptr_);
+    return *ptr_;
   }
 
   bool is_null() const {
-    return m_ptr == nullptr;
+    return ptr_ == nullptr;
   }
 
   const T* get() const {
-    return m_ptr;
+    return ptr_;
   }
 
   T* get() {
-    return m_ptr;
+    return ptr_;
   }
 
   template <typename U>
   const U* cast() const {
-    return static_cast<const U*>(m_ptr);
+    return static_cast<const U*>(ptr_);
   }
 
   template <typename U>
   U* cast() {
-    return static_cast<U*>(m_ptr);
+    return static_cast<U*>(ptr_);
   }
 
   void reset(T* p = nullptr) {
     // No need to check for `nullptr` before `delete`.
-    delete m_ptr;
-    m_ptr = p;
+    delete ptr_;
+    ptr_ = p;
   }
 
   T* release() {
-    T* ptr = m_ptr;
-    m_ptr = nullptr;
+    T* ptr = ptr_;
+    ptr_ = nullptr;
     return ptr;
   }
 
 private:
-  T* m_ptr;
+  T* ptr_;
 };
 
 template <typename T, typename... Args>
-inline ScopedPtr<T> makeScopedPtr(Args&&... args) {
+inline ScopedPtr<T> make_scoped_ptr(Args&&... args) {
   return ScopedPtr<T>{new T{std::forward<Args>(args)...}};
 }
 

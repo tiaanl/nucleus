@@ -24,6 +24,8 @@ class HashTableBase {
 public:
   class Iterator {
   public:
+    NU_DEFAULT_COPY(Iterator);
+
     ItemType& operator*() const {
       return hash_table_->buckets_[index_].reference();
     }
@@ -65,10 +67,7 @@ public:
   HashTableBase() = default;
 
   ~HashTableBase() {
-    for (MemSize i = 0; i < size_; ++i) {
-      buckets_[i].reference().~ItemType();
-    }
-    std::free(buckets_);
+    clear();
   }
 
   NU_NO_DISCARD MemSize size() const {
@@ -99,8 +98,22 @@ public:
     return Iterator{this, capacity_};
   }
 
+  void clear() {
+    for (MemSize i = 0; i < size_; ++i) {
+      auto& ref = buckets_[i].reference();
+      ref.~ItemType();
+    }
+    std::free(buckets_);
+    size_ = 0;
+    capacity_ = 0;
+  }
+
 protected:
-  struct Bucket {
+  class Bucket {
+  public:
+    Bucket() {}
+    ~Bucket() {}
+
     bool is_used() const {
       return used_ == 1;
     }
@@ -109,8 +122,14 @@ protected:
       return deleted_;
     }
 
+    void set(const ItemType& item) {
+      new (data_.raw) ItemType{item};
+      used_ = 1;
+      deleted_ = 0;
+    }
+
     void set(ItemType&& item) {
-      new (data_) ItemType{std::forward<ItemType>(item)};
+      new (data_.raw) ItemType{std::forward<ItemType>(item)};
       used_ = 1;
       deleted_ = 0;
     }
@@ -130,7 +149,10 @@ protected:
     }
 
   private:
-    U8 data_[sizeof(ItemType)];
+    union {
+      ItemType typed;
+      U8 raw[sizeof(ItemType)];
+    } data_;
     U8 used_;
     U8 deleted_;
   };
@@ -151,7 +173,7 @@ protected:
     return start;
   }
 
-  static_assert(std::is_trivially_constructible_v<Bucket>);
+  // static_assert(std::is_trivially_constructible_v<Bucket>);
 
   static constexpr MemSize MIN_SIZE = 4;
 

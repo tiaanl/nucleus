@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nucleus/Memory/scoped_ptr.h"
+#include "nucleus/memory/scoped_ptr.h"
 #include "nucleus/logging.h"
 #include "nucleus/macros.h"
 
@@ -21,7 +21,7 @@ public:
   template <typename Callable,
             typename = std::void_t<decltype(std::declval<Callable>()(std::declval<Args>()...))>>
   Function(Callable&& callable)
-    : wrapper_{makeScopedPtr<Wrapper<Callable>>(std::forward<Callable>(callable))} {}
+    : wrapper_{make_scoped_ptr<Wrapper<Callable>>(std::forward<Callable>(callable))} {}
 
   ~Function() {
     reset();

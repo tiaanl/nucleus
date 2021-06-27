@@ -8,55 +8,55 @@ namespace nu {
 template <typename T>
 class ArrayView {
 public:
-  constexpr ArrayView() : m_data{nullptr}, m_size{0} {}
+  constexpr ArrayView() : data_{nullptr}, size_{0} {}
 
-  constexpr ArrayView(const T* data, MemSize size) : m_data{data}, m_size{size} {}
+  constexpr ArrayView(const T* data, MemSize size) : data_{data}, size_{size} {}
 
   template <typename ContainerType>
   constexpr ArrayView(const ContainerType& container)
-    : m_data(container.data()), m_size(container.size()) {}
+    : data_(container.data()), size_(container.size()) {}
 
   constexpr const T* data() const {
-    return m_data;
+    return data_;
   }
 
   constexpr MemSize size() const {
-    return m_size;
+    return size_;
   }
 
   constexpr bool empty() const {
-    return m_size == 0;
+    return size_ == 0;
   }
 
   const T& operator[](MemSize index) const {
-    DCHECK(index < m_size);
-    return m_data[index];
+    DCHECK(index < size_);
+    return data_[index];
   };
 
   T& operator[](MemSize index) {
-    DCHECK(index < m_size);
-    return m_data[index];
+    DCHECK(index < size_);
+    return data_[index];
   };
 
   T* begin() const {
-    return m_data;
+    return data_;
   }
 
   T* begin() {
-    return m_data;
+    return data_;
   }
 
   T* end() {
-    return m_data + m_size;
+    return data_ + size_;
   }
 
   T* end() const {
-    return m_data + m_size;
+    return data_ + size_;
   }
 
 private:
-  const T* m_data;
-  MemSize m_size;
+  const T* data_;
+  MemSize size_;
 };
 
 }  // namespace nu

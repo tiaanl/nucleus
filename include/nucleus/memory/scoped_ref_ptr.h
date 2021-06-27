@@ -130,7 +130,7 @@ private:
 };
 
 template <typename T, typename... Args>
-inline ScopedRefPtr<T> makeScopedRefPtr(Args&&... args) {
+inline ScopedRefPtr<T> make_scoped_ref_ptr(Args&&... args) {
   return ScopedRefPtr<T>{new T(std::forward<Args>(args)...)};
 }
 

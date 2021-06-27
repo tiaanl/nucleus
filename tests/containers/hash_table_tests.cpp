@@ -112,6 +112,17 @@ TEST_CASE("HashTable") {
 
     CHECK(t.size() == 1);
   }
+
+  SECTION("copy") {
+    HashTable<I32> first;
+    first.insert(10);
+    first.insert(20);
+
+    auto second = first;
+
+    CHECK(first.size() == second.size());
+    CHECK(first.capacity() == second.capacity());
+  }
 }
 
 }  // namespace nu

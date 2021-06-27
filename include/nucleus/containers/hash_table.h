@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-#include "nucleus/Containers/hash_table_base.h"
+#include "nucleus/containers/hash_table_base.h"
 #include "nucleus/hash.h"
 #include "nucleus/logging.h"
 #include "nucleus/macros.h"
@@ -15,6 +15,23 @@ template <typename T>
 class HashTable : public HashTableBase<T> {
 public:
   HashTable() = default;
+
+  HashTable(const HashTable& other) {
+    for (auto& other_item : other) {
+      insert(other_item);
+    }
+  }
+
+  ~HashTable() = default;
+
+  HashTable& operator=(const HashTable& other) {
+    HashTableBase::clear();
+    for (auto& other_item : other) {
+      insert(other_item);
+    }
+
+    return *this;
+  }
 
   bool contains(const T& item) const {
     auto hash = Hash<T>::hashed(item);
@@ -82,6 +99,24 @@ public:
     bool is_new_;
     T* item_;
   };
+
+  InsertResult insert(const T& item) {
+    auto hash = Hash<T>::hashed(item);
+    auto* bucket = this->find_bucket_for_writing(hash, [&](T& t) {
+      return item == t;
+    });
+    DCHECK(bucket) << "Could not find a bucket for writing.";
+
+    bool is_new = !bucket->is_used();
+
+    bucket->set(item);
+
+    if (is_new) {
+      ++this->size_;
+    }
+
+    return {is_new, bucket->pointer()};
+  }
 
   InsertResult insert(T&& item) {
     auto hash = Hash<T>::hashed(item);

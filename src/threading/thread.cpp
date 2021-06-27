@@ -60,7 +60,7 @@ void JoinHandle::join() {
 }
 
 JoinHandle spawn_thread(Function<void()> function) {
-  auto c = makeScopedPtr<ThreadContext>(std::move(function));
+  auto c = make_scoped_ptr<ThreadContext>(std::move(function));
   ThreadHandle handle;
 #if OS(WIN)
   handle = CreateThread(nullptr, 0, &thread_main, c.release(), 0, nullptr);
