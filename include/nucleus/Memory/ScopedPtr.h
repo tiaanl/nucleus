@@ -65,6 +65,12 @@ public:
   }
 
   const T& operator*() const {
+    DCHECK(m_ptr);
+    return *m_ptr;
+  }
+
+  T& operator*() {
+    DCHECK(m_ptr);
     return *m_ptr;
   }
 

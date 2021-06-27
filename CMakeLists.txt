@@ -58,14 +58,15 @@ set(HEADER_FILES
     include/nucleus/Win/WindowsMixin.h
     include/nucleus/function.h
     include/nucleus/hash.h
+    include/nucleus/main_header.hpp
     include/nucleus/message_loop/message_loop.h
     include/nucleus/message_loop/message_pump.h
+    include/nucleus/optional.h
     include/nucleus/testing/lifetime_tracker.h
     include/nucleus/threading/scoped_thread_local_ptr.h
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
     include/nucleus/type_id.h
-    include/nucleus/optional.h
     )
 
 set(SOURCE_FILES
@@ -96,10 +97,7 @@ set(SOURCE_FILES
     src/threading/thread_local.cpp
     )
 
-nucleus_add_library(nucleus
-    HEADER_FILES ${HEADER_FILES}
-    SOURCE_FILES ${SOURCE_FILES}
-    )
+nucleus_add_library(nucleus ${HEADER_FILES} ${SOURCE_FILES})
 
 # TODO: Only if posix
 if (WIN32)
@@ -108,7 +106,7 @@ else ()
 endif ()
 
 nucleus_add_library(tests_main
-    SOURCE_FILES tests/TestsMain.cpp
+    tests/TestsMain.cpp
     )
 target_link_libraries(tests_main PUBLIC Catch2::Catch2)
 
@@ -144,8 +142,6 @@ if (NOT ${NUCLEUS_SKIP_TESTS})
         tests/threading/thread_tests.cpp
         )
 
-    nucleus_add_executable(nucleus_tests
-        SOURCE_FILES ${TEST_FILES}
-        )
+    nucleus_add_executable(nucleus_tests ${TEST_FILES})
     target_link_libraries(nucleus_tests PRIVATE nucleus tests_main)
 endif ()

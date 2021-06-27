@@ -39,7 +39,11 @@ public:
 
   // Capacity
 
-  constexpr auto data() const noexcept -> const Char* {
+  const Char* data() const noexcept {
+    return m_text;
+  }
+
+  Char* data() noexcept {
     return m_text;
   }
 

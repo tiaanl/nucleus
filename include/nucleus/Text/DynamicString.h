@@ -7,6 +7,8 @@
 #include "nucleus/Text/StringView.h"
 #include "nucleus/hash.h"
 
+#undef min
+#undef max
 #undef free
 
 namespace nu {

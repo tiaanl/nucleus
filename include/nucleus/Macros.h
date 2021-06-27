@@ -12,7 +12,6 @@
   ClassName& operator=(ClassName&&) = delete
 
 #define NU_DELETE_COPY_AND_MOVE(ClassName)                                                         \
-public:                                                                                            \
   NU_DELETE_COPY(ClassName);                                                                       \
   NU_DELETE_MOVE(ClassName)
 

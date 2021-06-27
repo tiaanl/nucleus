@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #include "nucleus/Logging.h"
 #include "nucleus/Types.h"
 
@@ -68,6 +70,14 @@ public:
     return *reinterpret_cast<T*>(data_);
   }
 
+  T& operator*() const {
+    return value();
+  }
+
+  T& operator*() {
+    return value();
+  }
+
   T* operator->() const {
     DCHECK(value_is_set_);
     return reinterpret_cast<const T*>(data_);
@@ -84,3 +94,14 @@ private:
 };
 
 }  // namespace nu
+
+template <typename T>
+inline std::ostream& operator<<(std::ostream& os, const nu::Optional<T>& value) {
+  if (value.has_value()) {
+    os << value.value();
+  } else {
+    os << "(null)";
+  }
+
+  return os;
+}
