@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/static_array.h"
+#include "nucleus/containers/static_array.h"
 
 namespace nu {
 

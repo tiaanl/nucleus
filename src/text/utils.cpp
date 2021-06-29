@@ -1,4 +1,4 @@
-#include "nucleus/Text/utils.h"
+#include "nucleus/text/utils.h"
 
 namespace nu {
 

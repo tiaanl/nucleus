@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Streams/console_output_stream.h"
+#include "nucleus/streams/console_output_stream.h"
 
 namespace nu {
 

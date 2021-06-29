@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "nucleus/Synchronization/auto_lock.h"
-#include "nucleus/Synchronization/lock.h"
+#include "nucleus/synchronization/auto_lock.h"
+#include "nucleus/synchronization/lock.h"
 #include "nucleus/threading/thread.h"
 
 #if OS(WIN)

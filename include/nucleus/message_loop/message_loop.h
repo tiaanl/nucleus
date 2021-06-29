@@ -2,8 +2,8 @@
 
 #include <mutex>
 
-#include "nucleus/Containers/dynamic_array.h"
-#include "nucleus/Memory/scoped_ptr.h"
+#include "nucleus/containers/dynamic_array.h"
+#include "nucleus/memory/scoped_ptr.h"
 #include "nucleus/function.h"
 #include "nucleus/macros.h"
 #include "nucleus/message_loop/message_pump.h"

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "nucleus/Containers/dynamic_array.h"
-#include "nucleus/Streams/output_stream.h"
+#include "nucleus/containers/dynamic_array.h"
+#include "nucleus/streams/output_stream.h"
 #include "nucleus/macros.h"
 
 namespace nu {

@@ -1,5 +1,5 @@
 
-#include "nucleus/Streams/memory_input_stream.h"
+#include "nucleus/streams/memory_input_stream.h"
 
 #include <algorithm>
 

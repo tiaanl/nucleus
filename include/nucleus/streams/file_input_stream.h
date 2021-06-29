@@ -1,11 +1,11 @@
 #pragma once
 
-#include "nucleus/Streams/input_stream.h"
+#include "nucleus/streams/input_stream.h"
 #include "nucleus/config.h"
 #include "nucleus/file_path.h"
 
 #if OS(WIN)
-#include "nucleus/Win/includes.h"
+#include "nucleus/win/includes.h"
 #endif
 
 namespace nu {

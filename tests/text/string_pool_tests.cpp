@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Text/string_pool.h"
+#include "nucleus/text/string_pool.h"
 
 namespace nu {
 

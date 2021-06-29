@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.16)
-
 if (TARGET nucleus)
     return()
 endif ()
+
+cmake_minimum_required(VERSION 3.19)
 
 project(nucleus)
 
@@ -22,7 +22,6 @@ set(HEADER_FILES
     include/nucleus/containers/hash_map.h
     include/nucleus/containers/hash_table.h
     include/nucleus/containers/hash_table_base.h
-    include/nucleus/containers/sparse_array.h
     include/nucleus/containers/stable_pool.h
     include/nucleus/debugger.h
     include/nucleus/file_path.h
@@ -85,7 +84,7 @@ set(SOURCE_FILES
     src/streams/memory_input_stream.cpp
     src/streams/output_stream.cpp
     src/streams/string_output_stream.cpp
-    src/streams/Utils.cpp
+    src/streams/utils.cpp
     src/synchronization/lock.cpp
     src/text/dynamic_string.cpp
     src/text/string_view.cpp
@@ -118,14 +117,13 @@ if (NOT ${NUCLEUS_SKIP_TESTS})
         tests/containers/hash_map_tests.cpp
         tests/containers/hash_table_base_tests.cpp
         tests/containers/hash_table_tests.cpp
-        tests/containers/sparse_array_tests.cpp
         tests/containers/stable_pool_tests.cpp
         tests/file_path_tests.cpp
         tests/high_resolution_timer_tests.cpp
         tests/logging_tests.cpp
         tests/logging_tests.cpp
-        "tests/memory/scoped_ptr_tests.cpp"
-        "tests/memory/scoped_ref_ptr_tests.cpp"
+        tests/memory/scoped_ptr_tests.cpp
+        tests/memory/scoped_ref_ptr_tests.cpp
         tests/ref_counted_tests.cpp
         tests/streams/console_output_stream_tests.cpp
         tests/streams/string_output_stream_tests.cpp

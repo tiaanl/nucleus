@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-#include "nucleus/Text/string_view.h"
+#include "nucleus/text/string_view.h"
 #include "nucleus/config.h"
 #include "nucleus/logging.h"
 #include "nucleus/types.h"

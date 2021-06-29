@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/hash_table_base.h"
+#include "nucleus/containers/hash_table_base.h"
 #include "nucleus/testing/lifetime_tracker.h"
 
 namespace nu {

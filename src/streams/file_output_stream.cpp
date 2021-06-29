@@ -1,7 +1,6 @@
 
-#include "nucleus/Streams/file_output_stream.h"
-
-#include <nucleus/Text/utils.h>
+#include <nucleus/streams/file_output_stream.h>
+#include <nucleus/text/utils.h>
 
 #if OS(POSIX)
 #include <fcntl.h>

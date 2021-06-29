@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nucleus/Containers/hash_table.h"
+#include "nucleus/containers/hash_table.h"
 
 namespace nu {
 

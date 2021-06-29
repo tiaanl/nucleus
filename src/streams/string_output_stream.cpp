@@ -1,5 +1,5 @@
 
-#include "nucleus/Streams/string_output_stream.h"
+#include "nucleus/streams/string_output_stream.h"
 
 namespace nu {
 

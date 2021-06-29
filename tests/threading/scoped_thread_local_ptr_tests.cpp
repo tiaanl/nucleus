@@ -1,6 +1,5 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Memory/scoped_ptr.h"
 #include "nucleus/threading/scoped_thread_local_ptr.h"
 #include "nucleus/threading/thread.h"
 

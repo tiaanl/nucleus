@@ -32,7 +32,7 @@
 #elif defined(__sun)
 #define OS_SOLARIS 1
 #else
-#error Please add support for your platform in nucleus/Config.h
+#error Please add support for your platform in nucleus/config.h
 #endif
 
 // For access to standard BSD features, use OS_BSD instead of a
@@ -64,7 +64,7 @@
 #elif defined(_MSC_VER)
 #define COMPILER_MSVC 1
 #else
-#error Please add support for your compiler in nucleus/Config.h
+#error Please add support for your compiler in nucleus/config.h
 #endif
 
 // ARCH()
@@ -102,5 +102,5 @@
 #define ARCH_CPU_32_BITS 1
 #define ARCH_CPU_BIG_ENDIAN 1
 #else
-#error Please add support for your architecture in nucleus/Config.h
+#error Please add support for your architecture in nucleus/config.h
 #endif

@@ -25,7 +25,7 @@ public:
   ~HashTable() = default;
 
   HashTable& operator=(const HashTable& other) {
-    HashTableBase::clear();
+    this->clear();
     for (auto& other_item : other) {
       insert(other_item);
     }

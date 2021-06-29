@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/bit_set.h"
+#include "nucleus/containers/bit_set.h"
 
 namespace nu {
 

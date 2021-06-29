@@ -1,10 +1,10 @@
 
-#include "nucleus/Streams/file_input_stream.h"
+#include "nucleus/streams/file_input_stream.h"
 
 #include <algorithm>
 
-#include "nucleus/Text/utils.h"
 #include "nucleus/logging.h"
+#include "nucleus/text/utils.h"
 
 #if OS(POSIX)
 #include <fcntl.h>

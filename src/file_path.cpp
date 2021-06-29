@@ -1,8 +1,8 @@
 
 #include "nucleus/file_path.h"
 
-#include "nucleus/Text/utils.h"
 #include "nucleus/macros.h"
+#include "nucleus/text/utils.h"
 #if OS(POSIX)
 #include <unistd.h>
 #if OS(LINUX)

@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Memory/scoped_ref_ptr.h"
+#include "nucleus/memory/scoped_ref_ptr.h"
 #include "nucleus/ref_counted.h"
 
 namespace nu {

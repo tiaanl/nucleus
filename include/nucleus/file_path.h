@@ -2,8 +2,8 @@
 
 #include <ostream>
 
-#include "nucleus/Containers/dynamic_array.h"
-#include "nucleus/Text/dynamic_string.h"
+#include "nucleus/containers/dynamic_array.h"
+#include "nucleus/text/dynamic_string.h"
 #include "nucleus/config.h"
 
 #if OS(WIN)

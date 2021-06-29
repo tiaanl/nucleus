@@ -1,7 +1,7 @@
 #pragma once
 
-#include "nucleus/Text/char_traits.h"
-#include "nucleus/Text/string_view.h"
+#include "nucleus/text/char_traits.h"
+#include "nucleus/text/string_view.h"
 #include "nucleus/hash.h"
 #include "nucleus/logging.h"
 

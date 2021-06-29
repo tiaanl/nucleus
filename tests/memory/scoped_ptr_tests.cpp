@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Memory/scoped_ptr.h"
+#include "nucleus/memory/scoped_ptr.h"
 
 namespace nu {
 

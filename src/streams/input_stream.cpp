@@ -1,10 +1,10 @@
 
-#include "nucleus/Streams/input_stream.h"
+#include "nucleus/streams/input_stream.h"
 
 #include <algorithm>
 
-#include "nucleus/Containers/dynamic_array.h"
 #include "nucleus/byte_order.h"
+#include "nucleus/containers/dynamic_array.h"
 
 namespace nu {
 

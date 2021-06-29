@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Text/static_string.h"
+#include "nucleus/text/static_string.h"
 
 using Catch::Matchers::Equals;
 

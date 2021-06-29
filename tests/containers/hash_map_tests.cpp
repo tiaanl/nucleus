@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/hash_map.h"
-#include "nucleus/Text/dynamic_string.h"
+#include "nucleus/containers/hash_map.h"
+#include "nucleus/text/dynamic_string.h"
 
 namespace nu {
 

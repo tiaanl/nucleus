@@ -1,4 +1,4 @@
-#include "nucleus/Streams/dynamic_buffer_output_stream.h"
+#include "nucleus/streams/dynamic_buffer_output_stream.h"
 
 namespace nu {
 

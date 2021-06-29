@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "nucleus/Containers/array_view.h"
+#include "nucleus/containers/array_view.h"
 #include "nucleus/logging.h"
 #include "nucleus/types.h"
 

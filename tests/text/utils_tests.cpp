@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/Text/utils.h"
+#include "nucleus/text/utils.h"
 
 namespace nu {
 

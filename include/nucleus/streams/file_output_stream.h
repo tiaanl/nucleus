@@ -1,6 +1,6 @@
 #pragma once
 
-#include "nucleus/Streams/output_stream.h"
+#include "nucleus/streams/output_stream.h"
 #include "nucleus/config.h"
 #include "nucleus/file_path.h"
 

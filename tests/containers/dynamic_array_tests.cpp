@@ -1,7 +1,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/dynamic_array.h"
+#include "nucleus/containers/dynamic_array.h"
 #include "nucleus/testing/lifetime_tracker.h"
 
 namespace nu {

@@ -1,5 +1,5 @@
 
-#include "nucleus/Synchronization/lock.h"
+#include "nucleus/synchronization/lock.h"
 
 namespace nu {
 

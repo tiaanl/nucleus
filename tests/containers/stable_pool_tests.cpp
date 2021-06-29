@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "nucleus/Containers/stable_pool.h"
+#include "nucleus/containers/stable_pool.h"
 
 namespace nu {
 

@@ -5,8 +5,8 @@
 #include <ostream>
 #include <utility>
 
-#include "nucleus/Streams/output_stream.h"
-#include "nucleus/Text/char_traits.h"
+#include "nucleus/streams/output_stream.h"
+#include "nucleus/text/char_traits.h"
 #include "nucleus/hash.h"
 #include "nucleus/types.h"
 

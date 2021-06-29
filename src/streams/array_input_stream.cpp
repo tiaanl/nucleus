@@ -1,5 +1,5 @@
 
-#include "nucleus/Streams/array_input_stream.h"
+#include "nucleus/streams/array_input_stream.h"
 
 #include <cstring>
 

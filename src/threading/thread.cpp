@@ -37,6 +37,8 @@ namespace current_thread {
 ThreadId id() {
 #if OS(WIN)
   return GetCurrentThreadId();
+#elif OS(MACOSX)
+  return 0;
 #elif OS(POSIX)
   return syscall(__NR_gettid);
 #endif
