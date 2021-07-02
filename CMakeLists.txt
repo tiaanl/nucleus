@@ -87,7 +87,6 @@ set(SOURCE_FILES
     src/streams/utils.cpp
     src/synchronization/lock.cpp
     src/text/dynamic_string.cpp
-    src/text/string_view.cpp
     src/text/utils.cpp
     src/message_loop/message_loop.cpp
     src/message_loop/message_pump.cpp

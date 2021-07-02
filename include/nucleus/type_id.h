@@ -10,8 +10,8 @@ namespace detail {
 
 template <typename T>
 struct TypeIdStorage {
-  static constexpr TypeId get() {
-    static constexpr char id = 0;
+  static TypeId get() {
+    static char id = 0;
     return reinterpret_cast<TypeId>(&id);
   }
 };
