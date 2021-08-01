@@ -18,19 +18,25 @@ set(HEADER_FILES
     include/nucleus/containers/array_view.h
     include/nucleus/containers/bit_set.h
     include/nucleus/containers/dynamic_array.h
-    include/nucleus/containers/static_array.h
     include/nucleus/containers/hash_map.h
     include/nucleus/containers/hash_table.h
     include/nucleus/containers/hash_table_base.h
     include/nucleus/containers/stable_pool.h
+    include/nucleus/containers/static_array.h
     include/nucleus/debugger.h
     include/nucleus/file_path.h
+    include/nucleus/function.h
+    include/nucleus/hash.h
     include/nucleus/high_resolution_timer.h
     include/nucleus/logging.h
     include/nucleus/macros.h
+    include/nucleus/main_header.hpp
     include/nucleus/memory/ref_counted_ptr.h
     include/nucleus/memory/scoped_ptr.h
     include/nucleus/memory/scoped_ref_ptr.h
+    include/nucleus/message_loop/message_loop.h
+    include/nucleus/message_loop/message_pump.h
+    include/nucleus/optional.h
     include/nucleus/parser/tokenizer.h
     include/nucleus/profiling.h
     include/nucleus/ref_counted.h
@@ -47,25 +53,19 @@ set(HEADER_FILES
     include/nucleus/streams/utils.h
     include/nucleus/synchronization/auto_lock.h
     include/nucleus/synchronization/lock.h
+    include/nucleus/testing/lifetime_tracker.h
     include/nucleus/text/char_traits.h
     include/nucleus/text/dynamic_string.h
     include/nucleus/text/static_string.h
     include/nucleus/text/string_pool.h
     include/nucleus/text/string_view.h
     include/nucleus/text/utils.h
-    include/nucleus/types.h
-    include/nucleus/win/includes.h
-    include/nucleus/function.h
-    include/nucleus/hash.h
-    include/nucleus/main_header.hpp
-    include/nucleus/message_loop/message_loop.h
-    include/nucleus/message_loop/message_pump.h
-    include/nucleus/optional.h
-    include/nucleus/testing/lifetime_tracker.h
     include/nucleus/threading/scoped_thread_local_ptr.h
     include/nucleus/threading/thread.h
     include/nucleus/threading/thread_local.h
     include/nucleus/type_id.h
+    include/nucleus/types.h
+    include/nucleus/win/includes.h
     )
 
 set(SOURCE_FILES
@@ -110,19 +110,24 @@ target_link_libraries(tests_main PUBLIC Catch2::Catch2)
 
 if (NOT ${NUCLEUS_SKIP_TESTS})
     set(TEST_FILES
+        tests/byte_order_tests.cpp
         tests/containers/bit_set_tests.cpp
         tests/containers/dynamic_array_tests.cpp
-        tests/containers/static_array_tests.cpp
         tests/containers/hash_map_tests.cpp
         tests/containers/hash_table_base_tests.cpp
         tests/containers/hash_table_tests.cpp
         tests/containers/stable_pool_tests.cpp
+        tests/containers/static_array_tests.cpp
         tests/file_path_tests.cpp
+        tests/function_tests.cpp
+        tests/hash_tests.cpp
         tests/high_resolution_timer_tests.cpp
         tests/logging_tests.cpp
         tests/logging_tests.cpp
         tests/memory/scoped_ptr_tests.cpp
         tests/memory/scoped_ref_ptr_tests.cpp
+        tests/message_loop/message_loop_tests.cpp
+        tests/optional_tests.cpp
         tests/ref_counted_tests.cpp
         tests/streams/console_output_stream_tests.cpp
         tests/streams/string_output_stream_tests.cpp
@@ -131,11 +136,6 @@ if (NOT ${NUCLEUS_SKIP_TESTS})
         tests/text/string_pool_tests.cpp
         tests/text/string_view_tests.cpp
         tests/text/utils_tests.cpp
-        tests/byte_order_tests.cpp
-        tests/function_tests.cpp
-        tests/hash_tests.cpp
-        tests/message_loop/message_loop_tests.cpp
-        tests/optional_tests.cpp
         tests/threading/scoped_thread_local_ptr_tests.cpp
         tests/threading/thread_local_tests.cpp
         tests/threading/thread_tests.cpp

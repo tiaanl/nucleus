@@ -13,7 +13,7 @@ TEST_CASE("DynamicArray construct") {
     DynamicArray<I32> a;
 
     CHECK(a.size() == 0);
-    CHECK(a.isEmpty());
+    CHECK(a.empty());
   }
 
   SECTION("initializer list") {

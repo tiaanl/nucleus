@@ -37,7 +37,7 @@ bool MessageLoop::progress() {
   }
 
   // If we fetched the tasks from the incoming queue and it's empty, then we are idle.
-  if (quit_on_idle_ && tasks_to_run.isEmpty()) {
+  if (quit_on_idle_ && tasks_to_run.empty()) {
     return false;
   }
 
