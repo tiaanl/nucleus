@@ -128,6 +128,7 @@ if (NOT ${NUCLEUS_SKIP_TESTS})
         tests/memory/scoped_ref_ptr_tests.cpp
         tests/message_loop/message_loop_tests.cpp
         tests/optional_tests.cpp
+        tests/parser/tokenizer_tests.cpp
         tests/ref_counted_tests.cpp
         tests/streams/console_output_stream_tests.cpp
         tests/streams/string_output_stream_tests.cpp

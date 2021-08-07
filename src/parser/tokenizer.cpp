@@ -43,7 +43,7 @@ struct PunctuationInfo {
     {':', TokenType::Colon},
     {'\'', TokenType::Apostrophe},
     {'"', TokenType::Quote},
-    {'\\', TokenType::Backslack},
+    {'\\', TokenType::Backslash},
     {'|', TokenType::Pipe},
     {',', TokenType::Comma},
     {'<', TokenType::LessThan},
@@ -124,6 +124,40 @@ Token Tokenizer::consume_next_token(U32 options) {
   return token;
 }
 
+void Tokenizer::advance(const Token& token) {
+  advance(token.text.length());
+}
+
+Token Tokenizer::consume_until_eol() {
+  auto result = current_;
+  MemSize length_consumed = 0;
+
+  for (;;) {
+    auto token = peek_next_token();
+
+    if (token.type == TokenType::Whitespace) {
+      if (token.text.subString(0, 2) == "\r\n" || token.text.subString(0, 2) == "\n\r" ||
+          token.text.subString(0, 1) == "\n" || token.text.subString(0, 1) == "\r") {
+        break;
+      }
+
+      // We only advance by a single character, because there can be new lined embedded inside the
+      // whitespace sequence.
+      length_consumed += 1;
+      advance(1);
+      continue;
+
+    } else if (token.type == TokenType::EndOfSource) {
+      break;
+    }
+
+    length_consumed += token.text.length();
+    advance(token);
+  }
+
+  return {TokenType::Text, result.subString(0, length_consumed)};
+}
+
 void Tokenizer::advance(StringLength length) {
   current_ = current_.subString(length);
 }
@@ -162,6 +196,122 @@ Token Tokenizer::peek_next_token_internal(StringView source) {
   }
 
   return Token{TokenType::EndOfSource, {}};
+}
+
+const char* token_type_to_string(TokenType token_type) {
+  switch (token_type) {
+    case TokenType::EndOfSource:
+      return "EndOfSource";
+
+    case TokenType::Whitespace:
+      return "Whitespace";
+
+    case TokenType::Acute:
+      return "Acute";
+
+    case TokenType::Tilde:
+      return "Tilde";
+
+    case TokenType::ExclamationMark:
+      return "ExclamationMark";
+
+    case TokenType::At:
+      return "At";
+
+    case TokenType::Hash:
+      return "Hash";
+
+    case TokenType::DollarSign:
+      return "DollarSign";
+
+    case TokenType::Percentage:
+      return "Percentage";
+
+    case TokenType::Caret:
+      return "Caret";
+
+    case TokenType::Ampersand:
+      return "Ampersand";
+
+    case TokenType::Asterisk:
+      return "Asterisk";
+
+    case TokenType::OpenParenthesis:
+      return "OpenParenthesis";
+
+    case TokenType::ClosedParenthesis:
+      return "ClosedParenthesis";
+
+    case TokenType::Minus:
+      return "Minus";
+
+    case TokenType::Underscore:
+      return "Underscore";
+
+    case TokenType::Equals:
+      return "Equals";
+
+    case TokenType::Plus:
+      return "Plus";
+
+    case TokenType::OpenBracket:
+      return "OpenBracket";
+
+    case TokenType::OpenBrace:
+      return "OpenBrace";
+
+    case TokenType::ClosedBracket:
+      return "ClosedBracket";
+
+    case TokenType::ClosedBrace:
+      return "ClosedBrace";
+
+    case TokenType::SemiColon:
+      return "SemiColon";
+
+    case TokenType::Colon:
+      return "Colon";
+
+    case TokenType::Apostrophe:
+      return "Apostrophe";
+
+    case TokenType::Quote:
+      return "Quote";
+
+    case TokenType::Backslash:
+      return "Backslash";
+
+    case TokenType::Pipe:
+      return "Pipe";
+
+    case TokenType::Comma:
+      return "Comma";
+
+    case TokenType::LessThan:
+      return "LessThan";
+
+    case TokenType::Period:
+      return "Period";
+
+    case TokenType::GreaterThan:
+      return "GreaterThan";
+
+    case TokenType::ForwardSlash:
+      return "ForwardSlash";
+
+    case TokenType::QuestionMark:
+      return "QuestionMark";
+
+    case TokenType::Number:
+      return "Number";
+
+    case TokenType::Text:
+      return "Text";
+
+    default:
+      NOTREACHED();
+      return "Unknown";
+  }
 }
 
 }  // namespace nu

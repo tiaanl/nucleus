@@ -5,9 +5,9 @@
 #include <ostream>
 #include <utility>
 
+#include "nucleus/hash.h"
 #include "nucleus/streams/output_stream.h"
 #include "nucleus/text/char_traits.h"
-#include "nucleus/hash.h"
 #include "nucleus/types.h"
 
 namespace nu {
@@ -98,6 +98,17 @@ public:
     return npos;
   }
 
+  template <typename Predicate>
+  StringLength find_first_of_predicate(Predicate&& predicate) {
+    for (StringLength i = 0; i < m_length; ++i) {
+      if (predicate(m_text[i])) {
+        return i;
+      }
+    }
+
+    return npos;
+  }
+
   // Return the position of the first character that matches any of the predicate characters.
   StringLength findFirstOfAny(const StringView& characters) const {
     for (StringLength i = 0; i < m_length; ++i) {
@@ -111,7 +122,7 @@ public:
   }
 
   // Return the position of the last character that matches any of the predicate characters.
-  StringLength findLastOfAny(const StringView& characters) {
+  StringLength findLastOfAny(StringView characters) {
     for (StringLength i = 0; i < m_length; ++i) {
       auto currentPos = m_length - 1 - i;
       auto pos = characters.findFirstOf(m_text[currentPos]);
