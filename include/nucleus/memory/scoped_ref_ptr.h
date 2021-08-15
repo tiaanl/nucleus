@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "nucleus/logging.h"
 #include "nucleus/macros.h"
 
 namespace nu {

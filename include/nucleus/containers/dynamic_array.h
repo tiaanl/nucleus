@@ -25,7 +25,7 @@ public:
 
   // Factory Methods
 
-  static auto withInitialCapacity(SizeType initialCapacity) -> DynamicArray {
+  static DynamicArray withInitialCapacity(SizeType initialCapacity) {
     DynamicArray result;
 
     result.ensureAllocated(initialCapacity, DiscardOldData);
@@ -33,8 +33,8 @@ public:
     return result;
   }
 
-  static auto withInitialSize(SizeType initialSize, const ElementType& value = ElementType{})
-      -> DynamicArray {
+  static DynamicArray withInitialSize(SizeType initialSize,
+                                      const ElementType& value = ElementType{}) {
     DynamicArray result;
 
     result.ensureAllocated(initialSize, DiscardOldData);
@@ -67,7 +67,11 @@ public:
 
   DynamicArray(std::initializer_list<ElementType> list) : m_size{list.size()} {
     ensureAllocated(list.size(), DiscardOldData);
-    std::copy(list.begin(), list.end(), m_data);
+
+    SizeType index = 0;
+    for (auto& el : list) {
+      new (&m_data[index++]) ElementType{std::move(el)};
+    }
   }
 
   ~DynamicArray() {
