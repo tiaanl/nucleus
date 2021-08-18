@@ -50,12 +50,12 @@ public:
 
   DynamicArray(ElementType* data, SizeType size) : m_size{size} {
     ensureAllocated(size, DiscardOldData);
-    std::copy(data, data + size, m_data);
+    construct_from(data, size);
   }
 
   DynamicArray(const DynamicArray& other) : m_size{other.m_size} {
     ensureAllocated(m_size, DiscardOldData);
-    std::copy(other.m_data, other.m_data + other.m_size, m_data);
+    construct_from(other.m_data, other.m_size);
   }
 
   DynamicArray(DynamicArray&& other) noexcept
@@ -82,9 +82,8 @@ public:
 
   DynamicArray& operator=(const DynamicArray& other) {
     ensureAllocated(other.m_size, DiscardOldData);
-
-    std::copy(other.m_data, other.m_data + other.m_size, m_data);
     m_size = other.m_size;
+    construct_from(other.m_data, other.m_size);
 
     return *this;
   }
@@ -365,6 +364,14 @@ private:
 
     m_capacity = elementsRequired;
     m_data = newData;
+  }
+
+  void construct_from(T* source, SizeType source_size) {
+    DCHECK(m_capacity >= source_size);
+
+    for (SizeType i = 0; i < source_size; ++i) {
+      new (&m_data[i]) T{source[i]};
+    }
   }
 
   void free() {
