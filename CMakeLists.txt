@@ -36,7 +36,7 @@ set(HEADER_FILES
     include/nucleus/memory/scoped_ref_ptr.h
     include/nucleus/message_loop/message_loop.h
     include/nucleus/message_loop/message_pump.h
-    include/nucleus/optional.h
+    include/nucleus/optional.hpp
     include/nucleus/parser/tokenizer.h
     include/nucleus/profiling.h
     include/nucleus/ref_counted.h

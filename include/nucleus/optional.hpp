@@ -12,21 +12,24 @@ class Optional {
 public:
   Optional() : value_is_set_{false} {}
 
-  template <typename... Args>
-  Optional(Args&&... args) : value_is_set_{true} {
-    new (data_) T{std::forward<Args>(args)...};
-  }
-
   Optional(const Optional& other) : value_is_set_{other.value_is_set_} {
     if (value_is_set_) {
       new (data_) T{other.value()};
     }
   }
 
+  Optional(const T& value) : value_is_set_{true} {
+    new (data_) T{value};
+  }
+
   Optional(Optional&& other) : value_is_set_{other.value_is_set_} {
     if (value_is_set_) {
       new (data_) T{std::move(other.value())};
     }
+  }
+
+  Optional(T&& value) : value_is_set_{true} {
+    new (data_) T{std::forward<T>(value)};
   }
 
   ~Optional() {

@@ -1,7 +1,7 @@
 
 #include "nucleus/parser/tokenizer.h"
 
-#include "nucleus/optional.h"
+#include "nucleus/optional.hpp"
 
 namespace nu {
 

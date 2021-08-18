@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "nucleus/optional.h"
+#include "nucleus/optional.hpp"
 #include "nucleus/testing/lifetime_tracker.h"
 
 namespace nu {
